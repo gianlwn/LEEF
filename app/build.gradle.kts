@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    // Reads app/google-services.json (the LEEF Firebase project).
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -31,6 +33,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -38,6 +43,14 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)
     implementation(libs.material)
+    implementation(libs.recyclerview)
+    implementation(libs.viewpager2)
+
+    // Firebase: the BoM keeps every Firebase library on matching versions.
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

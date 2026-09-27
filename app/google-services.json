@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "374273010741",
+    "project_id": "leef-e53c2",
+    "storage_bucket": "leef-e53c2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374273010741:android:6b284ad83f2ef560d6d57c",
+        "android_client_info": {
+          "package_name": "com.itismob.s03.group7.leef"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5ydm8t_PdcsWUn5fG-glogpgFf-65aPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

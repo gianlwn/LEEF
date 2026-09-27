@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Artwork is looked up by name at runtime (ui/ArtAssets), so keep every art_* drawable even
+     if resource shrinking is turned on later. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/art_*" />

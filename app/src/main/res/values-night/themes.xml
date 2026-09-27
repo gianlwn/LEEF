@@ -1,7 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.LEEF" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
-    </style>
-</resources>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- LEEF ships a light-only design, so there are no night overrides.
+     Base.Theme.LEEF in values/themes.xml is used in every mode. -->
+<resources />

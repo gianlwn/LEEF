@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Contents of ArtSlotView: the artwork itself, or a dashed placeholder naming the file to create. -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_height="200dp"
+    tools:layout_width="300dp"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <ImageView
+        android:id="@+id/art_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/art_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_art_placeholder"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/art_placeholder_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:alpha="0.55"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_image_placeholder" />
+
+        <LinearLayout
+            android:id="@+id/art_placeholder_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/art_placeholder_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.LEEF.LabelLarge"
+                android:textColor="@color/leef_gray_600"
+                tools:text="Welcome illustration" />
+
+            <TextView
+                android:id="@+id/art_placeholder_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textAppearance="@style/TextAppearance.LEEF.LabelSmall"
+                android:textColor="@color/leef_gray_500"
+                tools:text="art_onboarding_welcome" />
+        </LinearLayout>
+    </LinearLayout>
+</merge>

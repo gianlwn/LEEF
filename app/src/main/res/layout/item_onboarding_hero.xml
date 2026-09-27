@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onboarding page 1: the LEEF lockup over the welcome illustration (art_onboarding_welcome).
+     Until that file exists, the sky backdrop and a placeholder frame stand in for it. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_height="720dp">
+
+    <com.itismob.s03.group7.leef.ui.widget.BottomCropImageView
+        android:id="@+id/hero_art"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg_onboarding_panel" />
+
+    <!-- Blends real artwork into the controls below; hidden while the placeholder is showing. -->
+    <com.itismob.s03.group7.leef.ui.widget.BottomCropImageView
+        android:id="@+id/hero_wave"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:src="@drawable/fg_onboarding_wave"
+        android:visibility="gone" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/page_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/onboarding_hero_top_offset"
+        android:paddingBottom="@dimen/onboarding_feature_bottom_offset">
+
+        <LinearLayout
+            android:id="@+id/lockup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/onboarding_hero_a11y"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.itismob.s03.group7.leef.ui.widget.ArtSlotView
+                android:id="@+id/logo"
+                android:layout_width="@dimen/onboarding_logo_width"
+                android:layout_height="@dimen/onboarding_logo_height"
+                app:leefArtCompact="true"
+                app:leefArtName="art_leef_logo"
+                app:leefArtTitle="@string/art_title_leef_logo" />
+
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:text="@string/onboarding_hero_subtitle"
+                android:textAppearance="@style/TextAppearance.LEEF.Onboarding.HeroSubtitle" />
+
+            <ImageView
+                android:id="@+id/tagline"
+                android:layout_width="@dimen/onboarding_tagline_width"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/onboarding_tagline_offset"
+                android:layout_marginTop="14dp"
+                android:adjustViewBounds="true"
+                android:importantForAccessibility="no"
+                android:src="@drawable/img_onboarding_tagline" />
+        </LinearLayout>
+
+        <com.itismob.s03.group7.leef.ui.widget.ArtSlotView
+            android:id="@+id/hero_placeholder"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lockup"
+            app:layout_constraintWidth_max="360dp"
+            app:leefArtName="art_onboarding_welcome"
+            app:leefArtTitle="@string/art_title_onboarding_welcome" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Cream wave laid over the bottom of the welcome artwork, so any picture blends into the
+     controls below it. Same geometry as the wave in bg_onboarding_panel. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="390dp"
+    android:height="645dp"
+    android:viewportWidth="1170"
+    android:viewportHeight="1935">
+    <path
+        android:fillColor="@color/leef_cream"
+        android:pathData="M0.0,1775.0C16.7,1782.8 66.7,1812.2 100.0,1822.0C133.3,1831.8 166.7,1835.7 200.0,1834.0C233.3,1832.3 266.7,1821.7 300.0,1812.0C333.3,1802.3 360.0,1784.3 400.0,1776.0C440.0,1767.7 490.0,1762.7 540.0,1762.0C590.0,1761.3 656.7,1771.7 700.0,1772.0C743.3,1772.3 766.7,1769.7 800.0,1764.0C833.3,1758.3 866.7,1749.5 900.0,1738.0C933.3,1726.5 966.7,1711.3 1000.0,1695.0C1033.3,1678.7 1071.7,1652.2 1100.0,1640.0C1128.3,1627.8 1158.3,1625.0 1170.0,1622.0L1170,1935L0,1935Z" />
+</vector>

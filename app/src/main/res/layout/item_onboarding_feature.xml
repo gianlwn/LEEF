@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onboarding pages 2-4: headline, supporting copy and an illustration on the sky backdrop.
+     The illustration slot shows a labeled placeholder until its art_* file is added. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_height="720dp">
+
+    <com.itismob.s03.group7.leef.ui.widget.BottomCropImageView
+        android:id="@+id/backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg_onboarding_panel" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/page_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/onboarding_feature_top_offset"
+        android:paddingBottom="@dimen/onboarding_feature_bottom_offset">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="28dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.LEEF.Onboarding.Headline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/onboarding_discover_title" />
+
+        <TextView
+            android:id="@+id/body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.LEEF.Onboarding.Body"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="@string/onboarding_discover_body" />
+
+        <com.itismob.s03.group7.leef.ui.widget.ArtSlotView
+            android:id="@+id/illustration"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/body"
+            app:layout_constraintWidth_max="360dp"
+            app:leefArtName="art_onboarding_discover"
+            app:leefArtTitle="@string/art_title_onboarding_discover" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

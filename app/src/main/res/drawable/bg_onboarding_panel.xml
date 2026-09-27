@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onboarding feature-page backdrop: sky gradient, clouds and the same cream wave as the hero art. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="390dp"
+    android:height="645dp"
+    android:viewportWidth="1170"
+    android:viewportHeight="1935">
+    <path android:pathData="M0,0H1170V1935H0Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:type="linear"
+                android:startX="0"
+                android:startY="0"
+                android:endX="0"
+                android:endY="1702"
+                android:startColor="#DDF2FD"
+                android:endColor="#EEF7F2" />
+        </aapt:attr>
+    </path>
+    <group android:translateX="-70" android:translateY="300" android:scaleX="1.05" android:scaleY="1.05">
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.75"
+            android:pathData="M-60,0A60,60 0 1 1 60,0A60,60 0 1 1 -60,0ZM-8,-38A78,78 0 1 1 148,-38A78,78 0 1 1 -8,-38ZM86,-6A64,64 0 1 1 214,-6A64,64 0 1 1 86,-6ZM171,18A44,44 0 1 1 259,18A44,44 0 1 1 171,18ZM-29,0H229A31,31 0 0 1 260,31V31A31,31 0 0 1 229,62H-29A31,31 0 0 1 -60,31V31A31,31 0 0 1 -29,0Z" />
+    </group>
+    <group android:translateX="760" android:translateY="170" android:scaleX="0.95" android:scaleY="0.95">
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.8"
+            android:pathData="M-60,0A60,60 0 1 1 60,0A60,60 0 1 1 -60,0ZM-8,-38A78,78 0 1 1 148,-38A78,78 0 1 1 -8,-38ZM86,-6A64,64 0 1 1 214,-6A64,64 0 1 1 86,-6ZM171,18A44,44 0 1 1 259,18A44,44 0 1 1 171,18ZM-29,0H229A31,31 0 0 1 260,31V31A31,31 0 0 1 229,62H-29A31,31 0 0 1 -60,31V31A31,31 0 0 1 -29,0Z" />
+    </group>
+    <group android:translateX="840" android:translateY="1120" android:scaleX="0.8" android:scaleY="0.8">
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.55"
+            android:pathData="M-60,0A60,60 0 1 1 60,0A60,60 0 1 1 -60,0ZM-8,-38A78,78 0 1 1 148,-38A78,78 0 1 1 -8,-38ZM86,-6A64,64 0 1 1 214,-6A64,64 0 1 1 86,-6ZM171,18A44,44 0 1 1 259,18A44,44 0 1 1 171,18ZM-29,0H229A31,31 0 0 1 260,31V31A31,31 0 0 1 229,62H-29A31,31 0 0 1 -60,31V31A31,31 0 0 1 -29,0Z" />
+    </group>
+    <group android:translateX="-40" android:translateY="1340" android:scaleX="0.75" android:scaleY="0.75">
+        <path
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.5"
+            android:pathData="M-60,0A60,60 0 1 1 60,0A60,60 0 1 1 -60,0ZM-8,-38A78,78 0 1 1 148,-38A78,78 0 1 1 -8,-38ZM86,-6A64,64 0 1 1 214,-6A64,64 0 1 1 86,-6ZM171,18A44,44 0 1 1 259,18A44,44 0 1 1 171,18ZM-29,0H229A31,31 0 0 1 260,31V31A31,31 0 0 1 229,62H-29A31,31 0 0 1 -60,31V31A31,31 0 0 1 -29,0Z" />
+    </group>
+    <path
+        android:fillColor="#FBF4E3"
+        android:pathData="M0.0,1775.0C16.7,1782.8 66.7,1812.2 100.0,1822.0C133.3,1831.8 166.7,1835.7 200.0,1834.0C233.3,1832.3 266.7,1821.7 300.0,1812.0C333.3,1802.3 360.0,1784.3 400.0,1776.0C440.0,1767.7 490.0,1762.7 540.0,1762.0C590.0,1761.3 656.7,1771.7 700.0,1772.0C743.3,1772.3 766.7,1769.7 800.0,1764.0C833.3,1758.3 866.7,1749.5 900.0,1738.0C933.3,1726.5 966.7,1711.3 1000.0,1695.0C1033.3,1678.7 1071.7,1652.2 1100.0,1640.0C1128.3,1627.8 1158.3,1625.0 1170.0,1622.0L1170,1935L0,1935Z" />
+</vector>

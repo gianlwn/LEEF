@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ShapeAppearance.LEEF.Pill" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Default filled button: pill shaped, brand green, bold label. -->
+    <style name="Widget.LEEF.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">56dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.LEEF.Button</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.LEEF.Pill</item>
+    </style>
+
+    <!-- Large call-to-action with a soft green shadow (onboarding "Get Started"). -->
+    <style name="Widget.LEEF.Button.Hero">
+        <item name="android:minHeight">60dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.LEEF.Button.Large</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">6dp</item>
+        <item name="android:outlineAmbientShadowColor" tools:targetApi="28">@color/leef_green_700</item>
+        <item name="android:outlineSpotShadowColor" tools:targetApi="28">@color/leef_green_700</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="iconPadding">10dp</item>
+        <item name="iconSize">20dp</item>
+    </style>
+
+    <style name="Widget.LEEF.Button.TextButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.LEEF.Button</item>
+        <item name="android:textColor">@color/leef_green_800</item>
+        <item name="rippleColor">@color/leef_green_100</item>
+    </style>
+</resources>

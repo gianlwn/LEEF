@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PagerDotsIndicator">
+        <attr name="leefDotColor" format="color" />
+        <attr name="leefDotActiveColor" format="color" />
+        <attr name="leefDotSize" format="dimension" />
+        <attr name="leefDotActiveWidth" format="dimension" />
+        <attr name="leefDotSpacing" format="dimension" />
+        <attr name="leefDotCount" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="ArtSlotView">
+        <!-- Drawable file name of the artwork, e.g. art_leef_logo. -->
+        <attr name="leefArtName" format="string" />
+        <!-- What the artwork shows; displayed on the placeholder. -->
+        <attr name="leefArtTitle" format="string" />
+        <!-- Icon beside the text instead of above it, for short slots. -->
+        <attr name="leefArtCompact" format="boolean" />
+        <attr name="leefArtScale" format="enum">
+            <enum name="fitCenter" value="0" />
+            <enum name="centerCrop" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>

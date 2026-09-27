@@ -3,24 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".LeefApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:enableOnBackInvokedCallback="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LEEF">
+        android:theme="@style/Theme.LEEF"
+        tools:targetApi="33">
+        <!-- Screen 1: Welcome / Onboarding (app entry point). -->
         <activity
-            android:name=".MainActivity"
+            android:name=".onboarding.OnboardingActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize">
+            android:theme="@style/Theme.LEEF.Onboarding">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Main app shell; becomes the Home / Event Feed host in Screen 4. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -1,9 +1,55 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.LEEF" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <!-- LEEF is a light-only design; LeefApplication also pins the app to light mode. -->
+    <style name="Base.Theme.LEEF" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/leef_green_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/leef_green_100</item>
+        <item name="colorOnPrimaryContainer">@color/leef_green_900</item>
+        <item name="colorSecondary">@color/leef_green_800</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/leef_green_100</item>
+        <item name="colorOnSecondaryContainer">@color/leef_green_900</item>
+        <item name="colorTertiary">@color/leef_yellow</item>
+        <item name="colorOnTertiary">@color/leef_ink</item>
+        <item name="colorError">@color/leef_red</item>
+
+        <item name="android:colorBackground">@color/leef_background</item>
+        <item name="colorOnBackground">@color/leef_ink</item>
+        <item name="colorSurface">@color/leef_background</item>
+        <item name="colorOnSurface">@color/leef_ink</item>
+        <item name="colorOnSurfaceVariant">@color/leef_gray_600</item>
+        <item name="colorSurfaceContainerLowest">@color/white</item>
+        <item name="colorSurfaceContainerLow">@color/leef_surface</item>
+        <item name="colorSurfaceContainer">@color/leef_surface</item>
+        <item name="colorSurfaceContainerHigh">@color/leef_field</item>
+        <item name="colorOutline">@color/leef_outline</item>
+        <item name="colorOutlineVariant">@color/leef_outline</item>
+
+        <item name="android:fontFamily">@font/leef_sans</item>
+        <item name="fontFamily">@font/leef_sans</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.LEEF.DisplaySmall</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.LEEF.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.LEEF.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.LEEF.HeadlineSmall</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.LEEF.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.LEEF.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.LEEF.TitleSmall</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.LEEF.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.LEEF.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.LEEF.BodySmall</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.LEEF.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.LEEF.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.LEEF.LabelSmall</item>
+
+        <item name="materialButtonStyle">@style/Widget.LEEF.Button</item>
+        <item name="borderlessButtonStyle">@style/Widget.LEEF.Button.TextButton</item>
     </style>
 
     <style name="Theme.LEEF" parent="Base.Theme.LEEF" />
+
+    <!-- Onboarding sits on the warm cream used under the hero wave. -->
+    <style name="Theme.LEEF.Onboarding">
+        <item name="android:windowBackground">@color/leef_cream</item>
+    </style>
 </resources>

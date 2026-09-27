@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">LEEF</string>
+    <string name="app_full_name">Local Educational Event Finder</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_hero_subtitle">Local Educational\nEvent Finder</string>
+    <string name="onboarding_hero_a11y">LEEF, Local Educational Event Finder. More learning opportunities for a brighter Philippines.</string>
+
+    <string name="onboarding_discover_title">Discover events near you</string>
+    <string name="onboarding_discover_body">Seminars, workshops, competitions, and campus activities in one feed. Search and filter by category, date, and location.</string>
+
+    <string name="onboarding_join_title">Register in a few taps</string>
+    <string name="onboarding_join_body">Save your spot, pay with GCash, Maya, or card, and get a reminder before your event starts.</string>
+
+    <string name="onboarding_connect_title">Connect and grow together</string>
+    <string name="onboarding_connect_body">Message organizers and fellow attendees, share events you love, or post your own to reach more learners.</string>
+
+    <string name="onboarding_get_started">Get Started</string>
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_create_account">Create Account</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_have_account">Already have an account?</string>
+    <string name="onboarding_log_in">Log In</string>
+    <string name="onboarding_log_in_a11y">Already have an account? Log In</string>
+    <string name="onboarding_page_indicator">Page %1$d of %2$d</string>
+
+    <!-- Artwork placeholders: what each image shows. The file name to create is shown under it. -->
+    <string name="placeholder_image">Image placeholder</string>
+    <string name="art_title_leef_logo" translatable="false">LEEF logo</string>
+    <string name="art_title_onboarding_welcome" translatable="false">Welcome illustration</string>
+    <string name="art_title_onboarding_discover" translatable="false">Discover illustration</string>
+    <string name="art_title_onboarding_register" translatable="false">Register illustration</string>
+    <string name="art_title_onboarding_connect" translatable="false">Connect illustration</string>
+
+    <!-- Temporary: shown until Screens 2 and 3 are built. -->
+    <string name="todo_create_account">Create Account is the next screen we build.</string>
+    <string name="todo_log_in">Log In is coming right after Create Account.</string>
 </resources>

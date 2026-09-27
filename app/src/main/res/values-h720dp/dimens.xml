@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="onboarding_hero_top_offset">36dp</dimen>
+    <dimen name="onboarding_logo_width">184dp</dimen>
+    <dimen name="onboarding_logo_height">72dp</dimen>
+    <dimen name="onboarding_tagline_width">150dp</dimen>
+    <dimen name="onboarding_tagline_offset">34dp</dimen>
+    <dimen name="onboarding_hero_subtitle_size">20sp</dimen>
+    <dimen name="onboarding_hero_subtitle_line_height">26sp</dimen>
+
+    <dimen name="onboarding_feature_top_offset">72dp</dimen>
+    <dimen name="onboarding_feature_bottom_offset">96dp</dimen>
+</resources>

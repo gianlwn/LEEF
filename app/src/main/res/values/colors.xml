@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Brand greens (sampled from the LEEF wireframes) -->
+    <color name="leef_green_900">#FF173D2C</color> <!-- headings -->
+    <color name="leef_green_800">#FF1D4A36</color> <!-- links, selected chips -->
+    <color name="leef_green_700">#FF1B5840</color> <!-- primary buttons -->
+    <color name="leef_green_500">#FF4E9460</color>
+    <color name="leef_green_100">#FFE2ECE4</color> <!-- tonal fills -->
+
+    <!-- Neutrals -->
+    <color name="leef_ink">#FF1B2A22</color>
+    <color name="leef_gray_700">#FF5F6660</color>
+    <color name="leef_gray_600">#FF797A74</color>
+    <color name="leef_gray_500">#FF8E8E88</color>
+    <color name="leef_gray_300">#FFD9D5CC</color>
+    <color name="leef_outline">#FFE4E0D6</color>
+    <color name="leef_field">#FFEFEEE8</color>
+    <color name="leef_surface">#FFFDFCF8</color>
+    <color name="leef_background">#FFFCF8F1</color>
+    <color name="leef_cream">#FFFBF4E3</color>
+    <color name="leef_cream_light">#FFFDF9F0</color>
+
+    <!-- Accents -->
+    <color name="leef_yellow">#FFF4C542</color>
+    <color name="leef_red">#FFEF5350</color>
+    <color name="leef_sky">#FFDDF2FD</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
