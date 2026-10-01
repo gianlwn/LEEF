@@ -17,3 +17,6 @@ local.properties
 
 # TODO
 TODO
+
+# IDE personal preferences
+.idea/markdown.xml
