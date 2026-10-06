@@ -31,6 +31,7 @@
     <string name="art_title_onboarding_discover" translatable="false">Discover illustration</string>
     <string name="art_title_onboarding_register" translatable="false">Register illustration</string>
     <string name="art_title_onboarding_connect" translatable="false">Connect illustration</string>
+    <string name="art_title_verify_email" translatable="false">Email illustration</string>
     <string name="art_title_auth_leaf_top_left" translatable="false">Top-left leaf</string>
     <string name="art_title_auth_leaf_top_right" translatable="false">Top-right leaf</string>
     <string name="art_title_auth_leaf_bottom_right" translatable="false">Bottom-right leaf</string>
@@ -82,4 +83,20 @@
     <string name="auth_error_network">No internet connection. Check your connection and try again.</string>
     <string name="auth_error_profile_not_saved">We couldn\'t finish creating your account. Please try again.</string>
     <string name="auth_error_unknown">Something went wrong. Please try again.</string>
+
+    <!-- Verify Email -->
+    <string name="verify_title">Check your email</string>
+    <string name="verify_sent_to">We sent a verification link to</string>
+    <string name="verify_hint">Open the link in that email, then come back here. Can\'t find it? Check your spam folder.</string>
+    <string name="verify_continue">I\'ve verified my email</string>
+    <string name="verify_checking">Checking…</string>
+    <string name="verify_resend">Resend email</string>
+    <string name="verify_resend_wait">Resend email in %1$s</string>
+    <string name="verify_change_email">Use a different email</string>
+    <string name="verify_done_toast">Email verified. Welcome to LEEF!</string>
+    <string name="verify_status_sent">Verification email sent.</string>
+    <string name="verify_status_not_sent">We couldn\'t send the email yet. Tap Resend email to try again.</string>
+    <string name="verify_status_send_failed">We couldn\'t send the email. Please try again in a moment.</string>
+    <string name="verify_status_not_yet">We haven\'t seen your verification yet. Open the link in your email, then try again.</string>
+    <string name="verify_status_too_many">Too many attempts. Please wait a few minutes and try again.</string>
 </resources>

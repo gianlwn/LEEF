@@ -2,7 +2,6 @@ package com.itismob.s03.group7.leef.auth;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Spannable;
@@ -30,15 +29,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.CircularProgressIndicatorSpec;
-import com.google.android.material.progressindicator.IndeterminateDrawable;
 import com.google.android.material.textfield.TextInputLayout;
-import com.itismob.s03.group7.leef.MainActivity;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.data.AccountRepository;
 import com.itismob.s03.group7.leef.databinding.ActivityCreateAccountBinding;
 import com.itismob.s03.group7.leef.model.UserProfile;
 import com.itismob.s03.group7.leef.model.UserRole;
+import com.itismob.s03.group7.leef.ui.ButtonSpinner;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
 /**
@@ -251,16 +248,9 @@ public class CreateAccountActivity extends AppCompatActivity {
         binding.createButton.setText(loading ? R.string.auth_creating_account : R.string.auth_create_account);
 
         if (loading != spinnerShown) {
-            binding.createButton.setIcon(loading ? createSpinner() : null);
+            binding.createButton.setIcon(loading ? ButtonSpinner.create(this) : null);
             spinnerShown = loading;
         }
-    }
-
-    @NonNull
-    private Drawable createSpinner() {
-        CircularProgressIndicatorSpec spec = new CircularProgressIndicatorSpec(
-                this, null, 0, R.style.Widget_LEEF_CircularProgressIndicator_OnButton);
-        return IndeterminateDrawable.createCircularDrawable(this, spec);
     }
 
     private void handleResult(@Nullable CreateAccountViewModel.Result result) {
@@ -269,19 +259,15 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
         viewModel.resultHandled();
         if (result.profile != null) {
-            onAccountCreated(result.profile);
+            onAccountCreated(result.profile, result.verificationEmailSent);
         } else if (result.failure != null) {
             showFailure(result.failure);
         }
     }
 
-    private void onAccountCreated(@NonNull UserProfile profile) {
-        Toast.makeText(this, getString(R.string.auth_welcome_toast, profile.getFirstName()),
-                Toast.LENGTH_LONG).show();
-        // The home feed is Screen 4; until then MainActivity is the landing page.
-        Intent home = new Intent(this, MainActivity.class);
-        home.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(home);
+    private void onAccountCreated(@NonNull UserProfile profile, boolean verificationEmailSent) {
+        // Next the person confirms their email with the link we just sent.
+        startActivity(VerifyEmailActivity.createIntent(this, verificationEmailSent));
         finish();
     }
 

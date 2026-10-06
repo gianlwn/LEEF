@@ -21,11 +21,15 @@ public class CreateAccountViewModel extends ViewModel {
     static final class Result {
         @Nullable
         final UserProfile profile;
+        /** Only meaningful on success: false if the verification email still has to be resent. */
+        final boolean verificationEmailSent;
         @Nullable
         final AccountRepository.Failure failure;
 
-        private Result(@Nullable UserProfile profile, @Nullable AccountRepository.Failure failure) {
+        private Result(@Nullable UserProfile profile, boolean verificationEmailSent,
+                       @Nullable AccountRepository.Failure failure) {
             this.profile = profile;
+            this.verificationEmailSent = verificationEmailSent;
             this.failure = failure;
         }
     }
@@ -64,15 +68,15 @@ public class CreateAccountViewModel extends ViewModel {
         repository.register(fullName, schoolOrganization, email, role, password,
                 new AccountRepository.RegisterCallback() {
                     @Override
-                    public void onSuccess(@NonNull UserProfile profile) {
+                    public void onSuccess(@NonNull UserProfile profile, boolean verificationEmailSent) {
                         loading.setValue(false);
-                        result.setValue(new Result(profile, null));
+                        result.setValue(new Result(profile, verificationEmailSent, null));
                     }
 
                     @Override
                     public void onFailure(@NonNull AccountRepository.Failure failure) {
                         loading.setValue(false);
-                        result.setValue(new Result(null, failure));
+                        result.setValue(new Result(null, false, failure));
                     }
                 });
     }

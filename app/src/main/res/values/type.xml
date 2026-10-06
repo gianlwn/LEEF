@@ -135,6 +135,12 @@
         <item name="lineHeight">24sp</item>
     </style>
 
+    <style name="TextAppearance.LEEF.Auth.Email" parent="TextAppearance.LEEF.TitleMedium">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/leef_ink</item>
+        <item name="lineHeight">24sp</item>
+    </style>
+
     <style name="TextAppearance.LEEF.Auth.Terms" parent="TextAppearance.LEEF.BodyMedium">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/leef_gray_700</item>
