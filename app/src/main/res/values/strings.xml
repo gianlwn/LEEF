@@ -31,8 +31,54 @@
     <string name="art_title_onboarding_discover" translatable="false">Discover illustration</string>
     <string name="art_title_onboarding_register" translatable="false">Register illustration</string>
     <string name="art_title_onboarding_connect" translatable="false">Connect illustration</string>
+    <string name="art_title_auth_leaf_top_left" translatable="false">Top-left leaf</string>
+    <string name="art_title_auth_leaf_top_right" translatable="false">Top-right leaf</string>
+    <string name="art_title_auth_leaf_bottom_right" translatable="false">Bottom-right leaf</string>
 
-    <!-- Temporary: shown until Screens 2 and 3 are built. -->
-    <string name="todo_create_account">Create Account is the next screen we build.</string>
+    <!-- Temporary: shown until Screen 3 is built. -->
     <string name="todo_log_in">Log In is coming right after Create Account.</string>
+
+    <!-- Account roles (fixed list from the MCO1 scope) -->
+    <string name="role_student">Student</string>
+    <string name="role_teacher">Teacher</string>
+    <string name="role_organizer">Organizer</string>
+    <string name="role_parent">Parent</string>
+    <string name="role_freelancer">Freelancer</string>
+
+    <!-- Create Account -->
+    <string name="auth_create_title">Create Your\nLEEF Account</string>
+    <string name="auth_create_title_a11y">Create Your LEEF Account</string>
+    <string name="auth_create_subtitle">Join a growing community of learners and changemakers across the Philippines.</string>
+    <string name="auth_hint_full_name">Full name</string>
+    <string name="auth_hint_school">School or organization</string>
+    <string name="auth_hint_email">Email address</string>
+    <string name="auth_hint_password">Password</string>
+    <string name="auth_hint_role">I am a…</string>
+    <string name="auth_password_helper">At least 8 characters</string>
+    <string name="auth_terms_agree">I agree to the %1$s and %2$s.</string>
+    <string name="auth_terms_of_service">Terms of Service</string>
+    <string name="auth_privacy_policy">Privacy Policy</string>
+    <string name="auth_legal_placeholder">LEEF is a school project prototype. The full text will be published here before release.</string>
+    <string name="auth_legal_ok">Got it</string>
+    <string name="auth_create_account">Create Account</string>
+    <string name="auth_creating_account">Creating account…</string>
+    <string name="auth_have_account">Already have an account?</string>
+    <string name="auth_log_in">Log In</string>
+    <string name="auth_log_in_a11y">Already have an account? Log In</string>
+    <string name="auth_welcome_toast">Welcome to LEEF, %1$s!</string>
+
+    <string name="auth_error_name_required">Enter your full name</string>
+    <string name="auth_error_name_short">Your name looks too short</string>
+    <string name="auth_error_school_required">Enter your school or organization</string>
+    <string name="auth_error_email_required">Enter your email address</string>
+    <string name="auth_error_email_invalid">Enter a valid email address</string>
+    <string name="auth_error_email_in_use">An account with this email already exists</string>
+    <string name="auth_error_password_required">Create a password</string>
+    <string name="auth_error_password_short">Use at least 8 characters</string>
+    <string name="auth_error_password_weak">Choose a stronger password (at least 8 characters)</string>
+    <string name="auth_error_role_required">Select your role</string>
+    <string name="auth_error_terms_required">Please agree to continue</string>
+    <string name="auth_error_network">No internet connection. Check your connection and try again.</string>
+    <string name="auth_error_profile_not_saved">We couldn\'t finish creating your account. Please try again.</string>
+    <string name="auth_error_unknown">Something went wrong. Please try again.</string>
 </resources>

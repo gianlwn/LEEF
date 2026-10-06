@@ -23,6 +23,7 @@
     <!-- Accents -->
     <color name="leef_yellow">#FFF4C542</color>
     <color name="leef_red">#FFEF5350</color>
+    <color name="leef_error">#FFC53A32</color> <!-- error text and outlines (readable on cream and white) -->
     <color name="leef_sky">#FFDDF2FD</color>
 
     <color name="black">#FF000000</color>

@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Firebase (sign-in and the database) needs the internet. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".LeefApplication"
         android:allowBackup="true"
@@ -25,6 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Screen 2: Create Account. -->
+        <activity
+            android:name=".auth.CreateAccountActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Main app shell; becomes the Home / Event Feed host in Screen 4. -->
         <activity

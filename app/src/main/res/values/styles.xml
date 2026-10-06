@@ -34,4 +34,53 @@
         <item name="android:textColor">@color/leef_green_800</item>
         <item name="rippleColor">@color/leef_green_100</item>
     </style>
+
+    <!-- Rounded white text field with a sand outline (Create Account, Log In). -->
+    <style name="Widget.LEEF.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/leef_input_stroke</item>
+        <item name="boxStrokeErrorColor">@color/leef_error</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxCornerRadiusTopStart">16dp</item>
+        <item name="boxCornerRadiusTopEnd">16dp</item>
+        <item name="boxCornerRadiusBottomStart">16dp</item>
+        <item name="boxCornerRadiusBottomEnd">16dp</item>
+        <item name="hintTextColor">@color/leef_green_700</item>
+        <item name="android:textColorHint">@color/leef_gray_600</item>
+        <item name="startIconTint">@color/leef_gray_600</item>
+        <item name="endIconTint">@color/leef_gray_600</item>
+        <item name="helperTextTextColor">@color/leef_gray_600</item>
+        <item name="errorTextColor">@color/leef_error</item>
+        <item name="errorIconTint">@color/leef_error</item>
+        <item name="errorTextAppearance">@style/TextAppearance.LEEF.Auth.FieldError</item>
+        <item name="helperTextTextAppearance">@style/TextAppearance.LEEF.Auth.FieldHelper</item>
+    </style>
+
+    <!-- Same field, for a read-only list of options. -->
+    <style name="Widget.LEEF.TextInputLayout.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxBackgroundColor">@color/white</item>
+        <item name="boxStrokeColor">@color/leef_input_stroke</item>
+        <item name="boxStrokeErrorColor">@color/leef_error</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxCornerRadiusTopStart">16dp</item>
+        <item name="boxCornerRadiusTopEnd">16dp</item>
+        <item name="boxCornerRadiusBottomStart">16dp</item>
+        <item name="boxCornerRadiusBottomEnd">16dp</item>
+        <item name="hintTextColor">@color/leef_green_700</item>
+        <item name="android:textColorHint">@color/leef_gray_600</item>
+        <item name="startIconTint">@color/leef_gray_600</item>
+        <item name="endIconTint">@color/leef_gray_600</item>
+        <item name="helperTextTextColor">@color/leef_gray_600</item>
+        <item name="errorTextColor">@color/leef_error</item>
+        <item name="errorIconTint">@color/leef_error</item>
+        <item name="errorTextAppearance">@style/TextAppearance.LEEF.Auth.FieldError</item>
+        <item name="helperTextTextAppearance">@style/TextAppearance.LEEF.Auth.FieldHelper</item>
+    </style>
+
+    <!-- White spinner shown inside a filled button while it works. -->
+    <style name="Widget.LEEF.CircularProgressIndicator.OnButton" parent="Widget.Material3.CircularProgressIndicator.ExtraSmall">
+        <item name="indicatorColor">@color/white</item>
+    </style>
 </resources>
