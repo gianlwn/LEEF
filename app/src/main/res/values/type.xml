@@ -120,4 +120,44 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/leef_green_800</item>
     </style>
+
+    <!-- Create Account / Log In -->
+    <style name="TextAppearance.LEEF.Auth.Title" parent="TextAppearance.LEEF.HeadlineLarge">
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">@color/leef_green_900</item>
+        <item name="android:letterSpacing">-0.01</item>
+        <item name="lineHeight">40sp</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Auth.Subtitle" parent="TextAppearance.LEEF.BodyLarge">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/leef_gray_600</item>
+        <item name="lineHeight">24sp</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Auth.Terms" parent="TextAppearance.LEEF.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/leef_gray_700</item>
+        <item name="lineHeight">22sp</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Auth.Prompt" parent="TextAppearance.LEEF.BodyMedium">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/leef_gray_600</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Auth.PromptAction" parent="TextAppearance.LEEF.Auth.Prompt">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_green_800</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Auth.FieldError" parent="TextAppearance.LEEF.BodySmall">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/leef_error</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Auth.FieldHelper" parent="TextAppearance.LEEF.BodySmall">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/leef_gray_600</item>
+    </style>
 </resources>

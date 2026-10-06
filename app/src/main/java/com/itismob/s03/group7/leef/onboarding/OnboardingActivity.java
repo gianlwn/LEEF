@@ -1,5 +1,6 @@
 package com.itismob.s03.group7.leef.onboarding;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.itismob.s03.group7.leef.R;
+import com.itismob.s03.group7.leef.auth.CreateAccountActivity;
 import com.itismob.s03.group7.leef.databinding.ActivityOnboardingBinding;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
@@ -186,8 +188,7 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void openCreateAccount() {
-        // TODO(Screen 2): startActivity(new Intent(this, CreateAccountActivity.class));
-        Toast.makeText(this, R.string.todo_create_account, Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, CreateAccountActivity.class));
     }
 
     private void openLogIn() {
