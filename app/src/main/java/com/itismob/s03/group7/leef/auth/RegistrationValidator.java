@@ -43,6 +43,30 @@ final class RegistrationValidator {
         if (password.isEmpty()) {
             return R.string.auth_error_password_required;
         }
-        return password.length() < MIN_PASSWORD_LENGTH ? R.string.auth_error_password_short : 0;
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            return R.string.auth_error_password_short;
+        }
+        return meetsPasswordPolicy(password) ? 0 : R.string.auth_error_password_rules;
+    }
+
+    /** Password policy: an uppercase letter, a lowercase letter, a number and a symbol. */
+    private static boolean meetsPasswordPolicy(@NonNull String password) {
+        boolean upper = false;
+        boolean lower = false;
+        boolean digit = false;
+        boolean symbol = false;
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (Character.isUpperCase(c)) {
+                upper = true;
+            } else if (Character.isLowerCase(c)) {
+                lower = true;
+            } else if (Character.isDigit(c)) {
+                digit = true;
+            } else if (!Character.isWhitespace(c) && !Character.isLetter(c)) {
+                symbol = true;
+            }
+        }
+        return upper && lower && digit && symbol;
     }
 }

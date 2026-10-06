@@ -54,7 +54,7 @@
     <string name="auth_hint_email">Email address</string>
     <string name="auth_hint_password">Password</string>
     <string name="auth_hint_role">I am a…</string>
-    <string name="auth_password_helper">At least 8 characters</string>
+    <string name="auth_password_helper">8+ characters with upper and lowercase letters, a number and a symbol</string>
     <string name="auth_terms_agree">I agree to the %1$s and %2$s.</string>
     <string name="auth_terms_of_service">Terms of Service</string>
     <string name="auth_privacy_policy">Privacy Policy</string>
@@ -75,7 +75,8 @@
     <string name="auth_error_email_in_use">An account with this email already exists</string>
     <string name="auth_error_password_required">Create a password</string>
     <string name="auth_error_password_short">Use at least 8 characters</string>
-    <string name="auth_error_password_weak">Choose a stronger password (at least 8 characters)</string>
+    <string name="auth_error_password_rules">Include an uppercase letter, a lowercase letter, a number and a symbol</string>
+    <string name="auth_error_password_weak">Choose a stronger password: 8+ characters with upper and lowercase letters, a number and a symbol</string>
     <string name="auth_error_role_required">Select your role</string>
     <string name="auth_error_terms_required">Please agree to continue</string>
     <string name="auth_error_network">No internet connection. Check your connection and try again.</string>
