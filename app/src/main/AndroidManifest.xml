@@ -35,6 +35,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Verify Email: asks new (or unverified) accounts to tap the link in the Firebase email. -->
+        <activity
+            android:name=".auth.VerifyEmailActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Main app shell; becomes the Home / Event Feed host in Screen 4. -->
         <activity
             android:name=".MainActivity"

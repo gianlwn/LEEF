@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.auth.CreateAccountActivity;
+import com.itismob.s03.group7.leef.auth.SessionRouter;
 import com.itismob.s03.group7.leef.databinding.ActivityOnboardingBinding;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
@@ -58,6 +59,13 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Someone who is already signed in skips the welcome pages.
+        Intent resume = SessionRouter.resumeIntent(this);
+        if (resume != null) {
+            startActivity(resume);
+            finish();
+            return;
+        }
         LeefEdgeToEdge.enable(this);
         binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -85,13 +93,18 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        if (binding == null) {
+            return; // Already signed in: this screen handed off to the app in onCreate.
+        }
         // ViewPager2 restores its page after onCreate; sync the controls once it has.
         binding.pager.post(() -> renderControls(binding.pager.getCurrentItem(), false));
     }
 
     @Override
     protected void onDestroy() {
-        binding.pager.unregisterOnPageChangeCallback(pageChangeCallback);
+        if (binding != null) {
+            binding.pager.unregisterOnPageChangeCallback(pageChangeCallback);
+        }
         super.onDestroy();
     }
 
