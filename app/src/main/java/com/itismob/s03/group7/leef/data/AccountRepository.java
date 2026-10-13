@@ -49,6 +49,42 @@ public interface AccountRepository {
         UNKNOWN
     }
 
+    /** Why signing in with a Google account failed. */
+    enum GoogleSignInFailure {
+        /** Another sign-in method already owns this email and can't be merged automatically. */
+        ACCOUNT_EXISTS_WITH_OTHER_METHOD,
+        ACCOUNT_DISABLED,
+        NETWORK,
+        UNKNOWN
+    }
+
+    /** Why a Google user's profile couldn't be saved. */
+    enum ProfileFailure {
+        SIGNED_OUT,
+        NETWORK,
+        UNKNOWN
+    }
+
+    interface GoogleSignInCallback {
+        /** Signed in and the person already has a LEEF profile. */
+        void onSignedIn();
+
+        /**
+         * Signed in, but this Google account has no LEEF profile yet (first time here).
+         *
+         * @param suggestedName the name on the Google account, possibly empty
+         */
+        void onProfileNeeded(@NonNull String uid, @NonNull String suggestedName, @NonNull String email);
+
+        void onFailure(@NonNull GoogleSignInFailure failure);
+    }
+
+    interface SaveProfileCallback {
+        void onSaved(@NonNull UserProfile profile);
+
+        void onFailure(@NonNull ProfileFailure failure);
+    }
+
     interface SignInCallback {
         void onSignedIn(boolean emailVerified);
 
@@ -99,6 +135,27 @@ public interface AccountRepository {
      * address has an account, so success only means "if it exists, a link was sent".
      */
     void sendPasswordReset(@NonNull String email, @NonNull PasswordResetCallback callback);
+
+    /**
+     * Signs in with the ID token that Google's account sheet returned. Google accounts are created
+     * on first use; the callback says whether the person still needs to fill in their profile.
+     */
+    void signInWithGoogle(@NonNull String idToken, @NonNull GoogleSignInCallback callback);
+
+    /**
+     * Saves the profile for the signed-in Google account (name from Google, plus the school and role
+     * the person chose). The email always comes from the account itself.
+     */
+    void saveGoogleProfile(@NonNull String fullName, @NonNull String schoolOrganization,
+                           @NonNull UserRole role, @NonNull SaveProfileCallback callback);
+
+    /** Id of the signed-in account, or null if nobody is signed in. */
+    @Nullable
+    String getSignedInUid();
+
+    /** Display name on the signed-in account (set for Google accounts), or null. */
+    @Nullable
+    String getSignedInDisplayName();
 
     /** Email of the signed-in account, or null if nobody is signed in. */
     @Nullable

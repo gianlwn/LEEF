@@ -42,18 +42,21 @@ import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
  * organization, email, role, password), creates the Firebase account plus the user's profile, and
  * continues into the app.
  */
-public class CreateAccountActivity extends AppCompatActivity {
+public class CreateAccountActivity extends AppCompatActivity implements GoogleSignInController.Host {
 
     private static final String STATE_ROLE = "state_role";
     private static final int SCROLL_MARGIN_DP = 24;
 
     private ActivityCreateAccountBinding binding;
     private CreateAccountViewModel viewModel;
+    private GoogleSignInController google;
     private final UserRole[] roles = UserRole.values();
     @Nullable
     private UserRole selectedRole;
     /** The button starts without a spinner; only touch its icon when loading actually changes. */
     private boolean spinnerShown;
+    private boolean emailLoading;
+    private boolean googleLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +80,19 @@ public class CreateAccountActivity extends AppCompatActivity {
         });
         binding.createButton.setOnClickListener(v -> submit());
         binding.loginRow.setOnClickListener(v -> openLogIn());
+        google = new GoogleSignInController(this, this);
+        binding.googleButton.setOnClickListener(v -> {
+            hideKeyboard();
+            binding.formError.setVisibility(View.GONE);
+            google.start();
+        });
 
         applyWindowInsets();
 
-        viewModel.getLoading().observe(this, this::renderLoading);
+        viewModel.getLoading().observe(this, loading -> {
+            emailLoading = loading;
+            renderBusy();
+        });
         viewModel.getResult().observe(this, this::handleResult);
     }
 
@@ -235,21 +247,36 @@ public class CreateAccountActivity extends AppCompatActivity {
     // State from the ViewModel
     // ---------------------------------------------------------------------------------------
 
-    private void renderLoading(boolean loading) {
-        binding.nameLayout.setEnabled(!loading);
-        binding.schoolLayout.setEnabled(!loading);
-        binding.emailLayout.setEnabled(!loading);
-        binding.passwordLayout.setEnabled(!loading);
-        binding.roleLayout.setEnabled(!loading);
-        binding.termsCheck.setEnabled(!loading);
-        binding.loginRow.setEnabled(!loading);
-        binding.createButton.setEnabled(!loading);
-        binding.createButton.setText(loading ? R.string.auth_creating_account : R.string.auth_create_account);
+    /** Locks the form while either sign-up is running; only the running one shows its progress. */
+    private void renderBusy() {
+        boolean busy = emailLoading || googleLoading;
+        binding.nameLayout.setEnabled(!busy);
+        binding.schoolLayout.setEnabled(!busy);
+        binding.emailLayout.setEnabled(!busy);
+        binding.passwordLayout.setEnabled(!busy);
+        binding.roleLayout.setEnabled(!busy);
+        binding.termsCheck.setEnabled(!busy);
+        binding.loginRow.setEnabled(!busy);
+        binding.createButton.setEnabled(!busy);
+        binding.googleButton.setEnabled(!busy);
+        binding.createButton.setText(emailLoading ? R.string.auth_creating_account : R.string.auth_create_account);
+        binding.googleButton.setText(googleLoading ? R.string.auth_google_connecting : R.string.auth_google_sign_up);
 
-        if (loading != spinnerShown) {
-            binding.createButton.setIcon(loading ? ButtonSpinner.create(this) : null);
-            spinnerShown = loading;
+        if (emailLoading != spinnerShown) {
+            binding.createButton.setIcon(emailLoading ? ButtonSpinner.create(this) : null);
+            spinnerShown = emailLoading;
         }
+    }
+
+    @Override
+    public void onGoogleBusyChanged(boolean busy) {
+        googleLoading = busy;
+        renderBusy();
+    }
+
+    @Override
+    public void onGoogleError(@StringRes int messageRes) {
+        showFormError(messageRes);
     }
 
     private void handleResult(@Nullable CreateAccountViewModel.Result result) {

@@ -7,13 +7,16 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.FirebaseTooManyRequestsException;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.itismob.s03.group7.leef.model.UserProfile;
 import com.itismob.s03.group7.leef.model.UserRole;
 
@@ -95,6 +98,89 @@ public final class FirebaseAccountRepository implements AccountRepository {
     }
 
     @Override
+    public void signInWithGoogle(@NonNull String idToken, @NonNull GoogleSignInCallback callback) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        auth.signInWithCredential(credential)
+                .addOnSuccessListener(result -> {
+                    FirebaseUser user = result.getUser();
+                    if (user == null) {
+                        callback.onFailure(GoogleSignInFailure.UNKNOWN);
+                        return;
+                    }
+                    checkForProfile(user, callback);
+                })
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "signInWithCredential (Google) failed", error);
+                    callback.onFailure(toGoogleFailure(error));
+                });
+    }
+
+    /** A returning person has a profile; a first-timer is sent to fill one in. */
+    private void checkForProfile(@NonNull FirebaseUser user, @NonNull GoogleSignInCallback callback) {
+        firestore.collection(UserProfile.COLLECTION)
+                .document(user.getUid())
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        callback.onSignedIn();
+                    } else {
+                        String name = user.getDisplayName();
+                        String email = user.getEmail();
+                        callback.onProfileNeeded(user.getUid(), name == null ? "" : name.trim(),
+                                email == null ? "" : email);
+                    }
+                })
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "Looking up the Google user's profile failed", error);
+                    // Start clean so the person can simply try again.
+                    auth.signOut();
+                    boolean offline = error instanceof FirebaseFirestoreException
+                            && ((FirebaseFirestoreException) error).getCode()
+                            == FirebaseFirestoreException.Code.UNAVAILABLE;
+                    callback.onFailure(offline ? GoogleSignInFailure.NETWORK : GoogleSignInFailure.UNKNOWN);
+                });
+    }
+
+    @Override
+    public void saveGoogleProfile(@NonNull String fullName, @NonNull String schoolOrganization,
+                                  @NonNull UserRole role, @NonNull SaveProfileCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+        String email = user == null ? null : user.getEmail();
+        if (user == null || email == null) {
+            callback.onFailure(ProfileFailure.SIGNED_OUT);
+            return;
+        }
+        UserProfile profile = new UserProfile(user.getUid(), fullName, schoolOrganization,
+                email.toLowerCase(java.util.Locale.ROOT), role);
+        firestore.collection(UserProfile.COLLECTION)
+                .document(profile.getUid())
+                .set(profile.toNewDocument())
+                .addOnSuccessListener(unused -> callback.onSaved(profile))
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "Saving the Google user's profile failed", error);
+                    boolean offline = error instanceof FirebaseFirestoreException
+                            && ((FirebaseFirestoreException) error).getCode()
+                            == FirebaseFirestoreException.Code.UNAVAILABLE;
+                    callback.onFailure(offline ? ProfileFailure.NETWORK : ProfileFailure.UNKNOWN);
+                });
+    }
+
+    @NonNull
+    private static GoogleSignInFailure toGoogleFailure(@NonNull Exception error) {
+        if (error instanceof FirebaseAuthUserCollisionException) {
+            return GoogleSignInFailure.ACCOUNT_EXISTS_WITH_OTHER_METHOD;
+        }
+        if (error instanceof FirebaseAuthInvalidUserException) {
+            return "ERROR_USER_DISABLED".equals(((FirebaseAuthInvalidUserException) error).getErrorCode())
+                    ? GoogleSignInFailure.ACCOUNT_DISABLED : GoogleSignInFailure.UNKNOWN;
+        }
+        if (error instanceof FirebaseNetworkException) {
+            return GoogleSignInFailure.NETWORK;
+        }
+        return GoogleSignInFailure.UNKNOWN;
+    }
+
+    @Override
     public void sendPasswordReset(@NonNull String email, @NonNull PasswordResetCallback callback) {
         auth.sendPasswordResetEmail(email)
                 .addOnSuccessListener(unused -> callback.onSent())
@@ -139,6 +225,20 @@ public final class FirebaseAccountRepository implements AccountRepository {
             return PasswordResetFailure.TOO_MANY_REQUESTS;
         }
         return PasswordResetFailure.UNKNOWN;
+    }
+
+    @Nullable
+    @Override
+    public String getSignedInUid() {
+        FirebaseUser user = auth.getCurrentUser();
+        return user == null ? null : user.getUid();
+    }
+
+    @Nullable
+    @Override
+    public String getSignedInDisplayName() {
+        FirebaseUser user = auth.getCurrentUser();
+        return user == null ? null : user.getDisplayName();
     }
 
     @Nullable

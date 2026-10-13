@@ -47,6 +47,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- First Google sign-in: asks for the school/organization and role that Google doesn't provide. -->
+        <activity
+            android:name=".auth.CompleteProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Main app shell; becomes the Home / Event Feed host in Screen 4. -->
         <activity
             android:name=".MainActivity"

@@ -12,7 +12,20 @@
           "package_name": "com.itismob.s03.group7.leef"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "374273010741-2cbc8jgride90t5kohddge42va04e6s0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itismob.s03.group7.leef",
+            "certificate_hash": "b4c4f869b0c247fe6daf50ce57f23a7808aede7b"
+          }
+        },
+        {
+          "client_id": "374273010741-040lvai25btduucijavr64s0qhoo4sr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA5ydm8t_PdcsWUn5fG-glogpgFf-65aPk"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374273010741-040lvai25btduucijavr64s0qhoo4sr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

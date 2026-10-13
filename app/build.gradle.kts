@@ -51,6 +51,12 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
 
+    // "Continue with Google": Credential Manager shows Google's account sheet and returns an ID token
+    // that Firebase Authentication exchanges for a LEEF sign-in. Free on the Spark plan.
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

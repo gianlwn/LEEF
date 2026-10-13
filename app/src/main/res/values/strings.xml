@@ -121,4 +121,25 @@
     <string name="login_error_invalid">Incorrect email or password. Please try again.</string>
     <string name="login_error_disabled">This account has been disabled.</string>
     <string name="login_error_too_many">Too many attempts. Please wait a few minutes and try again.</string>
+
+    <!-- Continue with Google (Log In, Create Account) -->
+    <string name="auth_or_continue_with">or continue with</string>
+    <string name="auth_or_sign_up_with">or sign up with</string>
+    <string name="auth_google_continue">Continue with Google</string>
+    <string name="auth_google_sign_up">Sign up with Google</string>
+    <string name="auth_google_connecting">Connecting to Google…</string>
+    <string name="auth_google_error_no_account">No Google account found on this phone. Add one in Settings, then try again.</string>
+    <string name="auth_google_error_not_configured">Google sign-in isn\'t set up for this build yet.</string>
+    <string name="auth_google_error_exists">An account with this email already exists. Log in with your password instead.</string>
+    <string name="auth_google_error_failed">We couldn\'t sign you in with Google. Please try again.</string>
+
+    <!-- Finish your profile (first Google sign-in) -->
+    <string name="profile_title">One last step</string>
+    <string name="profile_subtitle">Hi, %1$s! Tell us a little about you to finish setting up your account.</string>
+    <string name="profile_subtitle_no_name">Tell us a little about you to finish setting up your account.</string>
+    <string name="profile_signed_in_as">Signed in with Google as %1$s</string>
+    <string name="profile_continue">Continue</string>
+    <string name="profile_saving">Saving…</string>
+    <string name="profile_switch_account">Use a different account</string>
+    <string name="profile_error_signed_out">You\'re signed out. Please log in again.</string>
 </resources>

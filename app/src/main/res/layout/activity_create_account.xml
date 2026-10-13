@@ -223,6 +223,45 @@
                     android:text="@string/auth_create_account"
                     app:iconGravity="textStart" />
 
+                <!-- "or continue with" divider and the Google button. -->
+                <LinearLayout
+                    android:id="@+id/googleDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/leef_gray_300" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="@string/auth_or_sign_up_with"
+                        android:textAppearance="@style/TextAppearance.LEEF.Auth.Prompt" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1"
+                        android:background="@color/leef_gray_300" />
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/googleButton"
+                    style="@style/Widget.LEEF.Button.Google"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/auth_google_sign_up"
+                    app:icon="@drawable/ic_google_g" />
+
                 <LinearLayout
                     android:id="@+id/loginRow"
                     android:layout_width="wrap_content"

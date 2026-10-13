@@ -33,14 +33,17 @@ import java.util.Locale;
  * Screen 3 - Log In. Email and password sign-in through Firebase Authentication, a free
  * "Forgot password?" email, and a hand-off to the app (or to Verify Email for unverified accounts).
  */
-public class LogInActivity extends AppCompatActivity {
+public class LogInActivity extends AppCompatActivity implements GoogleSignInController.Host {
 
     private static final int SCROLL_MARGIN_DP = 24;
 
     private ActivityLogInBinding binding;
     private LogInViewModel viewModel;
+    private GoogleSignInController google;
     /** The button starts without a spinner; only touch its icon when loading actually changes. */
     private boolean spinnerShown;
+    private boolean emailLoading;
+    private boolean googleLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +67,15 @@ public class LogInActivity extends AppCompatActivity {
         binding.logInButton.setOnClickListener(v -> submit());
         binding.forgotButton.setOnClickListener(v -> startPasswordReset());
         binding.signUpRow.setOnClickListener(v -> openCreateAccount());
+        google = new GoogleSignInController(this, this);
+        binding.googleButton.setOnClickListener(v -> startGoogleSignIn());
 
         applyWindowInsets();
 
-        viewModel.getLoading().observe(this, this::renderLoading);
+        viewModel.getLoading().observe(this, loading -> {
+            emailLoading = loading;
+            renderBusy();
+        });
         viewModel.getResult().observe(this, this::handleResult);
     }
 
@@ -142,6 +150,23 @@ public class LogInActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void startGoogleSignIn() {
+        hideKeyboard();
+        binding.statusText.setVisibility(View.GONE);
+        google.start();
+    }
+
+    @Override
+    public void onGoogleBusyChanged(boolean busy) {
+        googleLoading = busy;
+        renderBusy();
+    }
+
+    @Override
+    public void onGoogleError(@StringRes int messageRes) {
+        showStatus(messageRes, true, null);
+    }
+
     private void openCreateAccount() {
         startActivity(new Intent(this, CreateAccountActivity.class));
         finish();
@@ -151,17 +176,21 @@ public class LogInActivity extends AppCompatActivity {
     // State from the ViewModel
     // ---------------------------------------------------------------------------------------
 
-    private void renderLoading(boolean loading) {
-        binding.emailLayout.setEnabled(!loading);
-        binding.passwordLayout.setEnabled(!loading);
-        binding.forgotButton.setEnabled(!loading);
-        binding.signUpRow.setEnabled(!loading);
-        binding.logInButton.setEnabled(!loading);
-        binding.logInButton.setText(loading ? R.string.login_logging_in : R.string.auth_log_in);
+    /** Locks the screen while either sign-in is running; only the running one shows its progress. */
+    private void renderBusy() {
+        boolean busy = emailLoading || googleLoading;
+        binding.emailLayout.setEnabled(!busy);
+        binding.passwordLayout.setEnabled(!busy);
+        binding.forgotButton.setEnabled(!busy);
+        binding.signUpRow.setEnabled(!busy);
+        binding.logInButton.setEnabled(!busy);
+        binding.googleButton.setEnabled(!busy);
+        binding.logInButton.setText(emailLoading ? R.string.login_logging_in : R.string.auth_log_in);
+        binding.googleButton.setText(googleLoading ? R.string.auth_google_connecting : R.string.auth_google_continue);
 
-        if (loading != spinnerShown) {
-            binding.logInButton.setIcon(loading ? ButtonSpinner.create(this) : null);
-            spinnerShown = loading;
+        if (emailLoading != spinnerShown) {
+            binding.logInButton.setIcon(emailLoading ? ButtonSpinner.create(this) : null);
+            spinnerShown = emailLoading;
         }
     }
 

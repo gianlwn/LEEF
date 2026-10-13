@@ -18,13 +18,17 @@ public final class SessionRouter {
 
     /**
      * Where a signed-in person belongs: the app once their email is verified, otherwise the verify
-     * screen. Returns null when nobody is signed in (show onboarding).
+     * screen (or the profile step for a new Google account). Returns null when nobody is signed in (show onboarding).
      */
     @Nullable
     public static Intent resumeIntent(@NonNull Context context) {
         AccountRepository accounts = new FirebaseAccountRepository();
         if (!accounts.isSignedIn()) {
             return null;
+        }
+        // A Google account that never finished its profile goes back to that step.
+        if (PendingProfileStore.isPendingFor(context, accounts.getSignedInUid())) {
+            return CompleteProfileActivity.createResumeIntent(context);
         }
         return accounts.isSignedInAndVerified()
                 ? homeIntent(context)

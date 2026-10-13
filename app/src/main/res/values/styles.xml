@@ -35,6 +35,24 @@
         <item name="rippleColor">@color/leef_green_100</item>
     </style>
 
+    <!-- White outlined pill for "Continue with Google"; the Google logo keeps its own colours. -->
+    <style name="Widget.LEEF.Button.Google" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">56dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.LEEF.Button</item>
+        <item name="android:textColor">@color/leef_ink</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.LEEF.Pill</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="strokeColor">@color/leef_gray_300</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="rippleColor">@color/leef_green_100</item>
+        <item name="iconTint">@null</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">12dp</item>
+        <item name="iconSize">22dp</item>
+    </style>
+
     <!-- Rounded white text field with a sand outline (Create Account, Log In). -->
     <style name="Widget.LEEF.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="boxBackgroundColor">@color/white</item>
