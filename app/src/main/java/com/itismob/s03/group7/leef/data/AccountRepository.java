@@ -31,6 +31,36 @@ public interface AccountRepository {
         UNKNOWN
     }
 
+    /** Why signing in failed. */
+    enum SignInFailure {
+        /** Wrong email or password (deliberately not distinguished, so emails can't be probed). */
+        INVALID_CREDENTIALS,
+        ACCOUNT_DISABLED,
+        NETWORK,
+        TOO_MANY_REQUESTS,
+        UNKNOWN
+    }
+
+    /** Why a password-reset email couldn't be sent. */
+    enum PasswordResetFailure {
+        INVALID_EMAIL,
+        NETWORK,
+        TOO_MANY_REQUESTS,
+        UNKNOWN
+    }
+
+    interface SignInCallback {
+        void onSignedIn(boolean emailVerified);
+
+        void onFailure(@NonNull SignInFailure failure);
+    }
+
+    interface PasswordResetCallback {
+        void onSent();
+
+        void onFailure(@NonNull PasswordResetFailure failure);
+    }
+
     interface RegisterCallback {
         /**
          * @param verificationEmailSent false if the account was created but the verification email
@@ -60,6 +90,15 @@ public interface AccountRepository {
      */
     void register(@NonNull String fullName, @NonNull String schoolOrganization, @NonNull String email,
                   @NonNull UserRole role, @NonNull String password, @NonNull RegisterCallback callback);
+
+    /** Signs in with an email and password; reports whether the email has been verified. */
+    void signIn(@NonNull String email, @NonNull String password, @NonNull SignInCallback callback);
+
+    /**
+     * Emails a password-reset link (free Firebase email). Firebase doesn't reveal whether the
+     * address has an account, so success only means "if it exists, a link was sent".
+     */
+    void sendPasswordReset(@NonNull String email, @NonNull PasswordResetCallback callback);
 
     /** Email of the signed-in account, or null if nobody is signed in. */
     @Nullable

@@ -9,6 +9,7 @@ import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
@@ -74,6 +75,70 @@ public final class FirebaseAccountRepository implements AccountRepository {
             }
             callback.onSuccess(profile, task.isSuccessful());
         });
+    }
+
+    @Override
+    public void signIn(@NonNull String email, @NonNull String password, @NonNull SignInCallback callback) {
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener(result -> {
+                    FirebaseUser user = result.getUser();
+                    if (user == null) {
+                        callback.onFailure(SignInFailure.UNKNOWN);
+                        return;
+                    }
+                    callback.onSignedIn(user.isEmailVerified());
+                })
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "signInWithEmailAndPassword failed", error);
+                    callback.onFailure(toSignInFailure(error));
+                });
+    }
+
+    @Override
+    public void sendPasswordReset(@NonNull String email, @NonNull PasswordResetCallback callback) {
+        auth.sendPasswordResetEmail(email)
+                .addOnSuccessListener(unused -> callback.onSent())
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "sendPasswordResetEmail failed", error);
+                    callback.onFailure(toPasswordResetFailure(error));
+                });
+    }
+
+    @NonNull
+    private static SignInFailure toSignInFailure(@NonNull Exception error) {
+        if (error instanceof FirebaseAuthInvalidUserException) {
+            String code = ((FirebaseAuthInvalidUserException) error).getErrorCode();
+            return "ERROR_USER_DISABLED".equals(code)
+                    ? SignInFailure.ACCOUNT_DISABLED : SignInFailure.INVALID_CREDENTIALS;
+        }
+        if (error instanceof FirebaseAuthInvalidCredentialsException) {
+            return SignInFailure.INVALID_CREDENTIALS;
+        }
+        if (error instanceof FirebaseNetworkException) {
+            return SignInFailure.NETWORK;
+        }
+        if (error instanceof FirebaseTooManyRequestsException) {
+            return SignInFailure.TOO_MANY_REQUESTS;
+        }
+        return SignInFailure.UNKNOWN;
+    }
+
+    @NonNull
+    private static PasswordResetFailure toPasswordResetFailure(@NonNull Exception error) {
+        if (error instanceof FirebaseAuthInvalidCredentialsException) {
+            return PasswordResetFailure.INVALID_EMAIL;
+        }
+        // An unknown address is reported as success by Firebase; a disabled one is treated the same.
+        if (error instanceof FirebaseAuthInvalidUserException) {
+            return PasswordResetFailure.INVALID_EMAIL;
+        }
+        if (error instanceof FirebaseNetworkException) {
+            return PasswordResetFailure.NETWORK;
+        }
+        if (error instanceof FirebaseTooManyRequestsException) {
+            return PasswordResetFailure.TOO_MANY_REQUESTS;
+        }
+        return PasswordResetFailure.UNKNOWN;
     }
 
     @Nullable

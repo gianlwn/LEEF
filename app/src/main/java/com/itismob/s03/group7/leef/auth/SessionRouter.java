@@ -28,7 +28,7 @@ public final class SessionRouter {
         }
         return accounts.isSignedInAndVerified()
                 ? homeIntent(context)
-                : VerifyEmailActivity.createIntent(context, false);
+                : VerifyEmailActivity.createResumeIntent(context);
     }
 
     /** The main app, as a fresh task so Back leaves the app instead of returning to sign-up screens. */

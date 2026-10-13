@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -16,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.auth.CreateAccountActivity;
+import com.itismob.s03.group7.leef.auth.LogInActivity;
 import com.itismob.s03.group7.leef.auth.SessionRouter;
 import com.itismob.s03.group7.leef.databinding.ActivityOnboardingBinding;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
@@ -205,7 +205,6 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void openLogIn() {
-        // TODO(Screen 3): startActivity(new Intent(this, LogInActivity.class));
-        Toast.makeText(this, R.string.todo_log_in, Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, LogInActivity.class));
     }
 }

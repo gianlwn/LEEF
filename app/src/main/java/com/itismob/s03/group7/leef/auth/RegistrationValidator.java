@@ -49,6 +49,12 @@ final class RegistrationValidator {
         return meetsPasswordPolicy(password) ? 0 : R.string.auth_error_password_rules;
     }
 
+    /** Logging in only needs a password to be typed; the policy applies when one is created. */
+    @StringRes
+    static int validateLoginPassword(@NonNull String password) {
+        return password.isEmpty() ? R.string.login_error_password_required : 0;
+    }
+
     /** Password policy: an uppercase letter, a lowercase letter, a number and a symbol. */
     private static boolean meetsPasswordPolicy(@NonNull String password) {
         boolean upper = false;

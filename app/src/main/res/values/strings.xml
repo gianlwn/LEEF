@@ -31,13 +31,13 @@
     <string name="art_title_onboarding_discover" translatable="false">Discover illustration</string>
     <string name="art_title_onboarding_register" translatable="false">Register illustration</string>
     <string name="art_title_onboarding_connect" translatable="false">Connect illustration</string>
+    <string name="art_title_login_corner" translatable="false">Tree and sun</string>
+    <string name="art_title_login_scene" translatable="false">Books and plants</string>
     <string name="art_title_verify_email" translatable="false">Email illustration</string>
     <string name="art_title_auth_leaf_top_left" translatable="false">Top-left leaf</string>
     <string name="art_title_auth_leaf_top_right" translatable="false">Top-right leaf</string>
     <string name="art_title_auth_leaf_bottom_right" translatable="false">Bottom-right leaf</string>
 
-    <!-- Temporary: shown until Screen 3 is built. -->
-    <string name="todo_log_in">Log In is coming right after Create Account.</string>
 
     <!-- Account roles (fixed list from the MCO1 scope) -->
     <string name="role_student">Student</string>
@@ -99,4 +99,26 @@
     <string name="verify_status_send_failed">We couldn\'t send the email. Please try again in a moment.</string>
     <string name="verify_status_not_yet">We haven\'t seen your verification yet. Open the link in your email, then try again.</string>
     <string name="verify_status_too_many">Too many attempts. Please wait a few minutes and try again.</string>
+
+    <!-- Log In -->
+    <string name="login_title">Welcome Back!</string>
+    <string name="login_subtitle">Log in to discover and join educational events near you.</string>
+    <string name="login_forgot_password">Forgot password?</string>
+    <string name="login_logging_in">Logging in…</string>
+    <string name="login_no_account">Don\'t have an account?</string>
+    <string name="login_sign_up">Sign Up</string>
+    <string name="login_sign_up_a11y">Don\'t have an account? Sign Up</string>
+    <string name="login_welcome_toast">Welcome back!</string>
+
+    <string name="login_reset_title">Reset your password?</string>
+    <string name="login_reset_message">We\'ll email a link to %1$s so you can choose a new password.</string>
+    <string name="login_reset_send">Send link</string>
+    <string name="login_reset_cancel">Cancel</string>
+    <string name="login_reset_sent">If an account exists for %1$s, we\'ve sent a link to reset the password. Check your spam folder too.</string>
+
+    <string name="login_error_password_required">Enter your password</string>
+    <string name="login_error_reset_needs_email">Enter your email above, then tap Forgot password</string>
+    <string name="login_error_invalid">Incorrect email or password. Please try again.</string>
+    <string name="login_error_disabled">This account has been disabled.</string>
+    <string name="login_error_too_many">Too many attempts. Please wait a few minutes and try again.</string>
 </resources>

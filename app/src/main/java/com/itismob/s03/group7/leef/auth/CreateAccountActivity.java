@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -309,8 +308,8 @@ public class CreateAccountActivity extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------
 
     private void openLogIn() {
-        // TODO(Screen 3): startActivity(new Intent(this, LogInActivity.class)); finish();
-        Toast.makeText(this, R.string.todo_log_in, Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, LogInActivity.class));
+        finish();
     }
 
     private void showLegalDialog(@NonNull String title) {

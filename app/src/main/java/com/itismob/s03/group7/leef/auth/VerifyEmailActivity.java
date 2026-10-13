@@ -51,11 +51,21 @@ public class VerifyEmailActivity extends AppCompatActivity {
         }
     };
 
-    /** Opens this screen as a fresh task so Back leaves the app instead of returning to sign-up. */
+    /**
+     * Opens this screen right after sign-up, as a fresh task so Back leaves the app instead of
+     * returning to sign-up. If the first email couldn't be sent, the screen says so.
+     */
     @NonNull
     public static Intent createIntent(@NonNull Context context, boolean verificationEmailSent) {
-        Intent intent = new Intent(context, VerifyEmailActivity.class);
+        Intent intent = createResumeIntent(context);
         intent.putExtra(EXTRA_EMAIL_SENT, verificationEmailSent);
+        return intent;
+    }
+
+    /** Opens this screen for someone who is already signed in but hasn't verified yet. */
+    @NonNull
+    public static Intent createResumeIntent(@NonNull Context context) {
+        Intent intent = new Intent(context, VerifyEmailActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return intent;
     }
@@ -80,7 +90,8 @@ public class VerifyEmailActivity extends AppCompatActivity {
 
         boolean emailSent = getIntent().getBooleanExtra(EXTRA_EMAIL_SENT, false);
         viewModel.start(emailSent);
-        if (savedInstanceState == null && !emailSent) {
+        boolean fromSignUp = getIntent().hasExtra(EXTRA_EMAIL_SENT);
+        if (savedInstanceState == null && fromSignUp && !emailSent) {
             showStatus(R.string.verify_status_not_sent, true);
         }
 

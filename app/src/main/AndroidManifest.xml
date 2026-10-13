@@ -35,6 +35,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Screen 3: Log In. -->
+        <activity
+            android:name=".auth.LogInActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Verify Email: asks new (or unverified) accounts to tap the link in the Firebase email. -->
         <activity
             android:name=".auth.VerifyEmailActivity"
