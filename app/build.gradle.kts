@@ -45,6 +45,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.recyclerview)
     implementation(libs.viewpager2)
+    implementation(libs.swiperefreshlayout)
+
+    // Loads event photos from their web addresses (the photos themselves are database records).
+    implementation(libs.glide)
 
     // Firebase: the BoM keeps every Firebase library on matching versions.
     implementation(platform(libs.firebase.bom))

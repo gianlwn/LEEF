@@ -142,4 +142,65 @@
     <string name="profile_saving">Saving…</string>
     <string name="profile_switch_account">Use a different account</string>
     <string name="profile_error_signed_out">You\'re signed out. Please log in again.</string>
+    <!-- Artwork placeholder titles for Home -->
+    <string name="art_title_event_cover_default" translatable="false">Default event cover</string>
+    <string name="art_title_home_empty" translatable="false">No events illustration</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_my_events">My Events</string>
+    <string name="nav_messages">Messages</string>
+    <string name="nav_profile">Profile</string>
+
+    <!-- Screens that aren't built yet -->
+    <string name="coming_soon_format">%1$s is coming soon.</string>
+    <string name="feature_search">Search</string>
+    <string name="feature_event_details">Event details</string>
+    <string name="feature_notifications">Notifications</string>
+    <string name="feature_profile">Your profile</string>
+    <string name="feature_explore">Explore</string>
+    <string name="feature_my_events">My Events</string>
+    <string name="feature_messages">Messages</string>
+
+    <!-- Home / Event Feed -->
+    <string name="home_greeting_morning">Good morning,</string>
+    <string name="home_greeting_afternoon">Good afternoon,</string>
+    <string name="home_greeting_evening">Good evening,</string>
+    <string name="home_name_format">%1$s!</string>
+    <string name="home_name_unknown">Welcome!</string>
+    <string name="home_avatar_a11y">Your profile</string>
+    <string name="home_notifications_a11y">Notifications</string>
+    <string name="home_search_hint">Search events, topics, or location…</string>
+    <string name="home_featured_title">Featured Events</string>
+    <string name="home_upcoming_title">Upcoming Events</string>
+    <string name="home_see_all">See all</string>
+    <string name="home_empty_title">No events yet</string>
+    <string name="home_empty_body">New seminars, workshops and competitions from schools and organizers will show up here.</string>
+    <string name="home_empty_filter_title">No %1$s right now</string>
+    <string name="home_empty_filter_body">Try another category, or check back soon.</string>
+    <string name="home_error_network">You seem to be offline. Check your connection and try again.</string>
+    <string name="home_error_generic">We couldn\'t load events right now. Please try again.</string>
+    <string name="home_loading_a11y">Loading events</string>
+    <string name="home_retry">Try again</string>
+    <string name="home_refresh_failed">Couldn\'t refresh. Showing what we had.</string>
+    <string name="home_save_failed">Couldn\'t save that event. Please try again.</string>
+    <string name="home_unsave_failed">Couldn\'t remove that event. Please try again.</string>
+
+    <!-- Categories (fixed list from the MCO1 scope) -->
+    <string name="category_all">All</string>
+    <string name="category_seminars">Seminars</string>
+    <string name="category_workshops">Workshops</string>
+    <string name="category_competitions">Competitions</string>
+    <string name="category_school_activities">School</string>
+    <string name="category_badge_seminar">Seminar</string>
+    <string name="category_badge_workshop">Workshop</string>
+    <string name="category_badge_competition">Competition</string>
+    <string name="category_badge_school_activity">School activity</string>
+
+    <!-- Event cards -->
+    <string name="event_price_free">Free</string>
+    <string name="event_price_format">₱%1$s</string>
+    <string name="event_save_a11y">Save %1$s</string>
+    <string name="event_unsave_a11y">Remove %1$s from saved events</string>
 </resources>

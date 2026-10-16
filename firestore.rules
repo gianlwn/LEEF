@@ -26,6 +26,22 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Screen 4: events anyone signed in can browse. Nobody can write events from the app yet;
+    // until Create/Post Event (Screen 11) exists, add test events in the Firebase console.
+    match /events/{eventId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Screen 4: the hearts. Each person keeps their own saved events at users/{uid}/savedEvents/{eventId}.
+    match /users/{userId}/savedEvents/{eventId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasOnly(['savedAt']);
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
     // Everything else stays locked until the screen that needs it is built.
     match /{document=**} {
       allow read, write: if false;

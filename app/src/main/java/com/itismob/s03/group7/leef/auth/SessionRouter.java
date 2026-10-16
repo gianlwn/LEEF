@@ -35,6 +35,16 @@ public final class SessionRouter {
                 : VerifyEmailActivity.createResumeIntent(context);
     }
 
+    /**
+     * For a signed-in account whose LEEF profile turned out to be missing (a Google sign-in that
+     * stopped part-way): remembers that and returns the intent that opens the profile step.
+     */
+    @NonNull
+    public static Intent profileMissingIntent(@NonNull Context context, @NonNull String uid) {
+        PendingProfileStore.markPending(context, uid);
+        return CompleteProfileActivity.createResumeIntent(context);
+    }
+
     /** The main app, as a fresh task so Back leaves the app instead of returning to sign-up screens. */
     @NonNull
     public static Intent homeIntent(@NonNull Context context) {

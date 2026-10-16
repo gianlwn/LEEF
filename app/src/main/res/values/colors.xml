@@ -26,6 +26,20 @@
     <color name="leef_error">#FFC53A32</color> <!-- error text and outlines (readable on cream and white) -->
     <color name="leef_sky">#FFDDF2FD</color>
 
+    <!-- Event categories: pastel chip fill, chip icon colour, solid badge colour -->
+    <color name="leef_cat_seminar_bg">#FFF8E3DF</color>
+    <color name="leef_cat_seminar_icon">#FF2F5D8A</color>
+    <color name="leef_cat_seminar_badge">#FF1E88E5</color>
+    <color name="leef_cat_workshop_bg">#FFDDEEE3</color>
+    <color name="leef_cat_workshop_icon">#FF1B5840</color>
+    <color name="leef_cat_workshop_badge">#FF2E7D5B</color>
+    <color name="leef_cat_competition_bg">#FFFCEFC7</color>
+    <color name="leef_cat_competition_icon">#FFB7791F</color>
+    <color name="leef_cat_competition_badge">#FFB26A00</color>
+    <color name="leef_cat_school_bg">#FFE9E4F7</color>
+    <color name="leef_cat_school_icon">#FF5B4B9E</color>
+    <color name="leef_cat_school_badge">#FF6A56B8</color>
+
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>
