@@ -11,11 +11,11 @@ import com.itismob.s03.group7.leef.databinding.ItemEventRowBinding;
 import com.itismob.s03.group7.leef.model.Event;
 
 /** The compact event cards in the Upcoming Events list. */
-final class EventRowAdapter extends ListAdapter<EventItem, EventRowAdapter.Holder> {
+public final class EventRowAdapter extends ListAdapter<EventItem, EventRowAdapter.Holder> {
 
     private final EventActions actions;
 
-    EventRowAdapter(@NonNull EventActions actions) {
+    public EventRowAdapter(@NonNull EventActions actions) {
         super(new EventItemDiff());
         this.actions = actions;
     }

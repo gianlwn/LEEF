@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Screen 5 - the Filters bottom sheet: category, date range, location, audience and price. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sheetRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_sheet_grabber" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingTop="6dp"
+        android:paddingEnd="12dp">
+
+        <TextView
+            android:id="@+id/sheetTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/filters_title"
+            android:textAppearance="@style/TextAppearance.LEEF.Home.Name" />
+
+        <TextView
+            android:id="@+id/clearAll"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/filters_clear_all"
+            android:textAppearance="@style/TextAppearance.LEEF.Home.SeeAll" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/categoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/filters_category"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.SectionTitle" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/categoryGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:chipSpacingHorizontal="10dp"
+                app:chipSpacingVertical="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true" />
+
+            <TextView
+                android:id="@+id/dateTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/filters_date_range"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.SectionTitle" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/fromField"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_filter_field"
+                    android:clickable="true"
+                    android:contentDescription="@string/filters_from_a11y"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp">
+
+                    <TextView
+                        android:id="@+id/fromText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/filters_from"
+                        android:textAppearance="@style/TextAppearance.LEEF.Home.Hint" />
+
+                    <ImageView
+                        android:id="@+id/fromIcon"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="11dp"
+                        android:src="@drawable/ic_event_date"
+                        app:tint="@color/leef_ink" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/toField"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_filter_field"
+                    android:clickable="true"
+                    android:contentDescription="@string/filters_to_a11y"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="4dp">
+
+                    <TextView
+                        android:id="@+id/toText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/filters_to"
+                        android:textAppearance="@style/TextAppearance.LEEF.Home.Hint" />
+
+                    <ImageView
+                        android:id="@+id/toIcon"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="11dp"
+                        android:src="@drawable/ic_event_date"
+                        app:tint="@color/leef_ink" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/locationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/filters_location"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.SectionTitle" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_filter_field"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_event_pin"
+                    app:tint="@color/leef_ink" />
+
+                <EditText
+                    android:id="@+id/locationField"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/filters_location_hint"
+                    android:imeOptions="actionDone"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textAppearance="@style/TextAppearance.LEEF.Search.FieldText"
+                    android:textColorHint="@color/leef_gray_600" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/filters_audience"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.SectionTitle" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/audienceGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:chipSpacingHorizontal="10dp"
+                app:chipSpacingVertical="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/filters_price"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.SectionTitle" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/priceGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:chipSpacingHorizontal="10dp"
+                app:chipSpacingVertical="8dp"
+                app:selectionRequired="true"
+                app:singleSelection="true" />
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/showButton"
+        style="@style/Widget.LEEF.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/filters_show_generic"
+        tools:text="Show 128 Events" />
+</LinearLayout>

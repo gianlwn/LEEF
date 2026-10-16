@@ -58,6 +58,13 @@
             android:name=".MainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Screen 5: Search & Filter Events. -->
+        <activity
+            android:name=".search.SearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

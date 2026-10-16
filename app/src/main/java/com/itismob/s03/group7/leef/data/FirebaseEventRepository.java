@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
 
 import java.util.ArrayList;
@@ -144,6 +145,7 @@ public final class FirebaseEventRepository implements EventRepository {
         }
         Timestamp endsAt = document.getTimestamp(Event.FIELD_ENDS_AT);
         String venue = document.getString(Event.FIELD_VENUE);
+        String city = document.getString(Event.FIELD_CITY);
         String organizerName = document.getString(Event.FIELD_ORGANIZER_NAME);
         Double price = document.getDouble(Event.FIELD_PRICE);
         Boolean boosted = document.getBoolean(Event.FIELD_BOOSTED);
@@ -157,6 +159,16 @@ public final class FirebaseEventRepository implements EventRepository {
                 }
             }
         }
+        List<EventAudience> audiences = new ArrayList<>();
+        Object rawAudiences = document.get(Event.FIELD_AUDIENCES);
+        if (rawAudiences instanceof List) {
+            for (Object value : (List<?>) rawAudiences) {
+                EventAudience audience = value instanceof String ? EventAudience.fromValue((String) value) : null;
+                if (audience != null && !audiences.contains(audience)) {
+                    audiences.add(audience);
+                }
+            }
+        }
         String coverUrl = document.getString(Event.FIELD_COVER_URL);
         return new Event(
                 document.getId(),
@@ -165,6 +177,8 @@ public final class FirebaseEventRepository implements EventRepository {
                 startsAt.toDate().getTime(),
                 endsAt == null ? 0 : endsAt.toDate().getTime(),
                 venue == null ? "" : venue.trim(),
+                city == null ? "" : city.trim(),
+                audiences,
                 organizerName == null ? "" : organizerName.trim(),
                 tags,
                 price == null ? 0 : price,

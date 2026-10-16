@@ -1,6 +1,5 @@
 package com.itismob.s03.group7.leef.home;
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,9 @@ import com.itismob.s03.group7.leef.databinding.FragmentHomeBinding;
 import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.model.UserProfile;
+import com.itismob.s03.group7.leef.search.SearchActivity;
 import com.itismob.s03.group7.leef.ui.ComingSoon;
+import com.itismob.s03.group7.leef.ui.GapDecoration;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -91,11 +92,11 @@ public class HomeFragment extends Fragment {
         binding.upcomingList.setNestedScrollingEnabled(false);
         binding.upcomingList.setAdapter(rowAdapter);
 
-        binding.searchBar.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_search));
+        binding.searchBar.setOnClickListener(v -> startActivity(SearchActivity.createIntent(requireContext(), true)));
         binding.notificationsButton.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_notifications));
         binding.avatar.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_profile));
-        binding.featuredSeeAll.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_search));
-        binding.upcomingSeeAll.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_search));
+        binding.featuredSeeAll.setOnClickListener(v -> startActivity(SearchActivity.createIntent(requireContext(), false)));
+        binding.upcomingSeeAll.setOnClickListener(v -> startActivity(SearchActivity.createIntent(requireContext(), false)));
         binding.retryButton.setOnClickListener(v -> viewModel.retry());
         binding.swipeRefresh.setColorSchemeResources(R.color.leef_green_700);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
@@ -190,29 +191,5 @@ public class HomeFragment extends Fragment {
 
     private int dp(int value) {
         return Math.round(value * getResources().getDisplayMetrics().density);
-    }
-
-    /** Even space between the cards of a list, without extra space before the first or after the last. */
-    private static final class GapDecoration extends RecyclerView.ItemDecoration {
-        private final int gapPx;
-        private final int orientation;
-
-        GapDecoration(int gapPx, int orientation) {
-            this.gapPx = gapPx;
-            this.orientation = orientation;
-        }
-
-        @Override
-        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent,
-                                   @NonNull RecyclerView.State state) {
-            if (parent.getChildAdapterPosition(view) == 0) {
-                return;
-            }
-            if (orientation == RecyclerView.HORIZONTAL) {
-                outRect.left = gapPx;
-            } else {
-                outRect.top = gapPx;
-            }
-        }
     }
 }

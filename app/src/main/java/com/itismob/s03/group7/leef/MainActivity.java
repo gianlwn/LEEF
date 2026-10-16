@@ -16,13 +16,14 @@ import com.itismob.s03.group7.leef.data.AccountRepository;
 import com.itismob.s03.group7.leef.data.FirebaseAccountRepository;
 import com.itismob.s03.group7.leef.databinding.ActivityMainBinding;
 import com.itismob.s03.group7.leef.onboarding.OnboardingActivity;
+import com.itismob.s03.group7.leef.search.SearchActivity;
 import com.itismob.s03.group7.leef.ui.ComingSoon;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
 /**
  * The app shell once someone is signed in: the current tab's screen above the bottom navigation bar.
- * Home is the first tab (Screen 4); Explore, My Events, Messages and Profile are added as their
- * screens are built.
+ * Home is the first tab (Screen 4); Explore opens Search & Filter (Screen 5); My Events, Messages and
+ * Profile are added as their screens are built.
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -71,9 +72,10 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.nav_home) {
             return true;
         }
-        // The other tabs arrive with their own screens; for now the bar stays on Home.
+        // Explore opens Search & Filter on top of Home, so the bar stays on Home. The other tabs arrive
+        // with their own screens.
         if (id == R.id.nav_explore) {
-            ComingSoon.show(this, R.string.feature_explore);
+            startActivity(SearchActivity.createIntent(this, false));
         } else if (id == R.id.nav_my_events) {
             ComingSoon.show(this, R.string.feature_my_events);
         } else if (id == R.id.nav_messages) {

@@ -155,11 +155,9 @@
 
     <!-- Screens that aren't built yet -->
     <string name="coming_soon_format">%1$s is coming soon.</string>
-    <string name="feature_search">Search</string>
     <string name="feature_event_details">Event details</string>
     <string name="feature_notifications">Notifications</string>
     <string name="feature_profile">Your profile</string>
-    <string name="feature_explore">Explore</string>
     <string name="feature_my_events">My Events</string>
     <string name="feature_messages">Messages</string>
 
@@ -203,4 +201,56 @@
     <string name="event_price_format">₱%1$s</string>
     <string name="event_save_a11y">Save %1$s</string>
     <string name="event_unsave_a11y">Remove %1$s from saved events</string>
+
+    <!-- Screen 5 - Search & Filter Events -->
+    <string name="search_title">Search Events</string>
+    <string name="search_hint">Search (e.g. seminar, hackathon…)</string>
+    <string name="search_back_a11y">Back</string>
+    <string name="search_clear_a11y">Clear search</string>
+    <string name="search_chip_date">Date</string>
+    <string name="search_chip_location">Location</string>
+    <string name="search_chip_category">Category</string>
+    <string name="search_filters_a11y">Filters</string>
+    <string name="search_filters_on_a11y">Filters, some are on</string>
+    <string name="search_date_range">%1$s – %2$s</string>
+    <string name="search_date_from_only">From %1$s</string>
+    <string name="search_date_to_only">Until %1$s</string>
+    <plurals name="search_result_count">
+        <item quantity="one">%d event found</item>
+        <item quantity="other">%d events found</item>
+    </plurals>
+    <string name="search_empty_title">No events found</string>
+    <string name="search_empty_body">Try different words, or loosen your filters.</string>
+    <string name="search_clear_filters">Clear filters</string>
+
+    <string name="filters_title">Filters</string>
+    <string name="filters_clear_all">Clear all</string>
+    <string name="filters_category">Category</string>
+    <string name="filters_date_range">Date Range</string>
+    <string name="filters_from">From</string>
+    <string name="filters_to">To</string>
+    <string name="filters_from_a11y">From date</string>
+    <string name="filters_to_a11y">To date</string>
+    <string name="filters_clear_date_a11y">Clear date</string>
+    <string name="filters_pick_from">Events from</string>
+    <string name="filters_pick_to">Events until</string>
+    <string name="filters_location">Location (City/Province)</string>
+    <string name="filters_location_hint">e.g. Manila, Cebu, Davao</string>
+    <string name="filters_audience">Audience / Age Group</string>
+    <string name="filters_price">Price</string>
+    <string name="filters_all">All</string>
+    <string name="filters_free">Free</string>
+    <string name="filters_paid">Paid</string>
+    <string name="filters_show_generic">Show Events</string>
+    <string name="filters_show_none">No events match</string>
+    <plurals name="filters_show_events">
+        <item quantity="one">Show %d Event</item>
+        <item quantity="other">Show %d Events</item>
+    </plurals>
+
+    <string name="audience_students">Students</string>
+    <string name="audience_teachers">Teachers</string>
+    <string name="audience_parents">Parents</string>
+    <string name="audience_freelancers">Freelancers</string>
+    <string name="audience_school_admins">School Admins</string>
 </resources>
