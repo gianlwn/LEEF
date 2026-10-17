@@ -80,8 +80,8 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
             return windowInsets;
         });
 
-        binding.cardNumberInput.addTextChangedListener(new GroupingWatcher(binding.cardNumberInput, 19, 4, ' '));
-        binding.expiryInput.addTextChangedListener(new GroupingWatcher(binding.expiryInput, 4, 2, '/'));
+        binding.cardNumberInput.addTextChangedListener(new GroupingWatcher(binding.cardNumberInput, 19, 4, ' ', false));
+        binding.expiryInput.addTextChangedListener(new GroupingWatcher(binding.expiryInput, 4, 2, '/', true));
         clearErrorOnEdit(binding.mobileInput, binding.mobileLayout);
         clearErrorOnEdit(binding.cvcInput, binding.cvcLayout);
         binding.sheetPayButton.setOnClickListener(v -> submit());
@@ -211,19 +211,27 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
         return text == null ? "" : text.toString().trim();
     }
 
-    /** Re-formats what's typed into digit groups: "4242 4242 4242 4242" or "12/28". */
+    /**
+     * Re-formats what's typed into digit groups: "4242 4242 4242 4242" or "12/28". With
+     * {@code separatorAfterGroup} the separator appears as soon as a group is complete ("12" becomes
+     * "12/"), but not while the person is deleting, so backspace still works.
+     */
     private static final class GroupingWatcher implements TextWatcher {
         private final EditText field;
         private final int maxDigits;
         private final int groupSize;
         private final char separator;
+        private final boolean separatorAfterGroup;
         private boolean editing;
+        private boolean deleting;
 
-        GroupingWatcher(@NonNull EditText field, int maxDigits, int groupSize, char separator) {
+        GroupingWatcher(@NonNull EditText field, int maxDigits, int groupSize, char separator,
+                        boolean separatorAfterGroup) {
             this.field = field;
             this.maxDigits = maxDigits;
             this.groupSize = groupSize;
             this.separator = separator;
+            this.separatorAfterGroup = separatorAfterGroup;
         }
 
         @Override
@@ -232,6 +240,7 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            deleting = before > count;
         }
 
         @Override
@@ -249,6 +258,11 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
                     formatted.append(separator);
                 }
                 formatted.append(digits.charAt(i));
+            }
+            boolean groupComplete = digits.length() > 0 && digits.length() % groupSize == 0
+                    && digits.length() < maxDigits;
+            if (separatorAfterGroup && groupComplete && !deleting) {
+                formatted.append(separator);
             }
             if (!formatted.toString().equals(editable.toString())) {
                 editing = true;
