@@ -34,6 +34,7 @@ public final class Event {
     public static final String FIELD_PRICE = "price";
     public static final String FIELD_EARLY_BIRD_PRICE = "earlyBirdPrice";
     public static final String FIELD_EARLY_BIRD_UNTIL = "earlyBirdUntil";
+    public static final String FIELD_GROUP_PRICE = "groupPrice";
     public static final String FIELD_COVER_URL = "coverUrl";
     public static final String FIELD_BOOSTED = "boosted";
 
@@ -61,6 +62,8 @@ public final class Event {
     private final double earlyBirdPrice;
     /** When the early-bird offer ends; 0 when there is no offer. */
     private final long earlyBirdUntilMillis;
+    /** Price per person for a group of {@link TicketType#GROUP_MIN_SIZE} or more; negative when the event has no group rate. */
+    private final double groupPrice;
     @Nullable
     private final String coverUrl;
     /** True while an organizer's paid boost is featuring this event. */
@@ -83,6 +86,7 @@ public final class Event {
         this.price = b.price;
         this.earlyBirdPrice = b.earlyBirdPrice;
         this.earlyBirdUntilMillis = b.earlyBirdUntilMillis;
+        this.groupPrice = b.groupPrice;
         this.coverUrl = b.coverUrl;
         this.boosted = b.boosted;
     }
@@ -183,6 +187,15 @@ public final class Event {
         return isEarlyBirdActive(nowMillis) ? earlyBirdPrice : price;
     }
 
+    /** True when the organizer offers a per-person group rate (Group 5+). */
+    public boolean hasGroupPrice() {
+        return groupPrice >= 0;
+    }
+
+    public double getGroupPrice() {
+        return groupPrice;
+    }
+
     @Nullable
     public String getCoverUrl() {
         return coverUrl;
@@ -221,6 +234,7 @@ public final class Event {
                 && Double.compare(price, event.price) == 0
                 && Double.compare(earlyBirdPrice, event.earlyBirdPrice) == 0
                 && earlyBirdUntilMillis == event.earlyBirdUntilMillis
+                && Double.compare(groupPrice, event.groupPrice) == 0
                 && boosted == event.boosted
                 && id.equals(event.id)
                 && title.equals(event.title)
@@ -240,7 +254,7 @@ public final class Event {
     public int hashCode() {
         return Objects.hash(id, title, category, startsAtMillis, endsAtMillis, description, venue, address,
                 city, audiences, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
-                earlyBirdUntilMillis, coverUrl, boosted);
+                earlyBirdUntilMillis, groupPrice, coverUrl, boosted);
     }
 
     /** Collects an event's fields; anything not set stays empty (or free, or "no early bird"). */
@@ -262,6 +276,7 @@ public final class Event {
         private double price;
         private double earlyBirdPrice = -1;
         private long earlyBirdUntilMillis;
+        private double groupPrice = -1;
         @Nullable
         private String coverUrl;
         private boolean boosted;
@@ -338,6 +353,12 @@ public final class Event {
         public Builder earlyBird(double earlyPrice, long untilMillis) {
             this.earlyBirdPrice = earlyPrice;
             this.earlyBirdUntilMillis = untilMillis;
+            return this;
+        }
+
+        @NonNull
+        public Builder groupPrice(double perPerson) {
+            this.groupPrice = perPerson;
             return this;
         }
 

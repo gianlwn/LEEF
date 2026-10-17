@@ -70,6 +70,12 @@
             android:name=".details.EventDetailsActivity"
             android:exported="false" />
 
+        <!-- Screen 7: Registration & Payment (simulated payment). -->
+        <activity
+            android:name=".registration.RegistrationActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
     </application>
 
 </manifest>

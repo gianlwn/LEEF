@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -27,7 +29,7 @@ import com.itismob.s03.group7.leef.home.EventFormat;
 import com.itismob.s03.group7.leef.home.EventItem;
 import com.itismob.s03.group7.leef.home.HomeViewModel;
 import com.itismob.s03.group7.leef.model.Event;
-import com.itismob.s03.group7.leef.ui.ComingSoon;
+import com.itismob.s03.group7.leef.registration.RegistrationActivity;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
 import java.util.ArrayList;
@@ -36,8 +38,8 @@ import java.util.Locale;
 
 /**
  * Screen 6 - Event Details: the complete listing (photo, category, title, summary, date and time,
- * venue with a map link, organizer, tags and pricing), the heart, share, and Register Now. Registration
- * and payment arrive with Screen 7.
+ * venue with a map link, organizer, tags and pricing), the heart, share, and Register Now, which opens
+ * Registration &amp; Payment (Screen 7).
  */
 public class EventDetailsActivity extends AppCompatActivity {
 
@@ -45,6 +47,8 @@ public class EventDetailsActivity extends AppCompatActivity {
 
     private ActivityEventDetailsBinding binding;
     private EventDetailsViewModel viewModel;
+    private ActivityResultLauncher<Intent> registrationLauncher;
+    private String eventId;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context, @NonNull String eventId) {
@@ -56,7 +60,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LeefEdgeToEdge.enable(this);
 
-        String eventId = getIntent().getStringExtra(EXTRA_EVENT_ID);
+        eventId = getIntent().getStringExtra(EXTRA_EVENT_ID);
         if (eventId == null || eventId.isEmpty()) {
             finish();
             return;
@@ -68,6 +72,12 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this, new EventDetailsViewModel.Factory(eventId))
                 .get(EventDetailsViewModel.class);
+
+        registrationLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                viewModel.markRegistered();
+            }
+        });
 
         binding.backButton.setOnClickListener(v -> finish());
         binding.retryButton.setOnClickListener(v -> viewModel.retry());
@@ -99,11 +109,11 @@ public class EventDetailsActivity extends AppCompatActivity {
             binding.errorText.setText(HomeViewModel.errorMessageFor(state.getFailure()));
         }
         if (content) {
-            bindEvent(state.getEvent(), state.isSaved());
+            bindEvent(state.getEvent(), state.isSaved(), state.isRegistered());
         }
     }
 
-    private void bindEvent(@NonNull Event event, boolean saved) {
+    private void bindEvent(@NonNull Event event, boolean saved, boolean registered) {
         long now = System.currentTimeMillis();
 
         EventCardBinder.bindHeart(binding.heart, new EventItem(event, saved));
@@ -150,9 +160,11 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         // Register
         boolean ended = event.hasEnded(now);
-        binding.registerButton.setEnabled(!ended);
-        binding.registerButton.setText(ended ? R.string.details_event_ended : R.string.details_register);
-        binding.registerButton.setOnClickListener(v -> ComingSoon.show(this, R.string.feature_register));
+        binding.registerButton.setEnabled(!ended && !registered);
+        binding.registerButton.setText(registered ? R.string.details_registered
+                : ended ? R.string.details_event_ended : R.string.details_register);
+        binding.registerButton.setOnClickListener(v ->
+                registrationLauncher.launch(RegistrationActivity.createIntent(this, eventId)));
     }
 
     /** One price, or the early-bird price beside the regular rate while the offer lasts. */

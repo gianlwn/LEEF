@@ -42,6 +42,30 @@ service cloud.firestore {
       allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
+    // Screen 7: registrations. One document per person per event, named {uid}_{eventId}, so nobody can
+    // register twice. The payment is simulated, so the rules don't check prices; they only make sure a
+    // person writes their own registration for an event that exists, and can never change or delete it.
+    match /registrations/{registrationId} {
+      allow get: if request.auth != null
+        && registrationId.matches(request.auth.uid + '_.*');
+      allow list: if request.auth != null
+        && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.eventId is string
+        && registrationId == request.auth.uid + '_' + request.resource.data.eventId
+        && exists(/databases/$(database)/documents/events/$(request.resource.data.eventId))
+        && request.resource.data.ticketType in ['earlyBird', 'regular', 'group']
+        && request.resource.data.quantity is number
+        && request.resource.data.quantity >= 1
+        && request.resource.data.quantity <= 50
+        && request.resource.data.amount is number
+        && request.resource.data.amount >= 0
+        && request.resource.data.confirmationCode is string
+        && request.resource.data.status == 'confirmed';
+      allow update, delete: if false;
+    }
+
     // Everything else stays locked until the screen that needs it is built.
     match /{document=**} {
       allow read, write: if false;

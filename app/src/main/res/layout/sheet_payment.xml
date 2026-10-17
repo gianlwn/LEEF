@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Screen 7 - the simulated checkout sheet: mobile number for GCash / Maya, card details for a card. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sheetRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_sheet_grabber" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/sheetTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.Name"
+                tools:text="Pay with GCash" />
+
+            <TextView
+                android:id="@+id/sheetAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="@style/TextAppearance.LEEF.Details.PriceMain"
+                tools:text="₱350" />
+
+            <TextView
+                android:id="@+id/sheetTestHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_test_notice"
+                android:padding="14dp"
+                android:textAppearance="@style/TextAppearance.LEEF.Registration.Notice"
+                tools:text="Test mode: no real money is charged." />
+
+            <!-- GCash / Maya -->
+            <LinearLayout
+                android:id="@+id/walletGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/mobileLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/pay_hint_mobile">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/mobileInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="phone"
+                        android:imeOptions="actionDone"
+                        android:inputType="phone"
+                        android:maxLength="16"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- Credit / debit card -->
+            <LinearLayout
+                android:id="@+id/cardGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cardNumberLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/pay_hint_card_number">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cardNumberInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="number"
+                        android:maxLength="23"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/expiryLayout"
+                        style="@style/Widget.LEEF.TextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:hint="@string/pay_hint_expiry">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/expiryInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLength="5"
+                            android:maxLines="1"
+                            android:textAppearance="?attr/textAppearanceBodyLarge" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/cvcLayout"
+                        style="@style/Widget.LEEF.TextInputLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:hint="@string/pay_hint_cvc"
+                        app:endIconMode="password_toggle">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/cvcInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="numberPassword"
+                            android:maxLength="4"
+                            android:maxLines="1"
+                            android:textAppearance="?attr/textAppearanceBodyLarge" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/sheetError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:textAppearance="@style/TextAppearance.LEEF.Auth.FieldError"
+                android:visibility="gone"
+                tools:text="That payment was declined."
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sheetPayButton"
+                style="@style/Widget.LEEF.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                tools:text="Pay ₱350" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

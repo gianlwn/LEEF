@@ -16,6 +16,8 @@
         <attr name="leefArtTitle" format="string" />
         <!-- Icon beside the text instead of above it, for short slots. -->
         <attr name="leefArtCompact" format="boolean" />
+        <!-- Only the icon in the placeholder, for small logo slots (payment methods). -->
+        <attr name="leefArtIconOnly" format="boolean" />
         <attr name="leefArtScale" format="enum">
             <enum name="fitCenter" value="0" />
             <enum name="centerCrop" value="1" />

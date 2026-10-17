@@ -59,11 +59,13 @@ public class ArtSlotView extends FrameLayout {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ArtSlotView, defStyleAttr, 0);
         boolean compact;
+        boolean iconOnly;
         int scale;
         try {
             artName = a.getString(R.styleable.ArtSlotView_leefArtName);
             artTitle = a.getText(R.styleable.ArtSlotView_leefArtTitle);
             compact = a.getBoolean(R.styleable.ArtSlotView_leefArtCompact, false);
+            iconOnly = a.getBoolean(R.styleable.ArtSlotView_leefArtIconOnly, false);
             scale = a.getInt(R.styleable.ArtSlotView_leefArtScale, SCALE_FIT_CENTER);
         } finally {
             a.recycle();
@@ -72,7 +74,9 @@ public class ArtSlotView extends FrameLayout {
         artView.setScaleType(scale == SCALE_CENTER_CROP
                 ? ImageView.ScaleType.CENTER_CROP
                 : ImageView.ScaleType.FIT_CENTER);
-        if (compact) {
+        if (iconOnly) {
+            useIconOnlyPlaceholder();
+        } else if (compact) {
             useCompactPlaceholder();
         }
         // Artwork here is decorative; the surrounding screen describes it for screen readers.
@@ -126,6 +130,18 @@ public class ArtSlotView extends FrameLayout {
         textParams.setMarginStart(dp(8));
         text.setLayoutParams(textParams);
         ((LinearLayout) text).setGravity(Gravity.START);
+    }
+
+    /** Just the icon, for slots too small to name the artwork. */
+    private void useIconOnlyPlaceholder() {
+        int padding = dp(4);
+        placeholder.setPadding(padding, padding, padding, padding);
+        findViewById(R.id.art_placeholder_text).setVisibility(View.GONE);
+        View icon = findViewById(R.id.art_placeholder_icon);
+        LinearLayout.LayoutParams iconParams = (LinearLayout.LayoutParams) icon.getLayoutParams();
+        iconParams.width = dp(22);
+        iconParams.height = dp(22);
+        icon.setLayoutParams(iconParams);
     }
 
     private int dp(int value) {

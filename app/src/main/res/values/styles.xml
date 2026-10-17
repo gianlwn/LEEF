@@ -328,4 +328,34 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/leef_green_900</item>
     </style>
+
+    <!-- Screen 7 - Registration & Payment -->
+    <style name="TextAppearance.LEEF.Registration.Section" parent="TextAppearance.LEEF.TitleLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_ink</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Registration.RowTitle" parent="TextAppearance.LEEF.TitleMedium">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_ink</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Registration.RowSubtitle" parent="TextAppearance.LEEF.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/leef_gray_600</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Registration.RowPrice" parent="TextAppearance.LEEF.TitleMedium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_green_900</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Registration.Notice" parent="TextAppearance.LEEF.BodyMedium">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textColor">@color/leef_ink</item>
+    </style>
 </resources>

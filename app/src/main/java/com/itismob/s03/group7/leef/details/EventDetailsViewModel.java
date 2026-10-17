@@ -10,17 +10,21 @@ import androidx.lifecycle.ViewModelProvider;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.data.EventRepository;
 import com.itismob.s03.group7.leef.data.FirebaseEventRepository;
+import com.itismob.s03.group7.leef.data.FirebaseRegistrationRepository;
+import com.itismob.s03.group7.leef.data.RegistrationRepository;
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.model.Registration;
 
 import java.util.Set;
 
 /**
- * Screen 6 - Event Details. Loads one event by id, and whether the person has saved it, and handles
- * the heart.
+ * Screen 6 - Event Details. Loads one event by id, whether the person has saved it (the heart) and
+ * whether they have registered for it, and handles the heart.
  */
 public class EventDetailsViewModel extends ViewModel {
 
     private final EventRepository events;
+    private final RegistrationRepository registrations;
     private final String eventId;
 
     private final MutableLiveData<EventDetailsState> state = new MutableLiveData<>();
@@ -29,12 +33,15 @@ public class EventDetailsViewModel extends ViewModel {
     @Nullable
     private Event event;
     private boolean saved;
+    private boolean registered;
     private boolean loading;
     @Nullable
     private EventRepository.Failure failure;
 
-    EventDetailsViewModel(@NonNull EventRepository events, @NonNull String eventId) {
+    EventDetailsViewModel(@NonNull EventRepository events, @NonNull RegistrationRepository registrations,
+                          @NonNull String eventId) {
         this.events = events;
+        this.registrations = registrations;
         this.eventId = eventId;
         load();
     }
@@ -57,6 +64,12 @@ public class EventDetailsViewModel extends ViewModel {
     /** "Try again" after a failed load. */
     public void retry() {
         load();
+    }
+
+    /** Called when Registration & Payment finishes, so the button changes without another load. */
+    public void markRegistered() {
+        registered = true;
+        publish();
     }
 
     /** Taps the heart: saves the event, or removes it from the saved events. */
@@ -90,9 +103,10 @@ public class EventDetailsViewModel extends ViewModel {
         failure = null;
         publish();
 
-        final int[] pending = {2};
+        final int[] pending = {3};
         final Event[] loaded = {null};
         final boolean[] savedFlag = {false};
+        final boolean[] registeredFlag = {false};
         final EventRepository.Failure[] eventFailure = {null};
 
         Runnable finish = () -> {
@@ -103,6 +117,7 @@ public class EventDetailsViewModel extends ViewModel {
             if (loaded[0] != null) {
                 event = loaded[0];
                 saved = savedFlag[0];
+                registered = registeredFlag[0];
                 failure = null;
             } else {
                 failure = eventFailure[0] == null ? EventRepository.Failure.UNKNOWN : eventFailure[0];
@@ -136,6 +151,19 @@ public class EventDetailsViewModel extends ViewModel {
                 finish.run();
             }
         });
+        registrations.loadRegistration(eventId, new RegistrationRepository.LoadCallback() {
+            @Override
+            public void onLoaded(@Nullable Registration registration) {
+                registeredFlag[0] = registration != null;
+                finish.run();
+            }
+
+            @Override
+            public void onFailure(@NonNull RegistrationRepository.Failure reason) {
+                // Optional too: Register Now still works, and the registration screen checks again.
+                finish.run();
+            }
+        });
     }
 
     private void publish() {
@@ -149,7 +177,7 @@ public class EventDetailsViewModel extends ViewModel {
         } else {
             status = EventDetailsState.Status.ERROR;
         }
-        state.setValue(new EventDetailsState(status, event, saved, failure));
+        state.setValue(new EventDetailsState(status, event, saved, registered, failure));
     }
 
     /** Creates the view model for one event id. */
@@ -164,7 +192,8 @@ public class EventDetailsViewModel extends ViewModel {
         @Override
         @SuppressWarnings("unchecked")
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new EventDetailsViewModel(new FirebaseEventRepository(), eventId);
+            return (T) new EventDetailsViewModel(new FirebaseEventRepository(),
+                    new FirebaseRegistrationRepository(), eventId);
         }
     }
 }

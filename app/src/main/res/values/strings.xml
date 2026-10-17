@@ -155,7 +155,6 @@
 
     <!-- Screens that aren't built yet -->
     <string name="coming_soon_format">%1$s is coming soon.</string>
-    <string name="feature_register">Registration</string>
     <string name="feature_notifications">Notifications</string>
     <string name="feature_profile">Your profile</string>
     <string name="feature_my_events">My Events</string>
@@ -275,4 +274,76 @@
     <string name="details_not_found_body">It may have been removed by the organizer.</string>
     <string name="details_go_back">Go back</string>
     <string name="event_time_multiday">Starts %1$s · Ends %2$s</string>
+
+    <!-- Screen 7 - Registration & Payment -->
+    <string name="registration_title">Registration &amp; Payment</string>
+    <string name="registration_ticket_type">Ticket type</string>
+    <string name="registration_payment_method">Payment method</string>
+    <string name="registration_group_size">Group size</string>
+    <string name="registration_group_hint">%1$d to %2$d people</string>
+    <string name="registration_group_less_a11y">Fewer people</string>
+    <string name="registration_group_more_a11y">More people</string>
+    <string name="registration_total">Total</string>
+    <string name="registration_total_people">Total for %1$d people</string>
+    <string name="registration_pay_and_register">Pay and Register</string>
+    <string name="registration_register_free">Register</string>
+    <string name="registration_registering">Registering…</string>
+    <string name="registration_done_button">Done</string>
+    <string name="registration_free_note">This event is free, so there is nothing to pay. Just confirm your spot.</string>
+    <string name="registration_test_notice">Simulation only. LEEF never charges real money, and your payment details are not saved.</string>
+    <string name="registration_loading_a11y">Loading registration</string>
+    <string name="registration_unavailable_title">This event isn\'t available</string>
+    <string name="registration_unavailable_body">It may have been removed by the organizer.</string>
+    <string name="registration_closed_title">This event has ended</string>
+    <string name="registration_closed_body">Registration is closed because the event is over.</string>
+    <string name="registration_done_title">You\'re registered!</string>
+    <string name="registration_done_already">You\'re already registered</string>
+    <string name="registration_done_code_label">Confirmation code</string>
+    <string name="registration_done_ticket_label">Ticket</string>
+    <string name="registration_done_paid_label">Paid</string>
+    <string name="registration_done_free">Free</string>
+    <string name="registration_done_note">Keep this code. The organizer can use it to check you in.</string>
+    <string name="registration_ticket_line">%1$s × %2$d</string>
+    <string name="registration_paid_via">%1$s via %2$s</string>
+    <string name="registration_error_permission">Registration couldn\'t be saved because the database rules haven\'t been published yet.</string>
+    <string name="registration_error_network">You seem to be offline. Check your connection and try again.</string>
+    <string name="registration_error_generic">We couldn\'t save your registration. Please try again.</string>
+    <string name="registration_error_network_paid">Your payment went through, but you\'re offline so we couldn\'t save your registration. Reconnect and tap the button again. You won\'t be charged twice.</string>
+    <string name="registration_error_generic_paid">Your payment went through, but we couldn\'t save your registration. Tap the button again. You won\'t be charged twice.</string>
+
+    <string name="ticket_early_bird">Early Bird</string>
+    <string name="ticket_regular">Regular</string>
+    <string name="ticket_group">Group (5+)</string>
+    <string name="ticket_early_bird_until">Until %1$s</string>
+    <string name="ticket_regular_hint">Standard registration</string>
+    <string name="ticket_group_hint">Per person, for 5 or more</string>
+
+    <string name="pay_gcash">GCash</string>
+    <string name="pay_gcash_hint">Pay with your GCash wallet</string>
+    <string name="pay_maya">Maya</string>
+    <string name="pay_maya_hint">Pay with your Maya wallet</string>
+    <string name="pay_card">Credit / Debit Card</string>
+    <string name="pay_card_hint">Visa or Mastercard</string>
+    <string name="pay_sheet_title">Pay with %1$s</string>
+    <string name="pay_sheet_button">Pay %1$s</string>
+    <string name="pay_sheet_processing">Processing payment…</string>
+    <string name="pay_hint_mobile">Mobile number</string>
+    <string name="pay_hint_card_number">Card number</string>
+    <string name="pay_hint_expiry">Expiry (MM/YY)</string>
+    <string name="pay_hint_cvc">Security code</string>
+    <string name="pay_test_hint_wallet">Test mode: no real money is charged. Use any valid mobile number such as 0917 123 4567. A number ending in 0000 is declined.</string>
+    <string name="pay_test_hint_card">Test mode: no real money is charged. Use 4242 4242 4242 4242, any future expiry and any 3-digit code. The card 4000 0000 0000 0002 is declined.</string>
+    <string name="pay_error_mobile">Enter a Philippine mobile number, like 0917 123 4567.</string>
+    <string name="pay_error_card_number">Enter a valid card number.</string>
+    <string name="pay_error_expiry">Enter the expiry as MM/YY.</string>
+    <string name="pay_error_expiry_past">This card has expired.</string>
+    <string name="pay_error_cvc">Enter the 3 or 4 digit security code.</string>
+    <string name="pay_declined_wallet">The wallet doesn\'t have enough balance. Try another number or method.</string>
+    <string name="pay_declined_card">The card was declined. Try another card or method.</string>
+
+    <string name="details_registered">You\'re registered</string>
+
+    <string name="art_title_pay_gcash" translatable="false">GCash logo</string>
+    <string name="art_title_pay_maya" translatable="false">Maya logo</string>
+    <string name="art_title_pay_card" translatable="false">Card logo</string>
 </resources>
