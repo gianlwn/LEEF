@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- A plain credit/debit card icon (not any brand's logo). Delete this file if you add art_pay_card.png. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="52dp"
-    android:height="36dp"
-    android:viewportWidth="52"
-    android:viewportHeight="36">
+    android:width="72dp"
+    android:height="40dp"
+    android:viewportWidth="72"
+    android:viewportHeight="40">
+    <group android:translateX="10" android:translateY="2">
     <path
         android:fillColor="@color/leef_green_700"
         android:pathData="M10,4h32a6,6 0,0 1,6 6v16a6,6 0,0 1,-6 6H10a6,6 0,0 1,-6 -6V10a6,6 0,0 1,6 -6z" />
@@ -17,4 +18,5 @@
     <path
         android:fillColor="#B3FFFFFF"
         android:pathData="M30,24h10a1,1 0,0 1,1 1v0a1,1 0,0 1,-1 1H30a1,1 0,0 1,-1 -1v0a1,1 0,0 1,1 -1z" />
+    </group>
 </vector>

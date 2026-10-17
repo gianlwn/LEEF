@@ -290,7 +290,6 @@
     <string name="registration_registering">Registering…</string>
     <string name="registration_done_button">Done</string>
     <string name="registration_free_note">This event is free, so there is nothing to pay. Just confirm your spot.</string>
-    <string name="registration_test_notice">Simulation only. LEEF never charges real money, and your payment details are not saved.</string>
     <string name="registration_loading_a11y">Loading registration</string>
     <string name="registration_unavailable_title">This event isn\'t available</string>
     <string name="registration_unavailable_body">It may have been removed by the organizer.</string>
