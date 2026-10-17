@@ -3,6 +3,10 @@ package com.itismob.s03.group7.leef.home;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -76,11 +80,25 @@ public final class EventCardBinder {
                 ContextCompat.getColor(context, event.getCategory().getBadgeColorRes())));
     }
 
-    /** The price pill ("Free", "₱500") laid over the photo. */
+    /**
+     * The price pill ("Free", "₱500") laid over the photo. While the early-bird offer lasts it shows the
+     * early-bird price under a small "Early bird" label, so nobody mistakes it for the regular rate.
+     */
     static void bindPrice(@NonNull TextView pill, @NonNull Event event) {
         Context context = pill.getContext();
-        pill.setText(EventFormat.priceText(context, event));
-        boolean free = event.isFree();
+        long now = System.currentTimeMillis();
+        String price = EventFormat.priceText(context, event);
+        if (event.isEarlyBirdActive(now)) {
+            SpannableStringBuilder text = new SpannableStringBuilder(context.getString(R.string.event_price_early_label));
+            text.setSpan(new RelativeSizeSpan(0.78f), 0, text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            text.append('\n').append(price);
+            pill.setText(text);
+            pill.setGravity(Gravity.CENTER_HORIZONTAL);
+        } else {
+            pill.setText(price);
+            pill.setGravity(Gravity.START);
+        }
+        boolean free = event.currentPrice(now) <= 0;
         pill.setBackgroundResource(free ? R.drawable.bg_price_pill_free : R.drawable.bg_price_pill_paid);
         pill.setTextColor(ContextCompat.getColor(context, free ? R.color.leef_green_900 : R.color.white));
     }

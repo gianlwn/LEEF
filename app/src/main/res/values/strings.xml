@@ -199,6 +199,7 @@
     <!-- Event cards -->
     <string name="event_price_free">Free</string>
     <string name="event_price_format">₱%1$s</string>
+    <string name="event_price_early_label">Early bird</string>
     <string name="event_save_a11y">Save %1$s</string>
     <string name="event_unsave_a11y">Remove %1$s from saved events</string>
 

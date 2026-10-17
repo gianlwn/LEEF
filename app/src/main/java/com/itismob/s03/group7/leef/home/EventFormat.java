@@ -61,10 +61,10 @@ public final class EventFormat {
         return full.format(start) + " " + EN_DASH + " " + full.format(end);
     }
 
-    /** "Free" or the event's regular price in pesos ("₱500", "₱249.50"). */
+    /** "Free" or what registering costs right now in pesos: the early-bird price while it lasts ("₱350"), otherwise the regular one. */
     @NonNull
     public static String priceText(@NonNull Context context, @NonNull Event event) {
-        return priceText(context, event.getPrice());
+        return priceText(context, event.currentPrice(System.currentTimeMillis()));
     }
 
     /** "Free" for 0 or less, otherwise the amount in pesos ("₱500", "₱249.50"). */
