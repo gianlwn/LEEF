@@ -264,4 +264,68 @@
     <style name="ThemeOverlay.LEEF.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/Widget.LEEF.BottomSheet</item>
     </style>
+
+    <!-- Screen 6 - Event Details -->
+    <style name="TextAppearance.LEEF.Details.Title" parent="TextAppearance.LEEF.HeadlineSmall">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_ink</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.Summary" parent="TextAppearance.LEEF.BodyLarge">
+        <item name="android:textSize">17sp</item>
+        <item name="android:lineSpacingMultiplier">1.15</item>
+        <item name="android:textColor">@color/leef_gray_600</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.Line" parent="TextAppearance.LEEF.TitleMedium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/leef_ink</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.Label" parent="TextAppearance.LEEF.BodyMedium">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/leef_gray_600</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.Organizer" parent="TextAppearance.LEEF.TitleMedium">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_ink</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.PriceMain" parent="TextAppearance.LEEF.HeadlineMedium">
+        <item name="android:textSize">36sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_green_900</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.PriceSecond" parent="TextAppearance.LEEF.HeadlineMedium">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/leef_ink</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.PriceCaption" parent="TextAppearance.LEEF.BodyMedium">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/leef_gray_600</item>
+    </style>
+
+    <!-- Small mint pill button (View Map). -->
+    <style name="Widget.LEEF.Button.Tonal">
+        <item name="android:minHeight">44dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.LEEF.Details.ButtonTonal</item>
+        <item name="backgroundTint">@color/leef_green_100</item>
+        <item name="android:textColor">@color/leef_green_900</item>
+        <item name="rippleColor">@color/leef_green_500</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Details.ButtonTonal" parent="TextAppearance.LEEF.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/leef_green_900</item>
+    </style>
 </resources>

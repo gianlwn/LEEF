@@ -155,7 +155,7 @@
 
     <!-- Screens that aren't built yet -->
     <string name="coming_soon_format">%1$s is coming soon.</string>
-    <string name="feature_event_details">Event details</string>
+    <string name="feature_register">Registration</string>
     <string name="feature_notifications">Notifications</string>
     <string name="feature_profile">Your profile</string>
     <string name="feature_my_events">My Events</string>
@@ -253,4 +253,25 @@
     <string name="audience_parents">Parents</string>
     <string name="audience_freelancers">Freelancers</string>
     <string name="audience_school_admins">School Admins</string>
+
+    <!-- Screen 6 - Event Details -->
+    <string name="details_register">Register Now</string>
+    <string name="details_event_ended">This event has ended</string>
+    <string name="details_view_map">View Map</string>
+    <string name="details_organized_by">Organized by</string>
+    <string name="details_price_early">Early bird (until %1$s)</string>
+    <string name="details_price_regular">Regular rate</string>
+    <string name="details_price_fee">Registration fee</string>
+    <string name="details_price_free">Free to join</string>
+    <string name="details_share_a11y">Share event</string>
+    <string name="details_share_intro">Check out \"%1$s\" on LEEF!</string>
+    <string name="details_share_outro">Found on LEEF, the Local Educational Event Finder.</string>
+    <string name="details_share_chooser">Share event</string>
+    <string name="details_share_failed">No app can share this right now.</string>
+    <string name="details_map_failed">No app can open the map.</string>
+    <string name="details_loading_a11y">Loading event</string>
+    <string name="details_not_found_title">This event isn\'t available</string>
+    <string name="details_not_found_body">It may have been removed by the organizer.</string>
+    <string name="details_go_back">Go back</string>
+    <string name="event_time_multiday">Starts %1$s · Ends %2$s</string>
 </resources>

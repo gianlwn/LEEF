@@ -89,6 +89,31 @@ public class HomeViewModel extends ViewModel {
         publish();
     }
 
+    /**
+     * Re-reads which events are saved. Called when the screen comes back (for example from Event
+     * Details, where the heart can change) so the hearts here stay right.
+     */
+    public void reloadSaved() {
+        if (!loadedOnce || loading) {
+            return;
+        }
+        events.loadSavedEventIds(new EventRepository.SavedIdsCallback() {
+            @Override
+            public void onLoaded(@NonNull Set<String> ids) {
+                if (!ids.equals(savedIds)) {
+                    savedIds.clear();
+                    savedIds.addAll(ids);
+                    publish();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull EventRepository.Failure reason) {
+                // Keep the hearts we have.
+            }
+        });
+    }
+
     /** Taps the heart on an event: saves it, or removes it from the saved events. */
     public void toggleSaved(@NonNull Event event) {
         String id = event.getId();

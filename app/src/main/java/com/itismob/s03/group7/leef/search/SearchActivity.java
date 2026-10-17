@@ -24,11 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.chip.Chip;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.databinding.ActivitySearchBinding;
+import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.home.EventActions;
 import com.itismob.s03.group7.leef.home.EventRowAdapter;
 import com.itismob.s03.group7.leef.home.HomeViewModel;
 import com.itismob.s03.group7.leef.model.Event;
-import com.itismob.s03.group7.leef.ui.ComingSoon;
 import com.itismob.s03.group7.leef.ui.GapDecoration;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
@@ -70,7 +70,7 @@ public class SearchActivity extends AppCompatActivity {
         EventActions actions = new EventActions() {
             @Override
             public void onEventClick(@NonNull Event event) {
-                ComingSoon.show(SearchActivity.this, R.string.feature_event_details);
+                startActivity(EventDetailsActivity.createIntent(SearchActivity.this, event.getId()));
             }
 
             @Override
@@ -130,6 +130,13 @@ public class SearchActivity extends AppCompatActivity {
             binding.searchField.post(() -> WindowCompat.getInsetsController(getWindow(), binding.searchField)
                     .show(WindowInsetsCompat.Type.ime()));
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Back from Event Details the heart may have changed.
+        viewModel.reloadSaved();
     }
 
     private void openFilters(int section) {

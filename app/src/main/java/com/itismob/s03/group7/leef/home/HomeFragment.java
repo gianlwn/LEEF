@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.itismob.s03.group7.leef.MainViewModel;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.databinding.FragmentHomeBinding;
+import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.model.UserProfile;
@@ -67,7 +68,7 @@ public class HomeFragment extends Fragment {
         EventActions actions = new EventActions() {
             @Override
             public void onEventClick(@NonNull Event event) {
-                ComingSoon.show(requireContext(), R.string.feature_event_details);
+                startActivity(EventDetailsActivity.createIntent(requireContext(), event.getId()));
             }
 
             @Override
@@ -110,6 +111,15 @@ public class HomeFragment extends Fragment {
         });
         mainViewModel.getProfile().observe(getViewLifecycleOwner(), this::showProfile);
         mainViewModel.getProfileFinished().observe(getViewLifecycleOwner(), finished -> showProfile(mainViewModel.getProfile().getValue()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Back from Event Details the heart may have changed.
+        if (viewModel != null) {
+            viewModel.reloadSaved();
+        }
     }
 
     @Override

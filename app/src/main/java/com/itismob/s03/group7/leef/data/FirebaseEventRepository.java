@@ -77,6 +77,27 @@ public final class FirebaseEventRepository implements EventRepository {
     }
 
     @Override
+    public void loadEvent(@NonNull String eventId, @NonNull EventCallback callback) {
+        if (auth.getCurrentUser() == null) {
+            callback.onFailure(Failure.SIGNED_OUT);
+            return;
+        }
+        firestore.collection(Event.COLLECTION).document(eventId).get()
+                .addOnSuccessListener(document -> {
+                    Event event = document.exists() ? toEvent(document) : null;
+                    if (event == null) {
+                        callback.onFailure(Failure.NOT_FOUND);
+                    } else {
+                        callback.onLoaded(event);
+                    }
+                })
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "loading event failed", error);
+                    callback.onFailure(toFailure(error));
+                });
+    }
+
+    @Override
     public void loadSavedEventIds(@NonNull SavedIdsCallback callback) {
         FirebaseUser user = auth.getCurrentUser();
         if (user == null) {
@@ -144,21 +165,11 @@ public final class FirebaseEventRepository implements EventRepository {
             return null;
         }
         Timestamp endsAt = document.getTimestamp(Event.FIELD_ENDS_AT);
-        String venue = document.getString(Event.FIELD_VENUE);
-        String city = document.getString(Event.FIELD_CITY);
-        String organizerName = document.getString(Event.FIELD_ORGANIZER_NAME);
         Double price = document.getDouble(Event.FIELD_PRICE);
+        Double earlyBirdPrice = document.getDouble(Event.FIELD_EARLY_BIRD_PRICE);
+        Timestamp earlyBirdUntil = document.getTimestamp(Event.FIELD_EARLY_BIRD_UNTIL);
         Boolean boosted = document.getBoolean(Event.FIELD_BOOSTED);
 
-        List<String> tags = new ArrayList<>();
-        Object rawTags = document.get(Event.FIELD_TAGS);
-        if (rawTags instanceof List) {
-            for (Object tag : (List<?>) rawTags) {
-                if (tag instanceof String && !((String) tag).trim().isEmpty()) {
-                    tags.add(((String) tag).trim());
-                }
-            }
-        }
         List<EventAudience> audiences = new ArrayList<>();
         Object rawAudiences = document.get(Event.FIELD_AUDIENCES);
         if (rawAudiences instanceof List) {
@@ -169,21 +180,48 @@ public final class FirebaseEventRepository implements EventRepository {
                 }
             }
         }
-        String coverUrl = document.getString(Event.FIELD_COVER_URL);
-        return new Event(
-                document.getId(),
-                title.trim(),
-                category,
-                startsAt.toDate().getTime(),
-                endsAt == null ? 0 : endsAt.toDate().getTime(),
-                venue == null ? "" : venue.trim(),
-                city == null ? "" : city.trim(),
-                audiences,
-                organizerName == null ? "" : organizerName.trim(),
-                tags,
-                price == null ? 0 : price,
-                coverUrl == null || coverUrl.trim().isEmpty() ? null : coverUrl.trim(),
-                boosted != null && boosted);
+        List<String> tags = new ArrayList<>();
+        Object rawTags = document.get(Event.FIELD_TAGS);
+        if (rawTags instanceof List) {
+            for (Object tag : (List<?>) rawTags) {
+                if (tag instanceof String && !((String) tag).trim().isEmpty()) {
+                    tags.add(((String) tag).trim());
+                }
+            }
+        }
+
+        Event.Builder builder = new Event.Builder(document.getId(), title.trim(), category,
+                startsAt.toDate().getTime())
+                .endsAt(endsAt == null ? 0 : endsAt.toDate().getTime())
+                .description(text(document, Event.FIELD_DESCRIPTION))
+                .venue(text(document, Event.FIELD_VENUE))
+                .address(text(document, Event.FIELD_ADDRESS))
+                .city(text(document, Event.FIELD_CITY))
+                .audiences(audiences)
+                .organizerName(text(document, Event.FIELD_ORGANIZER_NAME))
+                .organizerLogoUrl(optionalText(document, Event.FIELD_ORGANIZER_LOGO_URL))
+                .tags(tags)
+                .price(price == null ? 0 : price)
+                .coverUrl(optionalText(document, Event.FIELD_COVER_URL))
+                .boosted(boosted != null && boosted);
+        if (earlyBirdPrice != null && earlyBirdPrice >= 0 && earlyBirdUntil != null) {
+            builder.earlyBird(earlyBirdPrice, earlyBirdUntil.toDate().getTime());
+        }
+        return builder.build();
+    }
+
+    /** A text field, trimmed; empty when missing. */
+    @NonNull
+    private static String text(@NonNull DocumentSnapshot document, @NonNull String field) {
+        String value = document.getString(field);
+        return value == null ? "" : value.trim();
+    }
+
+    /** A text field, trimmed; null when missing or blank. */
+    @Nullable
+    private static String optionalText(@NonNull DocumentSnapshot document, @NonNull String field) {
+        String value = text(document, field);
+        return value.isEmpty() ? null : value;
     }
 
     @NonNull

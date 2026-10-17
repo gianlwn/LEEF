@@ -65,6 +65,11 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Screen 6: Event Details. -->
+        <activity
+            android:name=".details.EventDetailsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

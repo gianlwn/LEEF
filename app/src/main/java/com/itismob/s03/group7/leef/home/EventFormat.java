@@ -3,6 +3,7 @@ package com.itismob.s03.group7.leef.home;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.model.Event;
@@ -60,17 +61,78 @@ public final class EventFormat {
         return full.format(start) + " " + EN_DASH + " " + full.format(end);
     }
 
-    /** "Free" or the price in pesos ("₱500", "₱249.50"). */
+    /** "Free" or the event's regular price in pesos ("₱500", "₱249.50"). */
     @NonNull
     public static String priceText(@NonNull Context context, @NonNull Event event) {
-        if (event.isFree()) {
+        return priceText(context, event.getPrice());
+    }
+
+    /** "Free" for 0 or less, otherwise the amount in pesos ("₱500", "₱249.50"). */
+    @NonNull
+    public static String priceText(@NonNull Context context, double price) {
+        if (price <= 0) {
             return context.getString(R.string.event_price_free);
         }
-        double price = event.getPrice();
         boolean whole = price == Math.floor(price);
         String amount = whole
                 ? String.format(Locale.getDefault(), "%,d", (long) price)
                 : String.format(Locale.getDefault(), "%,.2f", price);
         return context.getString(R.string.event_price_format, amount);
+    }
+
+    /**
+     * The date line on Event Details: "Sat, Oct 18, 2026" for a one-day event, or the range
+     * ("Nov 8–9, 2026") for a longer one.
+     */
+    @NonNull
+    public static String detailDateText(@NonNull Event event) {
+        if (isMultiDay(event)) {
+            return dateText(event, false);
+        }
+        return new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
+                .format(new Date(event.getStartsAtMillis()));
+    }
+
+    /**
+     * The time line on Event Details: "9:00 AM – 4:00 PM", "9:00 AM", or "Starts 9:00 AM · Ends 4:00 PM"
+     * for a multi-day event. Null when the event only has a date (it starts at midnight and has no end).
+     */
+    @Nullable
+    public static String timeText(@NonNull Context context, @NonNull Event event) {
+        Calendar start = Calendar.getInstance();
+        start.setTimeInMillis(event.getStartsAtMillis());
+        boolean hasEnd = event.getEndsAtMillis() > event.getStartsAtMillis();
+        boolean midnight = start.get(Calendar.HOUR_OF_DAY) == 0 && start.get(Calendar.MINUTE) == 0;
+        if (midnight && !hasEnd) {
+            return null;
+        }
+        SimpleDateFormat format = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        String startText = format.format(new Date(event.getStartsAtMillis()));
+        if (!hasEnd) {
+            return startText;
+        }
+        String endText = format.format(new Date(event.getEndsAtMillis()));
+        if (isMultiDay(event)) {
+            return context.getString(R.string.event_time_multiday, startText, endText);
+        }
+        return startText + " " + EN_DASH + " " + endText;
+    }
+
+    /** "Oct 1": a short date for captions such as "Early bird (until Oct 1)". */
+    @NonNull
+    public static String shortDateText(long millis) {
+        return new SimpleDateFormat("MMM d", Locale.getDefault()).format(new Date(millis));
+    }
+
+    private static boolean isMultiDay(@NonNull Event event) {
+        if (event.getEndsAtMillis() <= event.getStartsAtMillis()) {
+            return false;
+        }
+        Calendar start = Calendar.getInstance();
+        start.setTimeInMillis(event.getStartsAtMillis());
+        Calendar end = Calendar.getInstance();
+        end.setTimeInMillis(event.getEndsAtMillis());
+        return start.get(Calendar.YEAR) != end.get(Calendar.YEAR)
+                || start.get(Calendar.DAY_OF_YEAR) != end.get(Calendar.DAY_OF_YEAR);
     }
 }

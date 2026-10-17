@@ -19,11 +19,19 @@ public interface EventRepository {
         NETWORK,
         /** The database rules refused the request (for example the rules haven't been published). */
         PERMISSION,
+        /** The event doesn't exist (any more), or its document is incomplete. */
+        NOT_FOUND,
         UNKNOWN
     }
 
     interface EventsCallback {
         void onLoaded(@NonNull List<Event> events);
+
+        void onFailure(@NonNull Failure failure);
+    }
+
+    interface EventCallback {
+        void onLoaded(@NonNull Event event);
 
         void onFailure(@NonNull Failure failure);
     }
@@ -46,6 +54,9 @@ public interface EventRepository {
      * @param limit the most events to return
      */
     void loadUpcomingEvents(int limit, @NonNull EventsCallback callback);
+
+    /** One event by its id, with every detail (Event Details). */
+    void loadEvent(@NonNull String eventId, @NonNull EventCallback callback);
 
     /** Ids of the events the signed-in person has saved (the heart on an event card). */
     void loadSavedEventIds(@NonNull SavedIdsCallback callback);

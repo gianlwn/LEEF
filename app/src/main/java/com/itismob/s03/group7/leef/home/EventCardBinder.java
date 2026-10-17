@@ -26,7 +26,7 @@ import com.itismob.s03.group7.leef.model.Event;
 import java.util.List;
 
 /** Fills the pieces that Home's featured card and compact row have in common. */
-final class EventCardBinder {
+public final class EventCardBinder {
 
     /** The most tags shown under an event. */
     private static final int MAX_TAGS = 3;
@@ -38,7 +38,7 @@ final class EventCardBinder {
      * Shows the event's photo over the default cover art. With no photo (or if it fails to load) the
      * view is hidden and the default art shows through.
      */
-    static void bindCover(@NonNull ImageView photo, @Nullable String coverUrl) {
+    public static void bindCover(@NonNull ImageView photo, @Nullable String coverUrl) {
         if (coverUrl == null) {
             Glide.with(photo).clear(photo);
             photo.setImageDrawable(null);
@@ -69,7 +69,7 @@ final class EventCardBinder {
     }
 
     /** The coloured category label ("SEMINAR"). */
-    static void bindBadge(@NonNull TextView badge, @NonNull Event event) {
+    public static void bindBadge(@NonNull TextView badge, @NonNull Event event) {
         Context context = badge.getContext();
         badge.setText(event.getCategory().getBadgeRes());
         badge.setBackgroundTintList(ColorStateList.valueOf(
@@ -113,7 +113,7 @@ final class EventCardBinder {
     }
 
     /** The heart: red and filled when saved. */
-    static void bindHeart(@NonNull ImageButton heart, @NonNull EventItem item) {
+    public static void bindHeart(@NonNull ImageButton heart, @NonNull EventItem item) {
         Context context = heart.getContext();
         heart.setSelected(item.isSaved());
         heart.setContentDescription(context.getString(
