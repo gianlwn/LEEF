@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Screen 11 - Create / Post Event. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/createRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/leef_background"
+    android:orientation="vertical"
+    tools:context=".postevent.CreateEventActivity">
+
+    <!-- Top bar: back and title -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="4dp">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/search_back_a11y"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/leef_ink" />
+
+        <TextView
+            android:id="@+id/screenTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="@string/create_title"
+            android:textAppearance="@style/TextAppearance.LEEF.Home.Name" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:id="@+id/formScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/formContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="28dp">
+
+                <TextView
+                    android:id="@+id/sectionInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/create_section_info"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.Section" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/create_label_title"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/titleLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/titleInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_title"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLength="100"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/create_label_description"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/descriptionLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:hintEnabled="false"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="500">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/descriptionInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_description"
+                        android:gravity="top|start"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLength="500"
+                        android:minLines="4"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/create_label_category"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/categoryLayout"
+                    style="@style/Widget.LEEF.TextInputLayout.Dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:hintEnabled="false">
+
+                    <!-- saveEnabled=false: the screen restores the choice itself from the view model. -->
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/categoryInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_category"
+                        android:inputType="none"
+                        android:saveEnabled="false"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/create_label_when"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/create_label_starts"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/startLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:hintEnabled="false" app:endIconDrawable="@drawable/ic_event_date"
+                    app:endIconMode="custom">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/startInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_start"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="@string/create_label_ends"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/endLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:hintEnabled="false" app:endIconDrawable="@drawable/ic_event_date"
+                    app:endIconMode="custom">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/endInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_end"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/create_label_where"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/venueLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:hintEnabled="false" app:endIconDrawable="@drawable/ic_event_pin"
+                    app:endIconMode="custom">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/venueInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_venue"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLength="120"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cityLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cityInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_city"
+                        android:imeOptions="actionNext"
+                        android:inputType="textCapWords"
+                        android:maxLength="60"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:id="@+id/sectionAudience"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/create_section_audience"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.Section" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/create_audience_helper"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/audienceGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:chipSpacingHorizontal="10dp"
+                    app:chipSpacingVertical="8dp" />
+
+                <TextView
+                    android:id="@+id/sectionTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/create_section_tags"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.Section" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/create_tag_helper"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tagLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:hintEnabled="false" app:endIconContentDescription="@string/create_add_tag_a11y"
+                    app:endIconDrawable="@drawable/ic_plus"
+                    app:endIconMode="custom">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/tagInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_tag"
+                        android:imeOptions="actionDone"
+                        android:inputType="text|textNoSuggestions"
+                        android:maxLength="40"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/tagGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:chipSpacingHorizontal="8dp"
+                    app:chipSpacingVertical="6dp" />
+
+                <TextView
+                    android:id="@+id/sectionPricing"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/create_section_pricing"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.Section" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/pricingGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:chipSpacingHorizontal="10dp"
+                    app:selectionRequired="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipFree"
+                        style="@style/Widget.LEEF.FilterChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_price_free" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPaid"
+                        style="@style/Widget.LEEF.FilterChip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_price_paid" />
+                </com.google.android.material.chip.ChipGroup>
+
+                <LinearLayout
+                    android:id="@+id/paidBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/priceLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    app:hintEnabled="false"
+                    app:prefixText="₱">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/priceInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_price"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:maxLength="9"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/earlySwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="48dp"
+                    android:text="@string/create_early_switch"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                    <LinearLayout
+                        android:id="@+id/earlyBlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/earlyPriceLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:hintEnabled="false"
+                    app:prefixText="₱">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/earlyPriceInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_early_price"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:maxLength="9"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/earlyUntilLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:hintEnabled="false" app:endIconDrawable="@drawable/ic_event_date"
+                    app:endIconMode="custom">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/earlyUntilInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_early_until"
+                        android:clickable="true"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/groupSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:minHeight="48dp"
+                    android:text="@string/create_group_switch"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                    <LinearLayout
+                        android:id="@+id/groupBlock"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/groupPriceLayout"
+                    style="@style/Widget.LEEF.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:hintEnabled="false"
+                    app:prefixText="₱">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/groupPriceInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/create_hint_group_price"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
+                        android:maxLength="9"
+                        android:maxLines="1"
+                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/sectionPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/create_section_photo"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.Section" />
+
+                <FrameLayout
+                    android:id="@+id/coverCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/bg_upload_card"
+                    android:clickable="true"
+                    android:contentDescription="@string/create_photo_title"
+                    android:focusable="true">
+
+                    <LinearLayout
+                        android:id="@+id/coverEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp">
+
+                        <ImageView
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_image_placeholder"
+                            app:tint="@color/leef_ink" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/create_photo_title"
+                                android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/create_photo_subtitle"
+                                android:textAppearance="@style/TextAppearance.LEEF.Details.Label" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/coverPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_cover_preview"
+                        android:clipToOutline="true"
+                        android:contentDescription="@string/create_photo_preview_a11y"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/coverActions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/changeCoverButton"
+                        style="@style/Widget.LEEF.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_photo_change" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/removeCoverButton"
+                        style="@style/Widget.LEEF.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_photo_remove" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/coverError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:accessibilityLiveRegion="polite"
+                    android:textAppearance="@style/TextAppearance.LEEF.Auth.FieldError"
+                    android:visibility="gone"
+                    tools:text="Couldn't load that image."
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Checking the account, a problem, or "only organizers" -->
+        <LinearLayout
+            android:id="@+id/statePanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/loadingSpinner"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:indeterminateTint="@color/leef_green_700" />
+
+            <ImageView
+                android:id="@+id/stateIcon"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_state_cloud_off"
+                android:visibility="gone"
+                app:tint="@color/leef_gray_500" />
+
+            <TextView
+                android:id="@+id/stateTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/create_forbidden_title"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.StateTitle"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/stateBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.LEEF.Home.StateBody"
+                android:visibility="gone"
+                tools:text="We couldn't check your account. Please try again." />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/stateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:minWidth="170dp"
+                android:text="@string/home_retry"
+                android:visibility="gone" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Pinned Post Event button -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/leef_background"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/bg_bottom_nav_divider" />
+
+        <TextView
+            android:id="@+id/postingAs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textAppearance="@style/TextAppearance.LEEF.Details.Label"
+            tools:text="Posting as Ateneo Computer Society" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/postButton"
+            style="@style/Widget.LEEF.Button.Hero"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="14dp"
+            android:text="@string/create_post_button"
+            app:iconGravity="textStart" />
+    </LinearLayout>
+</LinearLayout>

@@ -13,10 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.itismob.s03.group7.leef.MainViewModel;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.databinding.FragmentMyEventsBinding;
 import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.home.HomeViewModel;
+import com.itismob.s03.group7.leef.model.UserRole;
+import com.itismob.s03.group7.leef.postevent.CreateEventActivity;
 import com.itismob.s03.group7.leef.search.SearchActivity;
 
 /**
@@ -54,6 +57,13 @@ public class MyEventsFragment extends Fragment {
         binding.swipeRefresh.setColorSchemeResources(R.color.leef_green_700);
         binding.swipeRefresh.setOnRefreshListener(viewModel::refresh);
         binding.retryButton.setOnClickListener(v -> viewModel.retry());
+        binding.postEventButton.setOnClickListener(v ->
+                startActivity(CreateEventActivity.createIntent(requireContext())));
+        // Organizer accounts get the Post event button (Screen 11).
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.getProfile().observe(getViewLifecycleOwner(), profile ->
+                binding.postEventButton.setVisibility(
+                        profile != null && profile.getRole() == UserRole.ORGANIZER ? View.VISIBLE : View.GONE));
         binding.exploreButton.setOnClickListener(v ->
                 startActivity(SearchActivity.createIntent(requireContext(), false)));
 

@@ -3,6 +3,7 @@ package com.itismob.s03.group7.leef.data;
 import androidx.annotation.NonNull;
 
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.model.EventDraft;
 
 import java.util.List;
 import java.util.Set;
@@ -42,6 +43,13 @@ public interface EventRepository {
         void onFailure(@NonNull Failure failure);
     }
 
+    interface PostedCallback {
+        /** The new event is saved and live; {@code eventId} is its document id. */
+        void onPosted(@NonNull String eventId);
+
+        void onFailure(@NonNull Failure failure);
+    }
+
     interface DoneCallback {
         void onDone();
 
@@ -69,4 +77,13 @@ public interface EventRepository {
 
     /** Saves or un-saves an event for the signed-in person. */
     void setEventSaved(@NonNull String eventId, boolean saved, @NonNull DoneCallback callback);
+
+    /**
+     * Publishes a new event for the signed-in organizer (Create/Post Event). The event is stamped with
+     * the person's uid. Fails with {@link Failure#NETWORK} when offline instead of queueing the write.
+     */
+    void postEvent(@NonNull EventDraft draft, @NonNull PostedCallback callback);
+
+    /** Every event the signed-in person has posted (at most 50), past ones included. */
+    void loadPostedEvents(@NonNull EventsCallback callback);
 }

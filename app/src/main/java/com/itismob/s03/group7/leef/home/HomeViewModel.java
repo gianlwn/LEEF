@@ -42,6 +42,8 @@ public class HomeViewModel extends ViewModel {
     private boolean loadedOnce;
     private boolean loading;
     private boolean refreshing;
+    /** {@link FeedChange#version()} at the moment the feed was last requested. */
+    private int feedVersion = FeedChange.version();
     @Nullable
     private EventRepository.Failure failure;
 
@@ -87,6 +89,13 @@ public class HomeViewModel extends ViewModel {
         }
         selectedCategory = category;
         publish();
+    }
+
+    /** Quietly reloads the feed when an event was posted since it was last loaded. */
+    public void reloadIfFeedChanged() {
+        if (loadedOnce && !loading && feedVersion != FeedChange.version()) {
+            load(false);
+        }
     }
 
     /**
@@ -150,6 +159,7 @@ public class HomeViewModel extends ViewModel {
         loading = true;
         refreshing = fromPull;
         failure = null;
+        feedVersion = FeedChange.version();
         publish();
 
         // Two reads run side by side; the feed is redrawn once both have answered.

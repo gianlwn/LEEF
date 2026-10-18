@@ -10,8 +10,7 @@ import java.util.Objects;
 
 /**
  * An educational event listing, stored in Firestore at {@code events/{eventId}}. Every field here is
- * a database record, never hardcoded in the app. Later screens (Create/Post Event) add the remaining
- * MCO1 fields such as attachments.
+ * a database record, never hardcoded in the app. Create/Post Event (Screen 11) writes them from the app.
  *
  * <p>Build one with {@link Builder}; only the id, title, category and start time are required.
  */
@@ -28,6 +27,8 @@ public final class Event {
     public static final String FIELD_ADDRESS = "address";
     public static final String FIELD_CITY = "city";
     public static final String FIELD_AUDIENCES = "audiences";
+    public static final String FIELD_ORGANIZER_ID = "organizerId";
+    public static final String FIELD_CREATED_AT = "createdAt";
     public static final String FIELD_ORGANIZER_NAME = "organizerName";
     public static final String FIELD_ORGANIZER_LOGO_URL = "organizerLogoUrl";
     public static final String FIELD_TAGS = "tags";
@@ -52,6 +53,8 @@ public final class Event {
     private final String city;
     /** Who the event is for. Empty means open to everyone. */
     private final List<EventAudience> audiences;
+    /** Account that posted the event (Create/Post Event); empty for events added by hand. */
+    private final String organizerId;
     private final String organizerName;
     @Nullable
     private final String organizerLogoUrl;
@@ -80,6 +83,7 @@ public final class Event {
         this.address = b.address;
         this.city = b.city;
         this.audiences = Collections.unmodifiableList(new ArrayList<>(b.audiences));
+        this.organizerId = b.organizerId;
         this.organizerName = b.organizerName;
         this.organizerLogoUrl = b.organizerLogoUrl;
         this.tags = Collections.unmodifiableList(new ArrayList<>(b.tags));
@@ -138,6 +142,12 @@ public final class Event {
     @NonNull
     public List<EventAudience> getAudiences() {
         return audiences;
+    }
+
+    /** Uid of the account that posted this event, or empty when it was added by hand. */
+    @NonNull
+    public String getOrganizerId() {
+        return organizerId;
     }
 
     @NonNull
@@ -244,6 +254,7 @@ public final class Event {
                 && address.equals(event.address)
                 && city.equals(event.city)
                 && audiences.equals(event.audiences)
+                && organizerId.equals(event.organizerId)
                 && organizerName.equals(event.organizerName)
                 && Objects.equals(organizerLogoUrl, event.organizerLogoUrl)
                 && tags.equals(event.tags)
@@ -253,7 +264,7 @@ public final class Event {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, category, startsAtMillis, endsAtMillis, description, venue, address,
-                city, audiences, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
+                city, audiences, organizerId, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
                 earlyBirdUntilMillis, groupPrice, coverUrl, boosted);
     }
 
@@ -269,6 +280,7 @@ public final class Event {
         private String address = "";
         private String city = "";
         private List<EventAudience> audiences = Collections.emptyList();
+        private String organizerId = "";
         private String organizerName = "";
         @Nullable
         private String organizerLogoUrl;
@@ -322,6 +334,12 @@ public final class Event {
         @NonNull
         public Builder audiences(@NonNull List<EventAudience> value) {
             this.audiences = value;
+            return this;
+        }
+
+        @NonNull
+        public Builder organizerId(@NonNull String value) {
+            this.organizerId = value;
             return this;
         }
 

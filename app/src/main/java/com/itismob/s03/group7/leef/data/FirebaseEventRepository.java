@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.Query;
 import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
+import com.itismob.s03.group7.leef.model.EventDraft;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -184,6 +186,56 @@ public final class FirebaseEventRepository implements EventRepository {
                 });
     }
 
+    @Override
+    public void postEvent(@NonNull EventDraft draft, @NonNull PostedCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            callback.onFailure(Failure.SIGNED_OUT);
+            return;
+        }
+        DocumentReference reference = firestore.collection(Event.COLLECTION).document();
+        Map<String, Object> document = draft.toDocument();
+        document.put(Event.FIELD_ORGANIZER_ID, user.getUid());
+        document.put(Event.FIELD_CREATED_AT, FieldValue.serverTimestamp());
+        // A transaction (not a plain set) so that being offline fails right away instead of queueing a
+        // write that would publish the event later, behind the organizer's back.
+        firestore.runTransaction(transaction -> {
+            transaction.set(reference, document);
+            return null;
+        }).addOnSuccessListener(unused -> callback.onPosted(reference.getId()))
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "posting event failed", error);
+                    callback.onFailure(toFailure(error));
+                });
+    }
+
+    @Override
+    public void loadPostedEvents(@NonNull EventsCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            callback.onFailure(Failure.SIGNED_OUT);
+            return;
+        }
+        firestore.collection(Event.COLLECTION)
+                .whereEqualTo(Event.FIELD_ORGANIZER_ID, user.getUid())
+                .limit(50)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Event> events = new ArrayList<>();
+                    for (DocumentSnapshot document : snapshot.getDocuments()) {
+                        Event event = toEvent(document);
+                        if (event != null) {
+                            events.add(event);
+                        }
+                    }
+                    callback.onLoaded(events);
+                })
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "loading posted events failed", error);
+                    callback.onFailure(toFailure(error));
+                });
+    }
+
     private com.google.firebase.firestore.CollectionReference savedCollection(@NonNull FirebaseUser user) {
         return firestore.collection("users").document(user.getUid()).collection(SAVED_COLLECTION);
     }
@@ -243,6 +295,7 @@ public final class FirebaseEventRepository implements EventRepository {
                 .address(text(document, Event.FIELD_ADDRESS))
                 .city(text(document, Event.FIELD_CITY))
                 .audiences(audiences)
+                .organizerId(text(document, Event.FIELD_ORGANIZER_ID))
                 .organizerName(text(document, Event.FIELD_ORGANIZER_NAME))
                 .organizerLogoUrl(optionalText(document, Event.FIELD_ORGANIZER_LOGO_URL))
                 .tags(tags)

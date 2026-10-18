@@ -8,15 +8,36 @@
     android:background="@color/leef_background"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingStart="20dp"
         android:paddingTop="16dp"
-        android:paddingEnd="20dp"
-        android:text="@string/my_events_title"
-        android:textAppearance="@style/TextAppearance.LEEF.Details.Title" />
+        android:paddingEnd="20dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/my_events_title"
+            android:textAppearance="@style/TextAppearance.LEEF.Details.Title" />
+
+        <!-- Only organizer accounts see this (Screen 11). -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/postEventButton"
+            style="@style/Widget.LEEF.Button.Tonal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_events_post"
+            android:visibility="gone"
+            app:icon="@drawable/ic_plus"
+            app:iconSize="18dp"
+            app:iconTint="@color/leef_green_900"
+            tools:visibility="visible" />
+    </LinearLayout>
 
     <!-- Upcoming / Past switch -->
     <LinearLayout

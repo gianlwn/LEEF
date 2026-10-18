@@ -118,6 +118,7 @@ public class HomeFragment extends Fragment {
         super.onResume();
         // Back from Event Details the heart may have changed.
         if (viewModel != null) {
+            viewModel.reloadIfFeedChanged();
             viewModel.reloadSaved();
         }
     }
@@ -127,6 +128,7 @@ public class HomeFragment extends Fragment {
         super.onHiddenChanged(hidden);
         // Coming back from the My Events tab the hearts may have changed.
         if (!hidden && viewModel != null) {
+            viewModel.reloadIfFeedChanged();
             viewModel.reloadSaved();
         }
     }

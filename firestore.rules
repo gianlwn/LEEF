@@ -26,11 +26,46 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Screen 4: events anyone signed in can browse. Nobody can write events from the app yet;
-    // until Create/Post Event (Screen 11) exists, add test events in the Firebase console.
+    // Screen 4: events anyone signed in can browse. Screen 11: accounts with the Organizer role can post
+    // new events (create only: events can't be edited or deleted from the app yet). Events added by
+    // hand in the Firebase console are not affected by these rules.
+    function isOrganizer() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'organizer';
+    }
+
+    function isNewEvent() {
+      let d = request.resource.data;
+      return d.keys().hasAll(['title', 'category', 'startsAt', 'price', 'organizerId', 'organizerName', 'createdAt', 'boosted'])
+        && d.keys().hasOnly(['title', 'category', 'startsAt', 'endsAt', 'description', 'venue', 'city',
+          'audiences', 'tags', 'price', 'earlyBirdPrice', 'earlyBirdUntil', 'groupPrice', 'coverUrl',
+          'organizerId', 'organizerName', 'createdAt', 'boosted'])
+        && d.title is string && d.title.size() > 0 && d.title.size() <= 100
+        && d.category in ['seminar', 'workshop', 'competition', 'school_activity']
+        && d.startsAt is timestamp && d.startsAt > request.time
+        && (!('endsAt' in d) || (d.endsAt is timestamp && d.endsAt > d.startsAt))
+        && d.get('description', '') is string && d.get('description', '').size() <= 500
+        && d.get('venue', '') is string && d.get('venue', '').size() <= 120
+        && d.get('city', '') is string && d.get('city', '').size() <= 60
+        && d.audiences is list && d.audiences.size() <= 5
+        && d.audiences.hasOnly(['students', 'teachers', 'parents', 'freelancers', 'school_admins'])
+        && d.tags is list && d.tags.size() <= 5
+        && d.price is number && d.price >= 0 && d.price <= 100000
+        && (('earlyBirdPrice' in d) == ('earlyBirdUntil' in d))
+        && (!('earlyBirdPrice' in d)
+          || (d.earlyBirdPrice is number && d.earlyBirdPrice >= 0 && d.earlyBirdPrice < d.price
+            && d.earlyBirdUntil is timestamp && d.earlyBirdUntil <= d.startsAt))
+        && (!('groupPrice' in d) || (d.groupPrice is number && d.groupPrice >= 0 && d.groupPrice < d.price))
+        && (!('coverUrl' in d) || (d.coverUrl is string && d.coverUrl.matches('https://.+') && d.coverUrl.size() <= 500))
+        && d.organizerId == request.auth.uid
+        && d.organizerName is string && d.organizerName.size() > 0 && d.organizerName.size() <= 100
+        && d.createdAt == request.time
+        && d.boosted == false;
+    }
+
     match /events/{eventId} {
       allow read: if request.auth != null;
-      allow write: if false;
+      allow create: if request.auth != null && isOrganizer() && isNewEvent();
+      allow update, delete: if false;
     }
 
     // Screen 4: the hearts. Each person keeps their own saved events at users/{uid}/savedEvents/{eventId}.

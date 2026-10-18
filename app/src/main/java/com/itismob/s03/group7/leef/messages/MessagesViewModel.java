@@ -128,14 +128,36 @@ public class MessagesViewModel extends ViewModel {
     }
 
     private void loadConversations(@NonNull List<Registration> registered) {
+        // Organizers also get the chat of every event they posted. A failure here only hides those chats.
+        events.loadPostedEvents(new EventRepository.EventsCallback() {
+            @Override
+            public void onLoaded(@NonNull List<Event> posted) {
+                loadConversations(registered, posted);
+            }
+
+            @Override
+            public void onFailure(@NonNull EventRepository.Failure reason) {
+                loadConversations(registered, new ArrayList<>());
+            }
+        });
+    }
+
+    private void loadConversations(@NonNull List<Registration> registered, @NonNull List<Event> posted) {
         Map<String, String> titles = new HashMap<>();
         for (Registration registration : registered) {
             titles.put(registration.getEventId(), registration.getEventTitle());
         }
+        final Map<String, String> covers = new HashMap<>();
+        for (Event event : posted) {
+            titles.put(event.getId(), event.getTitle());
+            covers.put(event.getId(), event.getCoverUrl());
+        }
+        // The covers of events the person registered for (not posted by them) still have to be loaded.
+        final java.util.Set<String> missingCovers = new java.util.HashSet<>(titles.keySet());
+        missingCovers.removeAll(covers.keySet());
 
         final int[] pending = {2};
         final List<Conversation>[] conversations = newHolder();
-        final Map<String, String> covers = new HashMap<>();
         final MessageRepository.Failure[] chatFailure = {null};
 
         Runnable next = () -> {
@@ -173,10 +195,10 @@ public class MessagesViewModel extends ViewModel {
                 next.run();
             }
         });
-        if (titles.isEmpty()) {
+        if (missingCovers.isEmpty()) {
             next.run();
         } else {
-            events.loadEventsByIds(titles.keySet(), new EventRepository.EventsCallback() {
+            events.loadEventsByIds(missingCovers, new EventRepository.EventsCallback() {
                 @Override
                 public void onLoaded(@NonNull List<Event> found) {
                     for (Event event : found) {
