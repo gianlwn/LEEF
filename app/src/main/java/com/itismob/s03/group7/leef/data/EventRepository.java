@@ -58,6 +58,12 @@ public interface EventRepository {
     /** One event by its id, with every detail (Event Details). */
     void loadEvent(@NonNull String eventId, @NonNull EventCallback callback);
 
+    /**
+     * The events with these ids (My Events). An id with no event, or an incomplete document, is simply
+     * missing from the result.
+     */
+    void loadEventsByIds(@NonNull Set<String> eventIds, @NonNull EventsCallback callback);
+
     /** Ids of the events the signed-in person has saved (the heart on an event card). */
     void loadSavedEventIds(@NonNull SavedIdsCallback callback);
 

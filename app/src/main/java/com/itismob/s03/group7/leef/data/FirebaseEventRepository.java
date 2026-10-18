@@ -9,6 +9,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -36,6 +37,7 @@ public final class FirebaseEventRepository implements EventRepository {
     private static final String TAG = "LeefEvents";
     private static final String SAVED_COLLECTION = "savedEvents";
     private static final String FIELD_SAVED_AT = "savedAt";
+    private static final int WHERE_IN_LIMIT = 10;
 
     private final FirebaseAuth auth;
     private final FirebaseFirestore firestore;
@@ -95,6 +97,48 @@ public final class FirebaseEventRepository implements EventRepository {
                     Log.w(TAG, "loading event failed", error);
                     callback.onFailure(toFailure(error));
                 });
+    }
+
+    @Override
+    public void loadEventsByIds(@NonNull Set<String> eventIds, @NonNull EventsCallback callback) {
+        if (auth.getCurrentUser() == null) {
+            callback.onFailure(Failure.SIGNED_OUT);
+            return;
+        }
+        if (eventIds.isEmpty()) {
+            callback.onLoaded(new ArrayList<>());
+            return;
+        }
+        // Firestore's "in" query takes at most 10 ids, so ask in groups of 10.
+        List<String> ids = new ArrayList<>(eventIds);
+        int groups = (ids.size() + WHERE_IN_LIMIT - 1) / WHERE_IN_LIMIT;
+        final int[] pending = {groups};
+        final boolean[] failed = {false};
+        final List<Event> found = new ArrayList<>();
+        for (int i = 0; i < groups; i++) {
+            List<String> group = ids.subList(i * WHERE_IN_LIMIT, Math.min(ids.size(), (i + 1) * WHERE_IN_LIMIT));
+            firestore.collection(Event.COLLECTION)
+                    .whereIn(FieldPath.documentId(), group)
+                    .get()
+                    .addOnSuccessListener(snapshot -> {
+                        for (DocumentSnapshot document : snapshot.getDocuments()) {
+                            Event event = toEvent(document);
+                            if (event != null) {
+                                found.add(event);
+                            }
+                        }
+                        if (--pending[0] == 0 && !failed[0]) {
+                            callback.onLoaded(found);
+                        }
+                    })
+                    .addOnFailureListener(error -> {
+                        Log.w(TAG, "loading events by id failed", error);
+                        if (!failed[0]) {
+                            failed[0] = true;
+                            callback.onFailure(toFailure(error));
+                        }
+                    });
+        }
     }
 
     @Override

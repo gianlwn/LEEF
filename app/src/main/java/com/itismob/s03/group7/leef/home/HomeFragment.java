@@ -123,6 +123,15 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        // Coming back from the My Events tab the hearts may have changed.
+        if (!hidden && viewModel != null) {
+            viewModel.reloadSaved();
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

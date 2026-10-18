@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 
 import com.itismob.s03.group7.leef.model.Registration;
 
+import java.util.List;
+
 /** Registrations the screens rely on; the Firebase code lives in {@link FirebaseRegistrationRepository}. */
 public interface RegistrationRepository {
 
@@ -24,6 +26,12 @@ public interface RegistrationRepository {
         void onFailure(@NonNull Failure failure);
     }
 
+    interface ListCallback {
+        void onLoaded(@NonNull List<Registration> registrations);
+
+        void onFailure(@NonNull Failure failure);
+    }
+
     interface SaveCallback {
         void onSaved();
 
@@ -32,6 +40,9 @@ public interface RegistrationRepository {
 
     /** The signed-in person's registration for one event, if any. */
     void loadRegistration(@NonNull String eventId, @NonNull LoadCallback callback);
+
+    /** Every event the signed-in person has registered for (My Events). */
+    void loadRegistrations(@NonNull ListCallback callback);
 
     /** Saves the signed-in person's registration. */
     void saveRegistration(@NonNull Registration registration, @NonNull SaveCallback callback);

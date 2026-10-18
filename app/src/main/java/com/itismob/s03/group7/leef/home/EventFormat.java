@@ -118,6 +118,26 @@ public final class EventFormat {
         return startText + " " + EN_DASH + " " + endText;
     }
 
+    /**
+     * The date line on My Events: "Oct 18, 2026 | 9:00 AM", or just the date for a multi-day event or one
+     * that starts at midnight. Works from the start time alone when the event itself is gone.
+     */
+    @NonNull
+    public static String dateTimeLine(@Nullable Event event, long startsAtMillis) {
+        Locale locale = Locale.getDefault();
+        if (event != null && isMultiDay(event)) {
+            return dateText(event, false);
+        }
+        Calendar start = Calendar.getInstance();
+        start.setTimeInMillis(startsAtMillis);
+        String date = new SimpleDateFormat("MMM d, yyyy", locale).format(new Date(startsAtMillis));
+        boolean midnight = start.get(Calendar.HOUR_OF_DAY) == 0 && start.get(Calendar.MINUTE) == 0;
+        if (midnight) {
+            return date;
+        }
+        return date + " | " + new SimpleDateFormat("h:mm a", locale).format(new Date(startsAtMillis));
+    }
+
     /** "Oct 1": a short date for captions such as "Early bird (until Oct 1)". */
     @NonNull
     public static String shortDateText(long millis) {

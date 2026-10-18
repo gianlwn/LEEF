@@ -16,7 +16,9 @@ import com.itismob.s03.group7.leef.model.PaymentMethod;
 import com.itismob.s03.group7.leef.model.Registration;
 import com.itismob.s03.group7.leef.model.TicketType;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,6 +55,32 @@ public final class FirebaseRegistrationRepository implements RegistrationReposit
                 .addOnSuccessListener(document -> callback.onLoaded(document.exists() ? toRegistration(document) : null))
                 .addOnFailureListener(error -> {
                     Log.w(TAG, "loading registration failed", error);
+                    callback.onFailure(toFailure(error));
+                });
+    }
+
+    @Override
+    public void loadRegistrations(@NonNull ListCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            callback.onFailure(Failure.SIGNED_OUT);
+            return;
+        }
+        firestore.collection(Registration.COLLECTION)
+                .whereEqualTo(Registration.FIELD_USER_ID, user.getUid())
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Registration> registrations = new ArrayList<>();
+                    for (DocumentSnapshot document : snapshot.getDocuments()) {
+                        Registration registration = toRegistration(document);
+                        if (registration != null) {
+                            registrations.add(registration);
+                        }
+                    }
+                    callback.onLoaded(registrations);
+                })
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "loading registrations failed", error);
                     callback.onFailure(toFailure(error));
                 });
     }

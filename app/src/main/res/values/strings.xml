@@ -157,7 +157,6 @@
     <string name="coming_soon_format">%1$s is coming soon.</string>
     <string name="feature_notifications">Notifications</string>
     <string name="feature_profile">Your profile</string>
-    <string name="feature_my_events">My Events</string>
     <string name="feature_messages">Messages</string>
 
     <!-- Home / Event Feed -->
@@ -345,4 +344,20 @@
     <string name="art_title_pay_gcash" translatable="false">GCash logo</string>
     <string name="art_title_pay_maya" translatable="false">Maya logo</string>
     <string name="art_title_pay_card" translatable="false">Card logo</string>
+
+    <!-- Screen 8 - My Events -->
+    <string name="my_events_title">My Events</string>
+    <string name="my_events_tab_upcoming">Upcoming</string>
+    <string name="my_events_tab_past">Past</string>
+    <string name="my_events_status_registered">Registered</string>
+    <string name="my_events_status_group">Group registered</string>
+    <string name="my_events_status_saved">Saved</string>
+    <string name="my_events_empty_upcoming_title">No upcoming events yet</string>
+    <string name="my_events_empty_upcoming_body">Register for an event, or tap the heart on one to save it, and it will show up here.</string>
+    <string name="my_events_empty_past_title">No past events yet</string>
+    <string name="my_events_empty_past_body">Events you registered for or saved will move here once they\'re over.</string>
+    <string name="my_events_explore">Explore events</string>
+    <string name="my_events_loading_a11y">Loading your events</string>
+    <string name="my_events_refresh_offline">You\'re offline, so your events weren\'t refreshed.</string>
+    <string name="my_events_refresh_failed">We couldn\'t refresh your events. Please try again.</string>
 </resources>
