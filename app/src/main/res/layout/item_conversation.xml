@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One row of the Messages list: avatar, name, time, latest message, unread badge. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="20dp"
+    android:paddingTop="12dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="12dp">
+
+    <!-- Avatar: the event's photo for an event chat, initials for a person -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        app:cardBackgroundColor="@color/leef_green_100"
+        app:cardCornerRadius="32dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/leef_outline"
+        app:strokeWidth="1dp">
+
+        <com.itismob.s03.group7.leef.ui.widget.ArtSlotView
+            android:id="@+id/avatarArt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:leefArtName="art_event_cover_default"
+            app:leefArtScale="centerCrop"
+            app:leefArtTitle="@string/art_title_event_cover_default" />
+
+        <ImageView
+            android:id="@+id/avatarPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/avatarInitials"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/leef_green_100"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.LEEF.Home.SectionTitle"
+            android:textColor="@color/leef_green_900"
+            android:visibility="gone"
+            tools:text="MC" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.LEEF.Event.RowTitle"
+            tools:text="Future-Ready: AI for Students" />
+
+        <TextView
+            android:id="@+id/preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.LEEF.Event.Meta"
+            tools:text="John: The materials are now available" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:gravity="end"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.LEEF.Event.Meta"
+            tools:text="10:24 AM" />
+
+        <TextView
+            android:id="@+id/unreadBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_unread_badge"
+            android:gravity="center"
+            android:minWidth="24dp"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:text="2"
+            tools:visibility="visible" />
+    </LinearLayout>
+</LinearLayout>

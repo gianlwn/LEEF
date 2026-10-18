@@ -157,7 +157,6 @@
     <string name="coming_soon_format">%1$s is coming soon.</string>
     <string name="feature_notifications">Notifications</string>
     <string name="feature_profile">Your profile</string>
-    <string name="feature_messages">Messages</string>
 
     <!-- Home / Event Feed -->
     <string name="home_greeting_morning">Good morning,</string>
@@ -385,4 +384,40 @@
     <string name="reminder_text">%1$s starts in 1 hour. See you there!</string>
     <string name="reminder_text_today_place">%1$s is today at %2$s. See you there!</string>
     <string name="reminder_text_today">%1$s is today. See you there!</string>
+
+    <!-- Screen 10 - Messaging -->
+    <string name="messages_title">Messages</string>
+    <string name="messages_search_hint">Search messages…</string>
+    <string name="messages_loading_a11y">Loading your messages</string>
+    <string name="messages_empty_title">No conversations yet</string>
+    <string name="messages_empty_body">Register for an event to join its group chat and talk with the people who are going.</string>
+    <string name="messages_no_matches_title">No matches</string>
+    <string name="messages_no_matches_body">Try a different name or word.</string>
+    <string name="messages_no_messages">No messages yet. Say hi!</string>
+    <string name="messages_preview_you">You: %1$s</string>
+    <string name="messages_preview_sender">%1$s: %2$s</string>
+    <string name="messages_unread_many">9+</string>
+    <string name="messages_error_network">You seem to be offline. Check your connection and try again.</string>
+    <string name="messages_error_permission">We couldn\'t open your messages because the database rules for messaging haven\'t been published yet.</string>
+    <string name="messages_error_generic">We couldn\'t load your messages right now. Please try again.</string>
+    <string name="messages_refresh_offline">You\'re offline, so your messages weren\'t refreshed.</string>
+    <string name="messages_refresh_failed">We couldn\'t refresh your messages. Please try again.</string>
+    <string name="chat_loading_a11y">Loading the chat</string>
+    <string name="chat_empty_title">No messages yet</string>
+    <string name="chat_empty_body_event">Be the first to say hello to everyone going.</string>
+    <string name="chat_empty_body_direct">Say hello to start the conversation.</string>
+    <string name="chat_input_hint">Write a message…</string>
+    <string name="chat_send_a11y">Send message</string>
+    <string name="chat_subtitle_event">Event chat</string>
+    <string name="chat_subtitle_direct">Private chat</string>
+    <string name="chat_today">Today</string>
+    <string name="chat_yesterday">Yesterday</string>
+    <string name="chat_error_not_member">You can join this chat once you\'ve registered for the event.</string>
+    <string name="chat_send_offline">You\'re offline. Your message will send when you\'re back online.</string>
+    <string name="chat_send_failed">Your message couldn\'t be sent. Please try again.</string>
+    <string name="chat_send_no_profile">We couldn\'t load your profile, so the message wasn\'t sent. Please try again.</string>
+    <string name="chat_dm_title">Message %1$s?</string>
+    <string name="chat_dm_body">This starts a private chat with them.</string>
+    <string name="chat_dm_confirm">Message</string>
+    <string name="chat_dm_cancel">Cancel</string>
 </resources>

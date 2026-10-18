@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- "Today", "Yesterday" or a date between messages of different days. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dayText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:paddingTop="14dp"
+    android:paddingBottom="6dp"
+    android:textAppearance="@style/TextAppearance.LEEF.LabelMedium"
+    android:textColor="@color/leef_gray_600"
+    tools:text="Today" />

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A message the person sent (right side). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    android:orientation="vertical"
+    android:paddingTop="6dp"
+    android:paddingBottom="2dp">
+
+    <TextView
+        android:id="@+id/messageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bubble_mine"
+        android:maxWidth="290dp"
+        android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="10dp"
+        android:textAppearance="@style/TextAppearance.LEEF.BodyLarge"
+        android:textColor="@color/white"
+        android:textIsSelectable="true"
+        tools:text="See you at the seminar!" />
+
+    <TextView
+        android:id="@+id/messageTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="4dp"
+        android:textAppearance="@style/TextAppearance.LEEF.LabelSmall"
+        android:textColor="@color/leef_gray_600"
+        tools:text="10:24 AM" />
+</LinearLayout>
