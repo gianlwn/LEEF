@@ -5,6 +5,11 @@
     <!-- Firebase (sign-in and the database) needs the internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Event reminders (Screen 9): the notification itself (Android 13+ asks first) and putting
+         the reminders back after the phone restarts. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".LeefApplication"
         android:allowBackup="true"
@@ -75,6 +80,26 @@
             android:name=".registration.RegistrationActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <!-- Screen 9: Check-in ticket with the QR code (opened from the reminder notification too). -->
+        <activity
+            android:name=".checkin.CheckInActivity"
+            android:exported="false" />
+
+        <!-- Screen 9: shows the "event starts in 1 hour" notification when its alarm goes off. -->
+        <receiver
+            android:name=".reminder.ReminderReceiver"
+            android:exported="false" />
+
+        <!-- Screen 9: alarms are forgotten when the phone restarts or the app updates, so set them again. -->
+        <receiver
+            android:name=".reminder.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

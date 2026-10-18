@@ -315,6 +315,25 @@
                     android:gravity="center"
                     android:text="@string/registration_done_note"
                     android:textAppearance="@style/TextAppearance.LEEF.Details.Label" />
+
+                <TextView
+                    android:id="@+id/doneReminder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label"
+                    android:visibility="gone"
+                    tools:text="We'll remind you 1 hour before it starts."
+                    tools:visibility="visible" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/doneCheckInButton"
+                    style="@style/Widget.LEEF.Button.Tonal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/registration_done_check_in" />
             </LinearLayout>
         </ScrollView>
 

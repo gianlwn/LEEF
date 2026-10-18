@@ -50,6 +50,9 @@ dependencies {
     // Loads event photos from their web addresses (the photos themselves are database records).
     implementation(libs.glide)
 
+    // Draws the check-in QR code on the device (Screen 9). Free, no network needed.
+    implementation(libs.zxing.core)
+
     // Firebase: the BoM keeps every Firebase library on matching versions.
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)

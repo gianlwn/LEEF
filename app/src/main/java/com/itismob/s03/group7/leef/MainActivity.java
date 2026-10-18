@@ -20,6 +20,7 @@ import com.itismob.s03.group7.leef.data.FirebaseAccountRepository;
 import com.itismob.s03.group7.leef.databinding.ActivityMainBinding;
 import com.itismob.s03.group7.leef.myevents.MyEventsFragment;
 import com.itismob.s03.group7.leef.onboarding.OnboardingActivity;
+import com.itismob.s03.group7.leef.reminder.ReminderSync;
 import com.itismob.s03.group7.leef.search.SearchActivity;
 import com.itismob.s03.group7.leef.ui.ComingSoon;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
@@ -76,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Make sure every event the person registered for has its reminder (new phone, reinstall...).
+        ReminderSync.run(getApplicationContext());
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.getProfileMissing().observe(this, missing -> {

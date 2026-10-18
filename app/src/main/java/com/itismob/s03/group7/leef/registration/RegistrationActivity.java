@@ -1,7 +1,9 @@
 package com.itismob.s03.group7.leef.registration;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,6 +23,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.itismob.s03.group7.leef.R;
+import com.itismob.s03.group7.leef.checkin.CheckInActivity;
 import com.itismob.s03.group7.leef.databinding.ActivityRegistrationBinding;
 import com.itismob.s03.group7.leef.databinding.ItemChoiceRowBinding;
 import com.itismob.s03.group7.leef.home.EventFormat;
@@ -27,8 +32,15 @@ import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.PaymentMethod;
 import com.itismob.s03.group7.leef.model.Registration;
 import com.itismob.s03.group7.leef.model.TicketType;
+import com.itismob.s03.group7.leef.reminder.Reminder;
+import com.itismob.s03.group7.leef.reminder.ReminderNotifications;
+import com.itismob.s03.group7.leef.reminder.ReminderScheduler;
+import com.itismob.s03.group7.leef.reminder.ReminderSync;
 import com.itismob.s03.group7.leef.ui.ButtonSpinner;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +57,10 @@ public class RegistrationActivity extends AppCompatActivity {
     private ActivityRegistrationBinding binding;
     private RegistrationViewModel viewModel;
     private boolean spinnerShown;
+    private boolean notificationsAsked;
+    private boolean reminderScheduled;
+    private boolean reminderDateOnly;
+    private ActivityResultLauncher<String> notificationPermission;
 
     @NonNull
     public static Intent createIntent(@NonNull Context context, @NonNull String eventId) {
@@ -72,6 +88,10 @@ public class RegistrationActivity extends AppCompatActivity {
         binding.backButton.setOnClickListener(v -> finish());
         binding.retryButton.setOnClickListener(v -> viewModel.retry());
         binding.unavailableBackButton.setOnClickListener(v -> finish());
+        // Android 13+ asks before an app may show notifications; the reminder needs it.
+        notificationPermission = registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                granted -> updateReminderNote());
+
         binding.groupMinus.setOnClickListener(v -> viewModel.changeGroupSize(-1));
         binding.groupPlus.setOnClickListener(v -> viewModel.changeGroupSize(1));
 
@@ -205,11 +225,49 @@ public class RegistrationActivity extends AppCompatActivity {
                     : getString(R.string.registration_paid_via, amount, getString(method.getLabelRes())));
         }
 
+        scheduleReminder(state.getEvent(), registration);
+        binding.doneCheckInButton.setOnClickListener(v ->
+                startActivity(CheckInActivity.createIntent(this, registration.getEventId())));
+
         binding.totalRow.setVisibility(View.GONE);
         setButtonSpinner(false);
         binding.primaryButton.setEnabled(true);
         binding.primaryButton.setText(R.string.registration_done_button);
         binding.primaryButton.setOnClickListener(v -> finish());
+    }
+
+    /** Sets the "event starts in 1 hour" reminder for this registration and asks for notification permission. */
+    private void scheduleReminder(@Nullable Event event, @NonNull Registration registration) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            return;
+        }
+        String title = event != null ? event.getTitle() : registration.getEventTitle();
+        long startsAt = event != null ? event.getStartsAtMillis() : registration.getEventStartsAtMillis();
+        String place = event != null ? ReminderSync.placeOf(event) : "";
+        Reminder reminder = new Reminder(registration.getEventId(), user.getUid(), title, place, startsAt);
+        reminderScheduled = ReminderScheduler.schedule(this, reminder);
+        reminderDateOnly = reminder.isDateOnly();
+        updateReminderNote();
+
+        if (reminderScheduled && !notificationsAsked && !ReminderNotifications.canNotify(this)
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            notificationsAsked = true;
+            notificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
+    }
+
+    /** Says whether a reminder is on its way (nothing when the event is too soon for one). */
+    private void updateReminderNote() {
+        if (!reminderScheduled) {
+            binding.doneReminder.setVisibility(View.GONE);
+            return;
+        }
+        binding.doneReminder.setVisibility(View.VISIBLE);
+        binding.doneReminder.setText(!ReminderNotifications.canNotify(this)
+                ? R.string.registration_done_reminder_off
+                : reminderDateOnly ? R.string.registration_done_reminder_today
+                : R.string.registration_done_reminder);
     }
 
     private String ticketHint(@NonNull TicketType type, @NonNull Event event) {

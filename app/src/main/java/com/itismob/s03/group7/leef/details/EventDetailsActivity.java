@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.itismob.s03.group7.leef.R;
+import com.itismob.s03.group7.leef.checkin.CheckInActivity;
 import com.itismob.s03.group7.leef.databinding.ActivityEventDetailsBinding;
 import com.itismob.s03.group7.leef.home.EventCardBinder;
 import com.itismob.s03.group7.leef.home.EventFormat;
@@ -160,11 +161,18 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         // Register
         boolean ended = event.hasEnded(now);
-        binding.registerButton.setEnabled(!ended && !registered);
-        binding.registerButton.setText(registered ? R.string.details_registered
+        // Not registered: Register Now. Registered: the check-in ticket (until the event is over).
+        binding.registerButton.setEnabled(!ended);
+        binding.registerButton.setText(registered
+                ? (ended ? R.string.details_registered : R.string.details_show_check_in)
                 : ended ? R.string.details_event_ended : R.string.details_register);
-        binding.registerButton.setOnClickListener(v ->
-                registrationLauncher.launch(RegistrationActivity.createIntent(this, eventId)));
+        binding.registerButton.setOnClickListener(v -> {
+            if (registered) {
+                startActivity(CheckInActivity.createIntent(this, eventId));
+            } else {
+                registrationLauncher.launch(RegistrationActivity.createIntent(this, eventId));
+            }
+        });
     }
 
     /** One price, or the early-bird price beside the regular rate while the offer lasts. */

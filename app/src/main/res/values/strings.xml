@@ -360,4 +360,29 @@
     <string name="my_events_loading_a11y">Loading your events</string>
     <string name="my_events_refresh_offline">You\'re offline, so your events weren\'t refreshed.</string>
     <string name="my_events_refresh_failed">We couldn\'t refresh your events. Please try again.</string>
+
+    <!-- Screen 9 - Check-in and reminders -->
+    <string name="check_in_title">Check-in</string>
+    <string name="check_in_ready">Ready to check in?</string>
+    <string name="check_in_show_qr">Show this QR code at the event venue.</string>
+    <string name="check_in_code">#%1$s</string>
+    <string name="check_in_qr_a11y">Your check-in QR code</string>
+    <string name="check_in_loading_a11y">Loading your ticket</string>
+    <string name="check_in_not_registered_title">You haven\'t registered yet</string>
+    <string name="check_in_not_registered_body">Register for this event to get your check-in code.</string>
+    <string name="check_in_view_event">View event</string>
+    <string name="check_in_ended_title">This event has ended</string>
+    <string name="check_in_ended_body">Check-in is closed. Thanks for joining!</string>
+    <string name="details_show_check_in">Show check-in QR</string>
+    <string name="registration_done_check_in">Show check-in QR</string>
+    <string name="registration_done_reminder">We\'ll remind you 1 hour before it starts.</string>
+    <string name="registration_done_reminder_today">We\'ll remind you on the morning of the event.</string>
+    <string name="registration_done_reminder_off">Turn on notifications for LEEF in Settings to get a reminder before it starts.</string>
+    <string name="reminder_channel_name">Event reminders</string>
+    <string name="reminder_channel_description">Reminders for events you registered for</string>
+    <string name="reminder_title">Event Reminder</string>
+    <string name="reminder_text_place">%1$s starts in 1 hour at %2$s. See you there!</string>
+    <string name="reminder_text">%1$s starts in 1 hour. See you there!</string>
+    <string name="reminder_text_today_place">%1$s is today at %2$s. See you there!</string>
+    <string name="reminder_text_today">%1$s is today. See you there!</string>
 </resources>
