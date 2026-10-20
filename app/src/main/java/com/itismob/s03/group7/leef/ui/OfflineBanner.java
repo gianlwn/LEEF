@@ -2,36 +2,32 @@ package com.itismob.s03.group7.leef.ui;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
 import com.itismob.s03.group7.leef.R;
+import com.itismob.s03.group7.leef.databinding.ViewNoInternetBinding;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Shows a slim "You're offline" bar across the top of every screen while the phone has no internet.
- * The screen underneath moves down by the height of the bar so nothing (like a back button) is covered.
- * Saved events can still be browsed; anything that needs the server tells the person itself.
+ * While the phone has no internet, every screen of the app is covered by a "No internet connection"
+ * page with a Try again button. The page goes away by itself when the connection returns. (The class
+ * keeps its first name, from when it was only a bar across the top.)
  */
 public final class OfflineBanner implements Application.ActivityLifecycleCallbacks {
 
     private final Map<Activity, Attached> attached = new HashMap<>();
 
-    /** Registers the bar for every screen of the app. */
+    /** Registers the cover for every screen of the app. */
     public static void install(@NonNull Application application) {
         application.registerActivityLifecycleCallbacks(new OfflineBanner());
     }
@@ -42,16 +38,16 @@ public final class OfflineBanner implements Application.ActivityLifecycleCallbac
         if (content == null || attached.containsKey(activity)) {
             return;
         }
-        Attached banner = new Attached(activity, content);
-        attached.put(activity, banner);
-        banner.start();
+        Attached cover = new Attached(activity, content);
+        attached.put(activity, cover);
+        cover.start();
     }
 
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
-        Attached banner = attached.remove(activity);
-        if (banner != null) {
-            banner.stop();
+        Attached cover = attached.remove(activity);
+        if (cover != null) {
+            cover.stop();
         }
     }
 
@@ -75,41 +71,25 @@ public final class OfflineBanner implements Application.ActivityLifecycleCallbac
     public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
     }
 
-    /** The bar on one screen. */
+    /** The cover on one screen. */
     private static final class Attached implements Observer<Boolean> {
+        private final Activity activity;
         private final ViewGroup content;
-        private final TextView bar;
-        private final int extraHeight;
-        private final int barHeight;
+        private final View cover;
 
         Attached(@NonNull Activity activity, @NonNull ViewGroup content) {
+            this.activity = activity;
             this.content = content;
-            float density = activity.getResources().getDisplayMetrics().density;
-            extraHeight = Math.round(32 * density);
-            barHeight = statusBarHeight(activity.getResources()) + extraHeight;
-
-            bar = new TextView(activity);
-            bar.setText(R.string.offline_banner);
-            bar.setTextColor(Color.WHITE);
-            bar.setTextSize(13f);
-            bar.setGravity(Gravity.CENTER);
-            bar.setBackgroundColor(ContextCompat.getColor(activity, R.color.leef_ink));
-            bar.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_state_cloud_off, 0, 0, 0);
-            bar.setCompoundDrawableTintList(ColorStateList.valueOf(Color.WHITE));
-            bar.setCompoundDrawablePadding(Math.round(8 * density));
-            bar.setPadding(Math.round(16 * density), statusBarHeight(activity.getResources()),
-                    Math.round(16 * density), 0);
-            bar.setElevation(24 * density);
-            bar.setVisibility(View.GONE);
-            bar.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-
-            // The screen is pushed down by extraHeight (below), so the bar starts above that padding.
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, barHeight, Gravity.TOP);
-            params.topMargin = -extraHeight;
-            content.setClipToPadding(false);
-            content.setClipChildren(false);
-            content.addView(bar, params);
+            ViewNoInternetBinding binding = ViewNoInternetBinding.inflate(LayoutInflater.from(activity), content, false);
+            cover = binding.getRoot();
+            cover.setVisibility(View.GONE);
+            binding.noInternetRetry.setOnClickListener(v -> {
+                ConnectionMonitor.refresh();
+                if (!Boolean.TRUE.equals(ConnectionMonitor.online().getValue())) {
+                    Toast.makeText(activity, R.string.offline_still, Toast.LENGTH_SHORT).show();
+                }
+            });
+            content.addView(cover);
         }
 
         void start() {
@@ -123,13 +103,16 @@ public final class OfflineBanner implements Application.ActivityLifecycleCallbac
         @Override
         public void onChanged(Boolean online) {
             boolean offline = Boolean.FALSE.equals(online);
-            bar.setVisibility(offline ? View.VISIBLE : View.GONE);
-            content.setPadding(0, offline ? extraHeight : 0, 0, 0);
-        }
-
-        private static int statusBarHeight(@NonNull Resources resources) {
-            int id = resources.getIdentifier("status_bar_height", "dimen", "android");
-            return id > 0 ? resources.getDimensionPixelSize(id) : 0;
+            cover.setVisibility(offline ? View.VISIBLE : View.GONE);
+            // Keep screen readers on the cover, not on the screen hidden behind it.
+            for (int i = 0; i < content.getChildCount(); i++) {
+                View child = content.getChildAt(i);
+                if (child != cover) {
+                    child.setImportantForAccessibility(offline
+                            ? View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                            : View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
+                }
+            }
         }
     }
 }

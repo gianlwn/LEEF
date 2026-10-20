@@ -548,5 +548,8 @@
     <string name="feedback_list_empty_body">Ratings from people who attended will show up here.</string>
     <string name="feedback_list_denied">Only the organizer of this event can read its feedback.</string>
     <string name="feedback_list_photo_a11y">Photo shared with this feedback</string>
-    <string name="offline_banner">You\'re offline. Some features need the internet.</string>
+    <string name="offline_title">No internet connection</string>
+    <string name="offline_body">LEEF needs the internet to work. Turn on Wi-Fi or mobile data, then try again.</string>
+    <string name="offline_retry">Try again</string>
+    <string name="offline_still">Still no connection.</string>
 </resources>

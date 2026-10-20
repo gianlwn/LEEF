@@ -17,7 +17,7 @@ public class LeefApplication extends Application {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         // The channel the event reminders use (Android 8+).
         ReminderNotifications.ensureChannel(this);
-        // Show a "You're offline" bar on every screen while there is no internet.
+        // Cover every screen with a "No internet connection" page while the phone is offline.
         ConnectionMonitor.start(this);
         OfflineBanner.install(this);
     }

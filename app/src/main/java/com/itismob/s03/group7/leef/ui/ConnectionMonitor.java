@@ -16,6 +16,7 @@ import androidx.lifecycle.MutableLiveData;
 public final class ConnectionMonitor {
 
     private static final MutableLiveData<Boolean> ONLINE = new MutableLiveData<>(true);
+    private static ConnectivityManager connectivity;
 
     private ConnectionMonitor() {
     }
@@ -26,11 +27,19 @@ public final class ConnectionMonitor {
         return ONLINE;
     }
 
+    /** Checks the connection again right now (the Try again button). */
+    public static void refresh() {
+        if (connectivity != null) {
+            ONLINE.setValue(hasInternet(connectivity));
+        }
+    }
+
     public static void start(@NonNull Application application) {
         ConnectivityManager manager = application.getSystemService(ConnectivityManager.class);
         if (manager == null) {
             return;
         }
+        connectivity = manager;
         ONLINE.setValue(hasInternet(manager));
         try {
             manager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
