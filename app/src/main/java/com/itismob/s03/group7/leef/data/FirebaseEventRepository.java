@@ -65,10 +65,12 @@ public final class FirebaseEventRepository implements EventRepository {
                 .limit(limit);
         query.get()
                 .addOnSuccessListener(snapshot -> {
+                    long now = System.currentTimeMillis();
                     List<Event> events = new ArrayList<>();
                     for (DocumentSnapshot document : snapshot.getDocuments()) {
                         Event event = toEvent(document);
-                        if (event != null) {
+                        // The query only drops past days, so skip today's events that are already over.
+                        if (event != null && !event.hasEnded(now)) {
                             events.add(event);
                         }
                     }
