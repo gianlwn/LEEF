@@ -4,6 +4,8 @@
 
     <!-- Firebase (sign-in and the database) needs the internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Lets the app notice when the phone goes offline, to show the "You're offline" bar. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- Event reminders (Screen 9): the notification itself (Android 13+ asks first) and putting
          the reminders back after the phone restarts. -->

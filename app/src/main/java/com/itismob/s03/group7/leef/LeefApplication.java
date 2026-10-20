@@ -5,6 +5,8 @@ import android.app.Application;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.itismob.s03.group7.leef.reminder.ReminderNotifications;
+import com.itismob.s03.group7.leef.ui.ConnectionMonitor;
+import com.itismob.s03.group7.leef.ui.OfflineBanner;
 
 public class LeefApplication extends Application {
 
@@ -15,5 +17,8 @@ public class LeefApplication extends Application {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         // The channel the event reminders use (Android 8+).
         ReminderNotifications.ensureChannel(this);
+        // Show a "You're offline" bar on every screen while there is no internet.
+        ConnectionMonitor.start(this);
+        OfflineBanner.install(this);
     }
 }

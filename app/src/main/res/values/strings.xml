@@ -548,4 +548,5 @@
     <string name="feedback_list_empty_body">Ratings from people who attended will show up here.</string>
     <string name="feedback_list_denied">Only the organizer of this event can read its feedback.</string>
     <string name="feedback_list_photo_a11y">Photo shared with this feedback</string>
+    <string name="offline_banner">You\'re offline. Some features need the internet.</string>
 </resources>
