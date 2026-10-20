@@ -22,9 +22,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.checkin.CheckInActivity;
 import com.itismob.s03.group7.leef.databinding.ActivityEventDetailsBinding;
+import com.itismob.s03.group7.leef.feedback.FeedbackActivity;
+import com.itismob.s03.group7.leef.feedback.FeedbackListActivity;
 import com.itismob.s03.group7.leef.home.EventCardBinder;
 import com.itismob.s03.group7.leef.home.EventFormat;
 import com.itismob.s03.group7.leef.home.EventItem;
@@ -159,12 +163,30 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         bindPrice(event, now);
 
-        // Register
+        // The main button: organizers read their feedback; attendees rate once the event is over;
+        // otherwise register / check in.
         boolean ended = event.hasEnded(now);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        boolean isOrganizer = user != null && !event.getOrganizerId().isEmpty()
+                && event.getOrganizerId().equals(user.getUid());
+        if (isOrganizer) {
+            binding.registerButton.setEnabled(true);
+            binding.registerButton.setText(R.string.details_view_feedback);
+            binding.registerButton.setOnClickListener(v ->
+                    startActivity(FeedbackListActivity.createIntent(this, eventId)));
+            return;
+        }
+        if (registered && ended) {
+            binding.registerButton.setEnabled(true);
+            binding.registerButton.setText(R.string.details_rate_event);
+            binding.registerButton.setOnClickListener(v ->
+                    startActivity(FeedbackActivity.createIntent(this, eventId)));
+            return;
+        }
         // Not registered: Register Now. Registered: the check-in ticket (until the event is over).
         binding.registerButton.setEnabled(!ended);
         binding.registerButton.setText(registered
-                ? (ended ? R.string.details_registered : R.string.details_show_check_in)
+                ? R.string.details_show_check_in
                 : ended ? R.string.details_event_ended : R.string.details_register);
         binding.registerButton.setOnClickListener(v -> {
             if (registered) {

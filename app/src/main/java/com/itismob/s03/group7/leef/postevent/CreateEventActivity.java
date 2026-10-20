@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -30,18 +29,17 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.databinding.ActivityCreateEventBinding;
-import com.itismob.s03.group7.leef.databinding.DialogImageLinkBinding;
 import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.search.SearchFilters;
 import com.itismob.s03.group7.leef.ui.ButtonSpinner;
+import com.itismob.s03.group7.leef.ui.ImageLinkDialog;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
 import java.text.SimpleDateFormat;
@@ -533,28 +531,10 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void askForImageLink() {
-        DialogImageLinkBinding dialogBinding = DialogImageLinkBinding.inflate(getLayoutInflater());
-        String existing = viewModel.getCoverUrl();
-        if (existing != null) {
-            dialogBinding.linkInput.setText(existing);
-        }
-        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.create_photo_dialog_title)
-                .setView(dialogBinding.getRoot())
-                .setPositiveButton(R.string.create_photo_dialog_use, null)
-                .setNegativeButton(R.string.create_photo_dialog_cancel, null)
-                .create();
-        dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            String link = text(dialogBinding.linkInput);
-            if (!link.toLowerCase(Locale.ROOT).startsWith("https://") || link.length() <= 12 || link.contains(" ")) {
-                dialogBinding.linkLayout.setError(getString(R.string.create_photo_error_link));
-                return;
-            }
+        ImageLinkDialog.show(this, viewModel.getCoverUrl(), link -> {
             viewModel.setCoverUrl(link);
             showCover();
-            dialog.dismiss();
-        }));
-        dialog.show();
+        });
     }
 
     // ---- helpers ----------------------------------------------------------------------------

@@ -19,6 +19,7 @@ import com.itismob.s03.group7.leef.auth.SessionRouter;
 import com.itismob.s03.group7.leef.data.AccountRepository;
 import com.itismob.s03.group7.leef.data.FirebaseAccountRepository;
 import com.itismob.s03.group7.leef.databinding.ActivityMainBinding;
+import com.itismob.s03.group7.leef.feedback.FeedbackPrompter;
 import com.itismob.s03.group7.leef.messages.MessagesFragment;
 import com.itismob.s03.group7.leef.myevents.MyEventsFragment;
 import com.itismob.s03.group7.leef.onboarding.OnboardingActivity;
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Make sure every event the person registered for has its reminder (new phone, reinstall...).
         ReminderSync.run(getApplicationContext());
+
+        // Once an event is over, ask the person to rate it (once per event).
+        FeedbackPrompter.run(this);
 
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.getProfileMissing().observe(this, missing -> {

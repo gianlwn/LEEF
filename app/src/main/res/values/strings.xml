@@ -498,4 +498,56 @@
     <string name="create_post_denied">LEEF couldn\'t post this event. Make sure this is an organizer account and the latest database rules are published.</string>
     <string name="create_post_failed">Something went wrong while posting. Please try again.</string>
     <string name="create_posted">Your event is live!</string>
+
+    <!-- Screen 12 - Event Feedback -->
+    <string name="feedback_title">Event Feedback</string>
+    <string name="feedback_question">How was your experience?</string>
+    <string name="feedback_star_a11y">%1$d stars</string>
+    <string name="feedback_rating_a11y">%1$d out of 5 stars</string>
+    <string name="feedback_error_rating">Tap a star to rate the event.</string>
+    <string name="feedback_tag_very_helpful">Very helpful</string>
+    <string name="feedback_tag_well_organized">Well organized</string>
+    <string name="feedback_tag_great_speakers">Great speakers</string>
+    <string name="feedback_tag_learned_a_lot">Learned a lot</string>
+    <string name="feedback_tag_met_new_people">Met new people</string>
+    <string name="feedback_tag_would_recommend">Would recommend</string>
+    <string name="feedback_label_comment">Your Feedback</string>
+    <string name="feedback_hint_comment">Share your thoughts, suggestions, or what you liked about the event…</string>
+    <string name="feedback_label_photo">Add a photo (optional)</string>
+    <string name="feedback_photo_add">Tap to add a photo link</string>
+    <string name="feedback_submit">Submit Feedback</string>
+    <string name="feedback_update">Update Feedback</string>
+    <string name="feedback_done_title">Thanks for your feedback!</string>
+    <string name="feedback_done_body">It helps the organizer make the next event even better.</string>
+    <string name="feedback_done_button">Done</string>
+    <string name="feedback_unavailable_early_title">Feedback opens when the event is over</string>
+    <string name="feedback_unavailable_early_body">Come back after it ends to rate it.</string>
+    <string name="feedback_unavailable_not_registered_title">Only attendees can rate this event</string>
+    <string name="feedback_unavailable_not_registered_body">You didn\'t register for this event, so there\'s nothing to rate.</string>
+    <string name="feedback_unavailable_gone_title">This event isn\'t available</string>
+    <string name="feedback_unavailable_gone_body">It may have been removed.</string>
+    <string name="feedback_unavailable_back">Go back</string>
+    <string name="feedback_post_offline">No internet connection. Check it and try again.</string>
+    <string name="feedback_post_denied">LEEF couldn\'t send your feedback. Make sure you registered for this event and the latest database rules are published.</string>
+    <string name="feedback_post_failed">Something went wrong while sending. Please try again.</string>
+    <string name="details_rate_event">Rate this event</string>
+    <string name="details_view_feedback">View attendee feedback</string>
+
+    <!-- The "rate it" prompt shown after an event the person registered for has ended -->
+    <string name="feedback_prompt_title">How was %1$s?</string>
+    <string name="feedback_prompt_body">The event is over. Rate it and tell the organizer what you thought.</string>
+    <string name="feedback_prompt_rate">Rate now</string>
+    <string name="feedback_prompt_later">Not now</string>
+
+    <!-- Organizer's feedback list -->
+    <string name="feedback_list_title">Attendee Feedback</string>
+    <plurals name="feedback_list_count">
+        <item quantity="one">%d rating</item>
+        <item quantity="other">%d ratings</item>
+    </plurals>
+    <string name="feedback_list_average">%1$s out of 5</string>
+    <string name="feedback_list_empty_title">No feedback yet</string>
+    <string name="feedback_list_empty_body">Ratings from people who attended will show up here.</string>
+    <string name="feedback_list_denied">Only the organizer of this event can read its feedback.</string>
+    <string name="feedback_list_photo_a11y">Photo shared with this feedback</string>
 </resources>

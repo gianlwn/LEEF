@@ -93,6 +93,15 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Screen 12: rate an event after it ends, and the organizer's list of that feedback. -->
+        <activity
+            android:name=".feedback.FeedbackActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".feedback.FeedbackListActivity"
+            android:exported="false" />
+
         <!-- Screen 9: Check-in ticket with the QR code (opened from the reminder notification too). -->
         <activity
             android:name=".checkin.CheckInActivity"

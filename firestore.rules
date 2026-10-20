@@ -197,6 +197,38 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Screen 12: feedback on an event, at events/{eventId}/feedback/{uid} (one per person, editable).
+    // Only the author and the event's organizer can read it, and it stores no names. Only someone who
+    // registered can write it, and only once the event has started (the app opens the form once it ends).
+    function isEventOrganizer(eventId) {
+      return get(/databases/$(database)/documents/events/$(eventId)).data.get('organizerId', '') == request.auth.uid;
+    }
+
+    function isValidFeedback() {
+      let d = request.resource.data;
+      return d.keys().hasAll(['userId', 'rating', 'tags', 'submittedAt'])
+        && d.keys().hasOnly(['userId', 'rating', 'tags', 'comment', 'photoUrl', 'submittedAt'])
+        && d.userId == request.auth.uid
+        && d.rating is int && d.rating >= 1 && d.rating <= 5
+        && d.tags is list && d.tags.size() <= 6
+        && d.tags.hasOnly(['very_helpful', 'well_organized', 'great_speakers', 'learned_a_lot', 'met_new_people', 'would_recommend'])
+        && (!('comment' in d) || (d.comment is string && d.comment.size() <= 300))
+        && (!('photoUrl' in d) || (d.photoUrl is string && d.photoUrl.matches('https://.+') && d.photoUrl.size() <= 500))
+        && d.submittedAt == request.time;
+    }
+
+    match /events/{eventId}/feedback/{userId} {
+      allow get: if request.auth != null
+        && (request.auth.uid == userId || isEventOrganizer(eventId));
+      allow list: if request.auth != null && isEventOrganizer(eventId);
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && exists(/databases/$(database)/documents/registrations/$(request.auth.uid + '_' + eventId))
+        && get(/databases/$(database)/documents/events/$(eventId)).data.startsAt < request.time
+        && isValidFeedback();
+      allow delete: if false;
+    }
+
     // Everything else stays locked until the screen that needs it is built.
     match /{document=**} {
       allow read, write: if false;
