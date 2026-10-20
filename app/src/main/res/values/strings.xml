@@ -59,8 +59,6 @@
     <string name="auth_terms_agree">I agree to the %1$s and %2$s.</string>
     <string name="auth_terms_of_service">Terms of Service</string>
     <string name="auth_privacy_policy">Privacy Policy</string>
-    <string name="auth_legal_placeholder">LEEF is a school project prototype. The full text will be published here before release.</string>
-    <string name="auth_legal_ok">Got it</string>
     <string name="auth_create_account">Create Account</string>
     <string name="auth_creating_account">Creating account…</string>
     <string name="auth_have_account">Already have an account?</string>

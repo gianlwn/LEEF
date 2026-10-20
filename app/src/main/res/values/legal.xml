@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The text of the Terms of Service and the Privacy Policy (opened from Create Account and Complete Profile).
+     Each document is a list of headings and a matching list of paragraphs: item N of the headings array
+     is the title of item N of the bodies array. Keep both arrays the same length. -->
+<resources>
+    <string name="legal_updated">Last updated October 20, 2026</string>
+    <string name="legal_back_a11y">Back</string>
+    <string name="legal_section_heading">%1$d. %2$s</string>
+
+    <string-array name="terms_headings">
+        <item>About LEEF</item>
+        <item>Accepting these terms</item>
+        <item>Your account</item>
+        <item>Events and organizers</item>
+        <item>Registration and payments</item>
+        <item>Messages</item>
+        <item>Feedback and photos</item>
+        <item>Acceptable use</item>
+        <item>Your content</item>
+        <item>Reminders and notifications</item>
+        <item>Availability and changes</item>
+        <item>Limits of our responsibility</item>
+        <item>Ending your account</item>
+        <item>Governing law</item>
+        <item>Contact</item>
+    </string-array>
+    <string-array name="terms_bodies">
+        <item>LEEF (Local Educational Event Finder) helps students, teachers, parents, freelancers and event organizers in the Philippines find and join local educational events such as seminars, workshops, competitions and school activities. LEEF is a school project prototype made by the LEEF project team for the ITISMOB course, so features can change or stop working without notice.</item>
+        <item>By creating an account or using LEEF, you agree to these Terms of Service and to our Privacy Policy. If you do not agree, please do not use the app.</item>
+        <item>You need an account to use LEEF. When you sign up, give true information and choose the role that really describes you. Only people who organize events should choose Organizer.\n\nKeep your password to yourself. You are responsible for what happens under your account, so tell us right away if you think someone else is using it. You must be at least 13 years old to create an account.</item>
+        <item>Organizers write their own event listings and are responsible for the dates, venue, prices and descriptions being accurate. By posting an event you confirm you have the right to organize it and to use any image you link.\n\nLEEF does not run, check or endorse the events listed. We cannot promise their quality, schedule or safety, so please confirm details with the organizer before you attend. We may remove listings that are misleading, unlawful or against these terms.</item>
+        <item>Registering for an event saves it to My Events and sets a reminder on your phone. Prices are set by organizers.\n\nIn this version of LEEF, payments are simulated. No real money is charged or moved, and LEEF does not store card or e-wallet numbers. Before real payments are added, we will update these terms and the Privacy Policy.</item>
+        <item>You can chat with other people who registered for an event, with its organizer, and privately with another person. Be respectful. Do not send harassment, hate, threats, scams, spam, sexual content or anything illegal, and do not share other people\'s private information.\n\nMessages in an event chat can be read by everyone registered for that event and by its organizer. A private chat can be read by the two people in it.</item>
+        <item>After an event ends you can rate it and leave feedback. Please be honest and fair. Your feedback can be read only by you and the event\'s organizer, and it does not carry your name.\n\nPhotos are added as image links. Only link to pictures you are allowed to share, and nothing that shows other people without their permission or that is inappropriate.</item>
+        <item>Do not use LEEF to break the law, to pretend to be someone else, to collect other people\'s data, to try to get into accounts or data that are not yours, to automate the app, or to disturb the service or other users.</item>
+        <item>You keep ownership of what you post, such as events, messages and feedback. You allow LEEF to store it and show it inside the app to the people it is meant for, only so the app can work.</item>
+        <item>Event reminders are shown as notifications from your phone. They can be late or missing if notifications are turned off or your phone\'s battery saver stops the app, so please do not rely on them alone.</item>
+        <item>LEEF is provided as it is, while it is being built. It may be interrupted, changed or reset, and data may be removed during development. We may update these terms from time to time. The date at the top shows when they last changed, and using LEEF after a change means you accept it.</item>
+        <item>As far as the law allows, the LEEF project team is not responsible for losses that come from events, organizers or other users, or from the app being unavailable. Nothing in these terms takes away rights you have under Philippine law.</item>
+        <item>You can stop using LEEF at any time. To have your account and personal data deleted, contact us. We may suspend or close accounts that break these terms.</item>
+        <item>These terms follow the laws of the Republic of the Philippines.</item>
+        <item>Questions about these terms? Contact the LEEF project team (ITISMOB, Section S03, Group 7) through your course instructor.</item>
+    </string-array>
+
+    <string-array name="privacy_headings">
+        <item>Who we are</item>
+        <item>What we collect</item>
+        <item>What we do not collect</item>
+        <item>How we use your information</item>
+        <item>Who can see what</item>
+        <item>Where it is stored</item>
+        <item>How long we keep it</item>
+        <item>Security</item>
+        <item>Your rights</item>
+        <item>Children</item>
+        <item>Changes to this policy</item>
+        <item>Contact</item>
+    </string-array>
+    <string-array name="privacy_bodies">
+        <item>LEEF is a school project prototype made by the LEEF project team for the ITISMOB course. This policy explains what information the app uses and why. We follow the Data Privacy Act of 2012 (Republic Act No. 10173).</item>
+        <item>Your account: your full name, school or organization, email address and role. Your password is handled by Firebase Authentication and we cannot see it. If you sign in with Google, we receive your name and email from your Google account.\n\nYour activity: events you save; events you register for (ticket type, number of tickets, amount, type of payment method, confirmation code and time); messages you send (text, your name and time) and when you last read each chat; feedback you leave (stars, tags, comment, photo link and time); and events you post, with the details and image link you enter.\n\nOn your phone: your reminder schedule, and which finished events the app has already asked you to rate.</item>
+        <item>We do not collect card numbers, e-wallet numbers or security codes. Payments are simulated and nothing you type for a payment is saved. We do not collect your location, contacts, camera, microphone or advertising ID. The app asks for notification permission only to show event reminders.</item>
+        <item>We use your information to create your account and sign you in, to show events, to register you and remind you, to let you message other people, to show organizers the feedback their events received, and to keep the app working and safe. We do not sell your information and we do not use it for advertising.</item>
+        <item>Event listings are visible to everyone who is signed in, with the organizer\'s name.\n\nEvent chats show your name and messages to the people registered for that event and to its organizer. Private chats are visible to you and the other person.\n\nYour registrations and saved events are visible only to you.\n\nFeedback is visible only to you and the event\'s organizer, and it does not include your name.\n\nYour email and role are visible only to you.</item>
+        <item>Your information is stored with Google Firebase (Authentication and Cloud Firestore), on servers in Singapore. Google processes it for us under its own terms. If you add an image link, the website that hosts the picture can see that it was requested. Opening a venue in maps or sharing an event uses other apps on your phone, which have their own privacy policies.</item>
+        <item>We keep your information while your account exists. If you ask us to delete your account, we will delete it and the personal data linked to it, except where the law requires us to keep something.</item>
+        <item>Firebase security rules limit who can read and change each piece of information, and we never see your password. No system is completely secure, so please choose a strong password and keep it private.</item>
+        <item>Under the Data Privacy Act you have the right to be informed, to access your information, to correct it, to object to its use, to ask for it to be erased or blocked, to receive a copy, and to complain to the National Privacy Commission (privacy.gov.ph). To use these rights, contact us.</item>
+        <item>LEEF is not meant for children under 13. If we learn that we have collected information from a child under 13, we will delete it.</item>
+        <item>We may update this policy. The date at the top shows when it last changed, and we will tell you in the app if a change affects how your information is used.</item>
+        <item>Questions or requests about your information? Contact the LEEF project team (ITISMOB, Section S03, Group 7) through your course instructor.</item>
+    </string-array>
+</resources>

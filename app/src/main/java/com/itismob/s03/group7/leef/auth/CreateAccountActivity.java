@@ -27,7 +27,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.data.AccountRepository;
@@ -35,6 +34,8 @@ import com.itismob.s03.group7.leef.databinding.ActivityCreateAccountBinding;
 import com.itismob.s03.group7.leef.model.UserProfile;
 import com.itismob.s03.group7.leef.model.UserRole;
 import com.itismob.s03.group7.leef.ui.ButtonSpinner;
+import com.itismob.s03.group7.leef.legal.LegalActivity;
+import com.itismob.s03.group7.leef.legal.LegalDocument;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
 /**
@@ -134,8 +135,8 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleSi
         String privacy = getString(R.string.auth_privacy_policy);
         String full = getString(R.string.auth_terms_agree, terms, privacy);
         SpannableString text = new SpannableString(full);
-        addLink(text, full, terms);
-        addLink(text, full, privacy);
+        addLink(text, full, terms, LegalDocument.TERMS);
+        addLink(text, full, privacy, LegalDocument.PRIVACY);
         binding.termsCheck.setText(text);
         binding.termsCheck.setMovementMethod(LinkMovementMethod.getInstance());
         binding.termsCheck.setHighlightColor(Color.TRANSPARENT);
@@ -146,14 +147,15 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleSi
         });
     }
 
-    private void addLink(@NonNull SpannableString text, @NonNull String full, @NonNull String label) {
+    private void addLink(@NonNull SpannableString text, @NonNull String full, @NonNull String label,
+                         @NonNull LegalDocument document) {
         int start = full.indexOf(label);
         if (start < 0) {
             return;
         }
         int end = start + label.length();
         text.setSpan(new StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        text.setSpan(new LegalLinkSpan(label), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        text.setSpan(new LegalLinkSpan(document), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     private void setUpFieldErrorClearing() {
@@ -339,14 +341,6 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleSi
         finish();
     }
 
-    private void showLegalDialog(@NonNull String title) {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(title)
-                .setMessage(R.string.auth_legal_placeholder)
-                .setPositiveButton(R.string.auth_legal_ok, null)
-                .show();
-    }
-
     private void hideKeyboard() {
         View focused = getCurrentFocus();
         InputMethodManager imm = getSystemService(InputMethodManager.class);
@@ -387,15 +381,15 @@ public class CreateAccountActivity extends AppCompatActivity implements GoogleSi
 
     /** A bold, underlined name inside the terms sentence that opens its document. */
     private final class LegalLinkSpan extends ClickableSpan {
-        private final String title;
+        private final LegalDocument document;
 
-        LegalLinkSpan(@NonNull String title) {
-            this.title = title;
+        LegalLinkSpan(@NonNull LegalDocument document) {
+            this.document = document;
         }
 
         @Override
         public void onClick(@NonNull View widget) {
-            showLegalDialog(title);
+            startActivity(LegalActivity.createIntent(CreateAccountActivity.this, document));
         }
 
         @Override

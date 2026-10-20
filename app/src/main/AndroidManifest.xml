@@ -93,6 +93,11 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Terms of Service and Privacy Policy (opened from Create Account and Complete Profile). -->
+        <activity
+            android:name=".legal.LegalActivity"
+            android:exported="false" />
+
         <!-- Screen 12: rate an event after it ends, and the organizer's list of that feedback. -->
         <activity
             android:name=".feedback.FeedbackActivity"
