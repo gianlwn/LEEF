@@ -154,7 +154,6 @@
     <!-- Screens that aren't built yet -->
     <string name="coming_soon_format">%1$s is coming soon.</string>
     <string name="feature_notifications">Notifications</string>
-    <string name="feature_profile">Your profile</string>
 
     <!-- Home / Event Feed -->
     <string name="home_greeting_morning">Good morning,</string>

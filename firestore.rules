@@ -22,7 +22,18 @@ service cloud.firestore {
         && request.resource.data.email == request.auth.token.email
         && request.resource.data.role in ['student', 'teacher', 'organizer', 'parent', 'freelancer'];
 
-      allow update: if request.auth != null && request.auth.uid == userId;
+      // Profile tab: a person can change only their name, school or organization and role (the email and
+      // creation time stay as they are), with the same limits as when the account was created.
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['fullName', 'schoolOrganization', 'role'])
+        && request.resource.data.fullName is string
+        && request.resource.data.fullName.size() > 0
+        && request.resource.data.fullName.size() <= 80
+        && request.resource.data.schoolOrganization is string
+        && request.resource.data.schoolOrganization.size() > 0
+        && request.resource.data.schoolOrganization.size() <= 100
+        && request.resource.data.role in ['student', 'teacher', 'organizer', 'parent', 'freelancer'];
       allow delete: if false;
     }
 

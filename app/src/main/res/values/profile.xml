@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Profile tab -->
+    <string name="profile_tab_title">Profile</string>
+    <string name="profile_fallback_name">LEEF member</string>
+    <string name="profile_section_account">Account</string>
+    <string name="profile_section_about">About</string>
+    <string name="profile_row_edit">Edit profile</string>
+    <string name="profile_row_password">Change password</string>
+    <string name="profile_sign_out">Sign out</string>
+    <string name="profile_sign_out_title">Sign out of LEEF?</string>
+    <string name="profile_sign_out_message">You\'ll need to log in again to see your events and messages.</string>
+    <string name="profile_cancel">Cancel</string>
+    <string name="profile_password_title">Change your password?</string>
+    <string name="profile_password_message">We\'ll email a link to %1$s so you can choose a new password.</string>
+    <string name="profile_updated">Profile updated</string>
+    <string name="profile_footer">LEEF %1$s · ITISMOB S03 Group 7</string>
+    <string name="profile_footer_no_version">LEEF · ITISMOB S03 Group 7</string>
+    <string name="profile_row_chevron_a11y">Opens</string>
+
+    <!-- Edit profile -->
+    <string name="edit_profile_title">Edit profile</string>
+    <string name="edit_profile_back_a11y">Back</string>
+    <string name="edit_profile_save">Save changes</string>
+    <string name="edit_profile_saving">Saving…</string>
+    <string name="edit_profile_email_note">Your email can\'t be changed here.</string>
+    <string name="edit_profile_error_failed">We couldn\'t save your changes. Please try again.</string>
+    <string name="edit_profile_error_permission">Your changes couldn\'t be saved because the latest database rules haven\'t been published yet.</string>
+    <string name="edit_profile_discard_title">Discard your changes?</string>
+    <string name="edit_profile_discard_message">What you edited hasn\'t been saved.</string>
+    <string name="edit_profile_discard">Discard</string>
+    <string name="edit_profile_keep">Keep editing</string>
+
+    <!-- Small grey heading above a group of rows. -->
+    <style name="TextAppearance.LEEF.Profile.Section" parent="TextAppearance.LEEF.LabelLarge">
+        <item name="android:textColor">@color/leef_gray_700</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextAppearance.LEEF.Profile.Footer" parent="TextAppearance.LEEF.BodySmall">
+        <item name="android:textColor">@color/leef_gray_600</item>
+    </style>
+
+    <!-- Outlined red pill for Sign out. -->
+    <style name="Widget.LEEF.Button.SignOut" parent="Widget.LEEF.Button.Google">
+        <item name="android:textColor">@color/leef_error</item>
+        <item name="strokeColor">@color/leef_error</item>
+        <item name="iconTint">@color/leef_error</item>
+    </style>
+</resources>

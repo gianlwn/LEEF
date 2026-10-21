@@ -249,6 +249,20 @@ public final class FirebaseAccountRepository implements AccountRepository {
     }
 
     @Override
+    public boolean hasPasswordSignIn() {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            return false;
+        }
+        for (com.google.firebase.auth.UserInfo info : user.getProviderData()) {
+            if (com.google.firebase.auth.EmailAuthProvider.PROVIDER_ID.equals(info.getProviderId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean isSignedIn() {
         return auth.getCurrentUser() != null;
     }

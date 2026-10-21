@@ -23,20 +23,21 @@ import com.itismob.s03.group7.leef.feedback.FeedbackPrompter;
 import com.itismob.s03.group7.leef.messages.MessagesFragment;
 import com.itismob.s03.group7.leef.myevents.MyEventsFragment;
 import com.itismob.s03.group7.leef.onboarding.OnboardingActivity;
+import com.itismob.s03.group7.leef.profile.ProfileFragment;
 import com.itismob.s03.group7.leef.reminder.ReminderSync;
 import com.itismob.s03.group7.leef.search.SearchActivity;
-import com.itismob.s03.group7.leef.ui.ComingSoon;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
 /**
  * The app shell once someone is signed in: the current tab's screen above the bottom navigation bar.
  * Home is the first tab (Screen 4); Explore opens Search & Filter (Screen 5); My Events is the second
- * tab (Screen 8); Messages is the fourth (Screen 10); Profile is added when its screen is built.
+ * tab (Screen 8); Messages is the fourth (Screen 10); Profile is the last tab.
  */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_MY_EVENTS = "my_events";
     private static final String TAG_MESSAGES = "messages";
+    private static final String TAG_PROFILE = "profile";
     /** Home is the fragment declared in the layout; it has no tag. */
     private static final String TAB_HOME = "";
 
@@ -75,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (binding.bottomNav.getSelectedItemId() == R.id.nav_my_events
-                        || binding.bottomNav.getSelectedItemId() == R.id.nav_messages) {
+                int selected = binding.bottomNav.getSelectedItemId();
+                if (selected == R.id.nav_my_events || selected == R.id.nav_messages
+                        || selected == R.id.nav_profile) {
                     binding.bottomNav.setSelectedItemId(R.id.nav_home);
                 } else {
                     setEnabled(false);
@@ -114,14 +116,22 @@ public class MainActivity extends AppCompatActivity {
             showTab(TAG_MESSAGES);
             return true;
         }
-        // Explore opens Search & Filter on top of Home, so the bar stays on Home. The other tabs arrive
-        // with their own screens.
+        if (id == R.id.nav_profile) {
+            showTab(TAG_PROFILE);
+            return true;
+        }
+        // Explore opens Search & Filter on top of Home, so the bar stays on Home.
         if (id == R.id.nav_explore) {
             startActivity(SearchActivity.createIntent(this, false));
-        } else if (id == R.id.nav_profile) {
-            ComingSoon.show(this, R.string.feature_profile);
         }
         return false;
+    }
+
+    /** Switches to the Profile tab (the avatar on Home opens it). */
+    public void openProfileTab() {
+        if (binding != null) {
+            binding.bottomNav.setSelectedItemId(R.id.nav_profile);
+        }
     }
 
     /** Switches tabs. All the tabs stay alive, so Home keeps its scroll and filters. */
@@ -132,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Fragment myEvents = getSupportFragmentManager().findFragmentByTag(TAG_MY_EVENTS);
         Fragment messages = getSupportFragmentManager().findFragmentByTag(TAG_MESSAGES);
+        Fragment profile = getSupportFragmentManager().findFragmentByTag(TAG_PROFILE);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().setReorderingAllowed(true);
         if (TAG_MY_EVENTS.equals(tab) && myEvents == null) {
             myEvents = new MyEventsFragment();
@@ -141,9 +152,14 @@ public class MainActivity extends AppCompatActivity {
             messages = new MessagesFragment();
             transaction.add(R.id.fragmentContainer, messages, TAG_MESSAGES);
         }
+        if (TAG_PROFILE.equals(tab) && profile == null) {
+            profile = new ProfileFragment();
+            transaction.add(R.id.fragmentContainer, profile, TAG_PROFILE);
+        }
         setTabVisible(transaction, home, TAB_HOME.equals(tab));
         setTabVisible(transaction, myEvents, TAG_MY_EVENTS.equals(tab));
         setTabVisible(transaction, messages, TAG_MESSAGES.equals(tab));
+        setTabVisible(transaction, profile, TAG_PROFILE.equals(tab));
         transaction.commit();
     }
 

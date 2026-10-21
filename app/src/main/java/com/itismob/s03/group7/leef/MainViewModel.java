@@ -55,6 +55,11 @@ public class MainViewModel extends ViewModel {
         profileMissing.setValue(false);
     }
 
+    /** Loads the profile again (after it was edited, or when the first load failed). */
+    public void refreshProfile() {
+        loadProfile();
+    }
+
     /** First name for the greeting, or null while unknown. */
     @Nullable
     public String getFirstName() {

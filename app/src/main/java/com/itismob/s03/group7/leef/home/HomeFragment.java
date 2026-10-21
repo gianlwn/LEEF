@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.itismob.s03.group7.leef.MainActivity;
 import com.itismob.s03.group7.leef.MainViewModel;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.databinding.FragmentHomeBinding;
@@ -95,7 +96,11 @@ public class HomeFragment extends Fragment {
 
         binding.searchBar.setOnClickListener(v -> startActivity(SearchActivity.createIntent(requireContext(), true)));
         binding.notificationsButton.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_notifications));
-        binding.avatar.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_profile));
+        binding.avatar.setOnClickListener(v -> {
+            if (requireActivity() instanceof MainActivity) {
+                ((MainActivity) requireActivity()).openProfileTab();
+            }
+        });
         binding.featuredSeeAll.setOnClickListener(v -> startActivity(SearchActivity.createIntent(requireContext(), false)));
         binding.upcomingSeeAll.setOnClickListener(v -> startActivity(SearchActivity.createIntent(requireContext(), false)));
         binding.retryButton.setOnClickListener(v -> viewModel.retry());
@@ -194,7 +199,7 @@ public class HomeFragment extends Fragment {
 
     /** "Alex Santos" becomes "AS"; a single name gives one letter. */
     @NonNull
-    static String initialsOf(@NonNull String fullName) {
+    public static String initialsOf(@NonNull String fullName) {
         String[] words = fullName.trim().split("\\s+");
         StringBuilder initials = new StringBuilder();
         if (words.length > 0 && !words[0].isEmpty()) {

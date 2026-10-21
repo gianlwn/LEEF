@@ -27,7 +27,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
  * {@link GoogleSignInViewModel}, which exchanges it for a Firebase sign-in. Only the ViewModel is
  * called back, so the result survives the screen being rotated while the sheet is open.
  */
-final class GoogleSignInHelper {
+public final class GoogleSignInHelper {
 
     /** Why no ID token was obtained. */
     enum Failure {
@@ -100,7 +100,7 @@ final class GoogleSignInHelper {
     }
 
     /** Makes Google forget which account was picked, so the next sign-in shows the chooser again. */
-    static void forgetChosenAccount(@NonNull Context context) {
+    public static void forgetChosenAccount(@NonNull Context context) {
         CredentialManager.create(context).clearCredentialStateAsync(
                 new ClearCredentialStateRequest(),
                 new CancellationSignal(),

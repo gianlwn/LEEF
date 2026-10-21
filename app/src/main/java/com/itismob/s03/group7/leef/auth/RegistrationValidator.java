@@ -8,7 +8,7 @@ import androidx.annotation.StringRes;
 import com.itismob.s03.group7.leef.R;
 
 /** Checks the Create Account fields before anything is sent to Firebase. Each method returns 0 when valid. */
-final class RegistrationValidator {
+public final class RegistrationValidator {
 
     static final int MIN_PASSWORD_LENGTH = 8;
 
@@ -16,7 +16,7 @@ final class RegistrationValidator {
     }
 
     @StringRes
-    static int validateFullName(@NonNull String fullName) {
+    public static int validateFullName(@NonNull String fullName) {
         String value = fullName.trim();
         if (value.isEmpty()) {
             return R.string.auth_error_name_required;
@@ -25,7 +25,7 @@ final class RegistrationValidator {
     }
 
     @StringRes
-    static int validateSchoolOrganization(@NonNull String schoolOrganization) {
+    public static int validateSchoolOrganization(@NonNull String schoolOrganization) {
         return schoolOrganization.trim().isEmpty() ? R.string.auth_error_school_required : 0;
     }
 

@@ -95,7 +95,13 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
-        <!-- Terms of Service and Privacy Policy (opened from Create Account and Complete Profile). -->
+        <!-- Profile tab: change your name, school or organization and role. -->
+        <activity
+            android:name=".profile.EditProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Terms of Service and Privacy Policy (opened from Create Account, Complete Profile and Profile). -->
         <activity
             android:name=".legal.LegalActivity"
             android:exported="false" />

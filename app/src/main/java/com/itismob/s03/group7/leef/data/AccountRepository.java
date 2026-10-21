@@ -164,6 +164,12 @@ public interface AccountRepository {
     /** True if someone is signed in and their email is already verified (as last known on this phone). */
     boolean isSignedInAndVerified();
 
+    /**
+     * True if the signed-in account has a password (it was created with an email and password), as
+     * opposed to a Google-only account that has nothing to reset.
+     */
+    boolean hasPasswordSignIn();
+
     /** True if someone is signed in, whether or not their email is verified. */
     boolean isSignedIn();
 
