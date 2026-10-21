@@ -28,6 +28,7 @@ import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.checkin.CheckInActivity;
 import com.itismob.s03.group7.leef.databinding.ActivityEventDetailsBinding;
 import com.itismob.s03.group7.leef.feedback.FeedbackActivity;
+import com.itismob.s03.group7.leef.boost.BoostActivity;
 import com.itismob.s03.group7.leef.feedback.FeedbackListActivity;
 import com.itismob.s03.group7.leef.home.EventCardBinder;
 import com.itismob.s03.group7.leef.home.EventFormat;
@@ -53,6 +54,7 @@ public class EventDetailsActivity extends AppCompatActivity {
     private ActivityEventDetailsBinding binding;
     private EventDetailsViewModel viewModel;
     private ActivityResultLauncher<Intent> registrationLauncher;
+    private ActivityResultLauncher<Intent> boostLauncher;
     private String eventId;
 
     @NonNull
@@ -81,6 +83,13 @@ public class EventDetailsActivity extends AppCompatActivity {
         registrationLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
                 viewModel.markRegistered();
+            }
+        });
+
+        boostLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                // Reload so the page and its button show the new boost.
+                viewModel.retry();
             }
         });
 
@@ -169,6 +178,16 @@ public class EventDetailsActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         boolean isOrganizer = user != null && !event.getOrganizerId().isEmpty()
                 && event.getOrganizerId().equals(user.getUid());
+        // Organizers can promote an event until it starts.
+        boolean canPromote = isOrganizer && !event.hasStarted(now);
+        binding.promoteButton.setVisibility(canPromote ? View.VISIBLE : View.GONE);
+        if (canPromote) {
+            binding.promoteButton.setText(event.isBoosted(now) && event.getBoostedUntilMillis() > 0
+                    ? getString(R.string.details_promote_active, boostUntilText(event.getBoostedUntilMillis()))
+                    : getString(R.string.details_promote));
+            binding.promoteButton.setOnClickListener(v ->
+                    boostLauncher.launch(BoostActivity.createIntent(this, eventId)));
+        }
         if (isOrganizer) {
             binding.registerButton.setEnabled(true);
             binding.registerButton.setText(R.string.details_view_feedback);
@@ -195,6 +214,13 @@ public class EventDetailsActivity extends AppCompatActivity {
                 registrationLauncher.launch(RegistrationActivity.createIntent(this, eventId));
             }
         });
+    }
+
+    /** "Oct 24, 3:00 PM". */
+    @NonNull
+    private static String boostUntilText(long millis) {
+        return new java.text.SimpleDateFormat("MMM d, h:mm a", java.util.Locale.getDefault())
+                .format(new java.util.Date(millis));
     }
 
     /** One price, or the early-bird price beside the regular rate while the offer lasts. */

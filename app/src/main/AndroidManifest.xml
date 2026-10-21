@@ -101,6 +101,12 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Promote Event: an organizer pays (simulated) to feature an event on Home and in Search. -->
+        <activity
+            android:name=".boost.BoostActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Terms of Service and Privacy Policy (opened from Create Account, Complete Profile and Profile). -->
         <activity
             android:name=".legal.LegalActivity"

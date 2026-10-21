@@ -20,6 +20,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.itismob.s03.group7.leef.R;
@@ -32,6 +34,9 @@ import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.PaymentMethod;
 import com.itismob.s03.group7.leef.model.Registration;
 import com.itismob.s03.group7.leef.model.TicketType;
+import com.itismob.s03.group7.leef.payment.PaymentInput;
+import com.itismob.s03.group7.leef.payment.PaymentSheetHost;
+import com.itismob.s03.group7.leef.payment.PaymentSheetState;
 import com.itismob.s03.group7.leef.reminder.Reminder;
 import com.itismob.s03.group7.leef.reminder.ReminderNotifications;
 import com.itismob.s03.group7.leef.reminder.ReminderScheduler;
@@ -50,13 +55,15 @@ import java.util.List;
  * to pay (GCash, Maya or card), then pay and register. The payment is simulated; no money moves.
  * Returns {@link #RESULT_OK} once the person is registered.
  */
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements PaymentSheetHost {
 
     private static final String EXTRA_EVENT_ID = "event_id";
 
     private ActivityRegistrationBinding binding;
     private RegistrationViewModel viewModel;
     private boolean spinnerShown;
+    /** What the checkout sheet shows, kept in step with the registration state. */
+    private final MediatorLiveData<PaymentSheetState> sheetState = new MediatorLiveData<>();
     private boolean notificationsAsked;
     private boolean reminderScheduled;
     private boolean reminderDateOnly;
@@ -95,6 +102,8 @@ public class RegistrationActivity extends AppCompatActivity {
         binding.groupMinus.setOnClickListener(v -> viewModel.changeGroupSize(-1));
         binding.groupPlus.setOnClickListener(v -> viewModel.changeGroupSize(1));
 
+        sheetState.addSource(viewModel.getState(), state ->
+                sheetState.setValue(new PaymentSheetState(state.getMethod(), state.getTotal(), state.isPaying())));
         viewModel.getState().observe(this, this::render);
         viewModel.getMessage().observe(this, messageRes -> {
             if (messageRes != null) {
@@ -293,6 +302,28 @@ public class RegistrationActivity extends AppCompatActivity {
             binding.primaryButton.setIcon(show ? ButtonSpinner.create(this) : null);
             spinnerShown = show;
         }
+    }
+
+    @NonNull
+    @Override
+    public LiveData<PaymentSheetState> getPaymentSheetState() {
+        return sheetState;
+    }
+
+    @NonNull
+    @Override
+    public LiveData<Integer> getPaymentError() {
+        return viewModel.getPaymentError();
+    }
+
+    @Override
+    public void paymentErrorHandled() {
+        viewModel.paymentErrorHandled();
+    }
+
+    @Override
+    public void pay(@NonNull PaymentInput input) {
+        viewModel.pay(input);
     }
 
     private void showPaymentSheet() {

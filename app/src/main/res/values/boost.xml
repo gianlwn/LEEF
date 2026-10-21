@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Promote Event (boost). Prices live in model/BoostPlan and firestore.rules. -->
+<resources>
+    <string name="boost_title">Promote event</string>
+    <string name="boost_loading_a11y">Loading event</string>
+    <string name="boost_section_duration">How long?</string>
+    <string name="boost_plan_day">1 day</string>
+    <string name="boost_plan_day_hint">Featured for 24 hours</string>
+    <string name="boost_plan_three_days">3 days</string>
+    <string name="boost_plan_three_days_hint">Featured for 3 days</string>
+    <string name="boost_plan_week">1 week</string>
+    <string name="boost_plan_week_hint">Featured for 7 days</string>
+    <string name="boost_plan_too_long">Would run past %1$d days from now</string>
+    <string name="boost_status_none">A boosted event is featured at the top of Home and listed first in Search for as long as you choose.</string>
+    <string name="boost_status_active">Boosted until %1$s. A new boost adds time after that.</string>
+    <string name="boost_maxed_note">This event is already boosted as far ahead as allowed. Come back once some of it has passed.</string>
+    <string name="boost_total">Total</string>
+    <string name="boost_pay">Pay and promote</string>
+
+    <string name="boost_done_title">Your event is boosted!</string>
+    <string name="boost_done_until_label">Featured until</string>
+    <string name="boost_done_plan_label">Plan</string>
+    <string name="boost_done_note">It\'s featured on Home and listed first in Search until then. You can add more time any time before the event starts.</string>
+
+    <string name="boost_not_organizer_title">Only the organizer can promote this event</string>
+    <string name="boost_not_organizer_body">Sign in with the account that posted it.</string>
+    <string name="boost_started_title">This event has already started</string>
+    <string name="boost_started_body">An event can only be promoted before it begins.</string>
+
+    <string name="boost_error_not_found">This event is no longer available, so it can\'t be boosted. You weren\'t charged.</string>
+    <string name="boost_error_not_organizer">Only the organizer can promote this event. You weren\'t charged.</string>
+    <string name="boost_error_started">This event has already started, so it can\'t be boosted. You weren\'t charged.</string>
+    <string name="boost_error_too_long">This would run more than 30 days ahead. You weren\'t charged.</string>
+    <string name="boost_error_permission">The boost couldn\'t be saved because the database rules haven\'t been published yet. Publish them, then tap the button again. You won\'t be charged twice.</string>
+    <string name="boost_error_network_paid">Your payment went through, but you\'re offline so we couldn\'t boost the event. Reconnect and tap the button again. You won\'t be charged twice.</string>
+    <string name="boost_error_generic_paid">Your payment went through, but we couldn\'t boost the event. Tap the button again. You won\'t be charged twice.</string>
+
+    <string name="details_promote">Promote this event</string>
+    <string name="details_promote_active">Boosted until %1$s · Add time</string>
+</resources>

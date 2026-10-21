@@ -473,11 +473,12 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- Register Now, always in reach -->
-    <FrameLayout
+    <!-- Register Now, always in reach (organizers also get Promote) -->
+    <LinearLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingStart="20dp"
         android:paddingTop="8dp"
         android:paddingEnd="20dp"
@@ -486,10 +487,20 @@
         tools:visibility="visible">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/promoteButton"
+            style="@style/Widget.LEEF.Button.Tonal"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/details_promote"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/registerButton"
             style="@style/Widget.LEEF.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/details_register" />
-    </FrameLayout>
+    </LinearLayout>
 </LinearLayout>

@@ -261,12 +261,18 @@ public class SearchViewModel extends ViewModel {
     }
 
     private void publish() {
+        // Boosted events come first (still soonest first within each group).
+        long now = System.currentTimeMillis();
+        List<EventItem> boosted = new ArrayList<>();
         List<EventItem> results = new ArrayList<>();
         for (Event event : loadedEvents) {
             if (filters.matches(event)) {
-                results.add(new EventItem(event, savedIds.contains(event.getId())));
+                EventItem item = new EventItem(event, savedIds.contains(event.getId()));
+                (event.isBoosted(now) ? boosted : results).add(item);
             }
         }
+        boosted.addAll(results);
+        results = boosted;
         SearchState.Status status;
         if (loadedOnce) {
             status = SearchState.Status.CONTENT;

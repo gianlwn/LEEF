@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -26,6 +25,8 @@ import com.itismob.s03.group7.leef.databinding.SheetPaymentBinding;
 import com.itismob.s03.group7.leef.home.EventFormat;
 import com.itismob.s03.group7.leef.model.PaymentMethod;
 import com.itismob.s03.group7.leef.payment.PaymentInput;
+import com.itismob.s03.group7.leef.payment.PaymentSheetHost;
+import com.itismob.s03.group7.leef.payment.PaymentSheetState;
 import com.itismob.s03.group7.leef.payment.PaymentValidator;
 import com.itismob.s03.group7.leef.ui.ButtonSpinner;
 
@@ -33,14 +34,15 @@ import java.util.Calendar;
 
 /**
  * The simulated checkout. A mobile number for GCash or Maya, card details for a card; "Pay" runs the
- * simulated gateway through the view model. Nothing typed here is saved or logged.
+ * simulated gateway through the host Activity (registration or boost). Nothing typed here is saved or
+ * logged.
  */
 public class PaymentSheetFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "payment";
 
     private SheetPaymentBinding binding;
-    private RegistrationViewModel viewModel;
+    private PaymentSheetHost host;
     @Nullable
     private PaymentMethod shownMethod;
     private boolean spinnerShown;
@@ -71,7 +73,11 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(RegistrationViewModel.class);
+        if (!(requireActivity() instanceof PaymentSheetHost)) {
+            dismissAllowingStateLoss();
+            return;
+        }
+        host = (PaymentSheetHost) requireActivity();
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.sheetRoot, (root, windowInsets) -> {
             Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
@@ -94,12 +100,12 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
             return true;
         });
 
-        viewModel.getState().observe(getViewLifecycleOwner(), this::render);
-        viewModel.getPaymentError().observe(getViewLifecycleOwner(), errorRes -> {
+        host.getPaymentSheetState().observe(getViewLifecycleOwner(), this::render);
+        host.getPaymentError().observe(getViewLifecycleOwner(), errorRes -> {
             if (errorRes != null) {
                 binding.sheetError.setText(errorRes);
                 binding.sheetError.setVisibility(View.VISIBLE);
-                viewModel.paymentErrorHandled();
+                host.paymentErrorHandled();
             }
         });
     }
@@ -121,7 +127,7 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
         binding = null;
     }
 
-    private void render(@NonNull RegistrationState state) {
+    private void render(@NonNull PaymentSheetState state) {
         PaymentMethod method = state.getMethod();
         if (method != shownMethod) {
             shownMethod = method;
@@ -176,7 +182,7 @@ public class PaymentSheetFragment extends BottomSheetDialogFragment {
         PaymentInput input = shownMethod.isWallet() ? walletInput() : cardInput();
         if (input != null) {
             binding.sheetError.setVisibility(View.GONE);
-            viewModel.pay(input);
+            host.pay(input);
         }
     }
 

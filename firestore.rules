@@ -38,8 +38,9 @@ service cloud.firestore {
     }
 
     // Screen 4: events anyone signed in can browse. Screen 11: accounts with the Organizer role can post
-    // new events (create only: events can't be edited or deleted from the app yet). Events added by
-    // hand in the Firebase console are not affected by these rules.
+    // new events. Events can't be edited or deleted from the app yet; the one exception is an organizer
+    // boosting their own event (see isBoostOfOwnEvent below). Events added by hand in the Firebase
+    // console are not affected by these rules.
     function isOrganizer() {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'organizer';
     }
@@ -73,9 +74,54 @@ service cloud.firestore {
         && d.boosted == false;
     }
 
+    // Promote Event: the organizer who posted an event may boost it before it starts. That changes only
+    // `boosted` and `boostedUntil`, and the end must be in the future but no more than 31 days ahead.
+    // Nothing else about an event can be edited, and events can't be deleted, from the app yet.
+    function isBoostOfOwnEvent() {
+      let d = request.resource.data;
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['boosted', 'boostedUntil'])
+        && resource.data.get('organizerId', '') == request.auth.uid
+        && resource.data.startsAt > request.time
+        && d.boosted == true
+        && d.boostedUntil is timestamp
+        && d.boostedUntil > request.time
+        && d.boostedUntil <= request.time + duration.value(31, 'd');
+    }
+
     match /events/{eventId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && isOrganizer() && isNewEvent();
+      allow update: if request.auth != null && isBoostOfOwnEvent();
+      allow delete: if false;
+    }
+
+    // Promote Event: one receipt per paid boost at boosts/{id}. The payment is simulated, so the rules
+    // don't check it; they check the plan and its price (the ones in model/BoostPlan.java), that the
+    // person is the event's organizer, and that nobody can change or delete a receipt. Only the person
+    // who paid can read their receipts.
+    function isBoostPlanPrice(d) {
+      return (d.plan == 'day' && d.days == 1 && d.amount == 599)
+        || (d.plan == 'three_days' && d.days == 3 && d.amount == 899)
+        || (d.plan == 'week' && d.days == 7 && d.amount == 1299);
+    }
+
+    match /boosts/{boostId} {
+      allow get: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow list: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(['userId', 'eventId', 'eventTitle', 'plan', 'days', 'amount',
+          'paymentMethod', 'confirmationCode', 'boostedUntil', 'createdAt'])
+        && request.resource.data.keys().hasAll(['userId', 'eventId', 'eventTitle', 'plan', 'days', 'amount',
+          'paymentMethod', 'confirmationCode', 'boostedUntil', 'createdAt'])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.eventId is string
+        && get(/databases/$(database)/documents/events/$(request.resource.data.eventId)).data.get('organizerId', '') == request.auth.uid
+        && isBoostPlanPrice(request.resource.data)
+        && request.resource.data.paymentMethod in ['gcash', 'maya', 'card']
+        && request.resource.data.confirmationCode is string
+        && request.resource.data.eventTitle is string
+        && request.resource.data.boostedUntil is timestamp
+        && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
     }
 

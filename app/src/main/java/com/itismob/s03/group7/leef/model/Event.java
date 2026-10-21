@@ -38,6 +38,7 @@ public final class Event {
     public static final String FIELD_GROUP_PRICE = "groupPrice";
     public static final String FIELD_COVER_URL = "coverUrl";
     public static final String FIELD_BOOSTED = "boosted";
+    public static final String FIELD_BOOSTED_UNTIL = "boostedUntil";
 
     private final String id;
     private final String title;
@@ -69,8 +70,10 @@ public final class Event {
     private final double groupPrice;
     @Nullable
     private final String coverUrl;
-    /** True while an organizer's paid boost is featuring this event. */
+    /** True when the event has been boosted (see {@link #isBoosted()} for whether the boost still runs). */
     private final boolean boosted;
+    /** When the paid boost ends; 0 when there is no end (for example an event boosted by hand in the console). */
+    private final long boostedUntilMillis;
 
     private Event(@NonNull Builder b) {
         this.id = b.id;
@@ -93,6 +96,7 @@ public final class Event {
         this.groupPrice = b.groupPrice;
         this.coverUrl = b.coverUrl;
         this.boosted = b.boosted;
+        this.boostedUntilMillis = b.boostedUntilMillis;
     }
 
     @NonNull
@@ -211,8 +215,23 @@ public final class Event {
         return coverUrl;
     }
 
+    /** True while a boost is featuring this event: boosted, and the paid time hasn't run out. */
     public boolean isBoosted() {
-        return boosted;
+        return isBoosted(System.currentTimeMillis());
+    }
+
+    public boolean isBoosted(long nowMillis) {
+        return boosted && (boostedUntilMillis == 0 || boostedUntilMillis > nowMillis);
+    }
+
+    /** When the boost ends, or 0 when the event was never given a timed boost. */
+    public long getBoostedUntilMillis() {
+        return boostedUntilMillis;
+    }
+
+    /** True once the event has begun (a boost can only be bought before this). */
+    public boolean hasStarted(long nowMillis) {
+        return nowMillis >= startsAtMillis;
     }
 
     /**
@@ -246,6 +265,7 @@ public final class Event {
                 && earlyBirdUntilMillis == event.earlyBirdUntilMillis
                 && Double.compare(groupPrice, event.groupPrice) == 0
                 && boosted == event.boosted
+                && boostedUntilMillis == event.boostedUntilMillis
                 && id.equals(event.id)
                 && title.equals(event.title)
                 && category == event.category
@@ -265,7 +285,7 @@ public final class Event {
     public int hashCode() {
         return Objects.hash(id, title, category, startsAtMillis, endsAtMillis, description, venue, address,
                 city, audiences, organizerId, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
-                earlyBirdUntilMillis, groupPrice, coverUrl, boosted);
+                earlyBirdUntilMillis, groupPrice, coverUrl, boosted, boostedUntilMillis);
     }
 
     /** Collects an event's fields; anything not set stays empty (or free, or "no early bird"). */
@@ -292,6 +312,7 @@ public final class Event {
         @Nullable
         private String coverUrl;
         private boolean boosted;
+        private long boostedUntilMillis;
 
         public Builder(@NonNull String id, @NonNull String title, @NonNull EventCategory category,
                        long startsAtMillis) {
@@ -389,6 +410,12 @@ public final class Event {
         @NonNull
         public Builder boosted(boolean value) {
             this.boosted = value;
+            return this;
+        }
+
+        @NonNull
+        public Builder boostedUntil(long millis) {
+            this.boostedUntilMillis = millis;
             return this;
         }
 
