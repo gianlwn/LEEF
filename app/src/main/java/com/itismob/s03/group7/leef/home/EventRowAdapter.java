@@ -43,6 +43,7 @@ public final class EventRowAdapter extends ListAdapter<EventItem, EventRowAdapte
             Event event = item.getEvent();
             EventCardBinder.bindCover(binding.coverPhoto, event.getCoverUrl());
             EventCardBinder.bindPrice(binding.price, event);
+            EventCardBinder.bindBoostedTag(binding.boostedTag, event);
             EventCardBinder.bindDetails(binding.title, binding.dateText, binding.venueText, event, false);
             EventCardBinder.bindRating(binding.ratingText, event);
             EventCardBinder.bindTags(binding.tags, event.getTags());

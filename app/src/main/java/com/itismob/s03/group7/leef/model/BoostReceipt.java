@@ -24,10 +24,18 @@ public final class BoostReceipt {
     private final PaymentMethod paymentMethod;
     private final String confirmationCode;
     private final long boostedUntilMillis;
+    /** When it was paid for; 0 for a receipt just made on this phone (not read back from the database). */
+    private final long createdAtMillis;
 
     public BoostReceipt(@NonNull String eventId, @NonNull String eventTitle, @NonNull BoostPlan plan,
                         double amount, @NonNull PaymentMethod paymentMethod, @NonNull String confirmationCode,
                         long boostedUntilMillis) {
+        this(eventId, eventTitle, plan, amount, paymentMethod, confirmationCode, boostedUntilMillis, 0);
+    }
+
+    public BoostReceipt(@NonNull String eventId, @NonNull String eventTitle, @NonNull BoostPlan plan,
+                        double amount, @NonNull PaymentMethod paymentMethod, @NonNull String confirmationCode,
+                        long boostedUntilMillis, long createdAtMillis) {
         this.eventId = eventId;
         this.eventTitle = eventTitle;
         this.plan = plan;
@@ -35,6 +43,7 @@ public final class BoostReceipt {
         this.paymentMethod = paymentMethod;
         this.confirmationCode = confirmationCode;
         this.boostedUntilMillis = boostedUntilMillis;
+        this.createdAtMillis = createdAtMillis;
     }
 
     @NonNull
@@ -69,5 +78,15 @@ public final class BoostReceipt {
     /** When the event stops being featured. */
     public long getBoostedUntilMillis() {
         return boostedUntilMillis;
+    }
+
+    /** When the boost was paid for; 0 when unknown. */
+    public long getCreatedAtMillis() {
+        return createdAtMillis;
+    }
+
+    /** True while the event is still featured because of this boost (or a later one that extends it). */
+    public boolean isRunning(long nowMillis) {
+        return boostedUntilMillis > nowMillis;
     }
 }

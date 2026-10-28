@@ -130,6 +130,11 @@ public final class EventCardBinder {
         }
     }
 
+    /** The yellow "Boosted" tag on the photo: shown only while the event's boost is still running. */
+    public static void bindBoostedTag(@NonNull TextView view, @NonNull Event event) {
+        view.setVisibility(event.isBoosted(System.currentTimeMillis()) ? View.VISIBLE : View.GONE);
+    }
+
     /** "4.6 (12)" with a star in front, or hidden when nobody has rated the event yet. */
     public static void bindRating(@NonNull TextView view, @NonNull Event event) {
         if (!event.hasRating()) {

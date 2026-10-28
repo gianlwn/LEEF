@@ -6,6 +6,8 @@ import com.itismob.s03.group7.leef.model.BoostPlan;
 import com.itismob.s03.group7.leef.model.BoostReceipt;
 import com.itismob.s03.group7.leef.model.PaymentMethod;
 
+import java.util.List;
+
 /** Saving a paid boost. Screens depend on this interface only; the Firebase code is in one place. */
 public interface BoostRepository {
 
@@ -33,6 +35,16 @@ public interface BoostRepository {
 
         void onFailure(@NonNull Failure failure);
     }
+
+    interface HistoryCallback {
+        /** @param receipts the signed-in person's boosts, newest first */
+        void onLoaded(@NonNull List<BoostReceipt> receipts);
+
+        void onFailure(@NonNull Failure failure);
+    }
+
+    /** The signed-in person's paid boosts (their receipts), newest first. */
+    void loadMyBoosts(@NonNull HistoryCallback callback);
 
     /**
      * Records the paid boost and features the event. If the event is already boosted, the new time is

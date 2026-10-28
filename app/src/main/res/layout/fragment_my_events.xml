@@ -74,6 +74,41 @@
             app:tint="@color/leef_gray_500" />
     </LinearLayout>
 
+    <!-- Only organizer accounts see this: the receipts of their boosts. -->
+    <LinearLayout
+        android:id="@+id/boostHistoryRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_info_card"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:minHeight="56dp"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="12dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/my_events_boost_history"
+            android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/leef_gray_500" />
+    </LinearLayout>
+
     <!-- Upcoming / Past switch -->
     <LinearLayout
         android:layout_width="match_parent"

@@ -59,6 +59,7 @@ final class FeaturedEventAdapter extends ListAdapter<EventItem, FeaturedEventAda
             EventCardBinder.bindCover(binding.coverPhoto, event.getCoverUrl());
             EventCardBinder.bindBadge(binding.badge, event);
             EventCardBinder.bindPrice(binding.price, event);
+            EventCardBinder.bindBoostedTag(binding.boostedTag, event);
             EventCardBinder.bindDetails(binding.title, binding.dateText, binding.venueText, event, true);
             EventCardBinder.bindRating(binding.ratingText, event);
             EventCardBinder.bindTags(binding.tags, event.getTags());

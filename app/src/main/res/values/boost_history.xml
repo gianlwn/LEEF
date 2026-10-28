@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Boosted tag on event cards, and the organizer's Boost history screen. -->
+<resources>
+    <string name="event_boosted_tag">Boosted</string>
+    <string name="event_boosted_tag_a11y">This event is promoted</string>
+
+    <string name="my_events_boost_history">Boost history</string>
+    <string name="boost_history_title">Boost history</string>
+    <string name="boost_history_empty_title">No boosts yet</string>
+    <string name="boost_history_empty_body">When you promote an event, the receipt will show up here.</string>
+    <string name="boost_history_error_title">Couldn\'t load your boosts</string>
+    <string name="boost_history_error_network">You seem to be offline. Check your connection and try again.</string>
+    <string name="boost_history_error_permission">The database rules haven\'t been published yet, so your boosts can\'t be read. Publish them, then try again.</string>
+    <string name="boost_history_error_generic">Something went wrong. Please try again.</string>
+    <string name="boost_history_untitled">Untitled event</string>
+    <string name="boost_history_active">Active</string>
+    <string name="boost_history_ended">Ended</string>
+    <string name="boost_history_plan_line">%1$s · %2$s · %3$s</string>
+    <string name="boost_history_dates_line">Paid %1$s · Featured until %2$s</string>
+    <string name="boost_history_until_line">Featured until %1$s</string>
+    <string name="boost_history_code_line">Confirmation %1$s</string>
+    <plurals name="boost_history_summary">
+        <item quantity="one">%1$d boost · %2$s spent</item>
+        <item quantity="other">%1$d boosts · %2$s spent</item>
+    </plurals>
+</resources>

@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot.ServerTimestampBehavior;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -17,8 +18,11 @@ import com.itismob.s03.group7.leef.model.BoostReceipt;
 import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.PaymentMethod;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,6 +54,53 @@ public final class FirebaseBoostRepository implements BoostRepository {
     FirebaseBoostRepository(@NonNull FirebaseAuth auth, @NonNull FirebaseFirestore firestore) {
         this.auth = auth;
         this.firestore = firestore;
+    }
+
+    @Override
+    public void loadMyBoosts(@NonNull HistoryCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            callback.onFailure(Failure.SIGNED_OUT);
+            return;
+        }
+        // Filtering on one field only (no orderBy) so no composite index is needed; the list is sorted here.
+        firestore.collection(BoostReceipt.COLLECTION)
+                .whereEqualTo(BoostReceipt.FIELD_USER_ID, user.getUid())
+                .limit(200)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<BoostReceipt> receipts = new ArrayList<>();
+                    for (DocumentSnapshot document : snapshot.getDocuments()) {
+                        BoostReceipt receipt = toReceipt(document);
+                        if (receipt != null) {
+                            receipts.add(receipt);
+                        }
+                    }
+                    Collections.sort(receipts, (a, b) -> Long.compare(b.getCreatedAtMillis(), a.getCreatedAtMillis()));
+                    callback.onLoaded(receipts);
+                })
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "loading boost history failed", error);
+                    callback.onFailure(toFailure(error));
+                });
+    }
+
+    /** A receipt document, or null when it is missing something the screen needs. */
+    private static BoostReceipt toReceipt(@NonNull DocumentSnapshot document) {
+        BoostPlan plan = BoostPlan.fromValue(document.getString(BoostReceipt.FIELD_PLAN));
+        PaymentMethod method = PaymentMethod.fromValue(document.getString(BoostReceipt.FIELD_PAYMENT_METHOD));
+        Double amount = document.getDouble(BoostReceipt.FIELD_AMOUNT);
+        Timestamp until = document.getTimestamp(BoostReceipt.FIELD_BOOSTED_UNTIL);
+        String eventId = document.getString(BoostReceipt.FIELD_EVENT_ID);
+        if (plan == null || method == null || amount == null || until == null || eventId == null) {
+            return null;
+        }
+        String title = document.getString(BoostReceipt.FIELD_EVENT_TITLE);
+        String code = document.getString(BoostReceipt.FIELD_CONFIRMATION_CODE);
+        Timestamp created = document.getTimestamp(BoostReceipt.FIELD_CREATED_AT, ServerTimestampBehavior.ESTIMATE);
+        return new BoostReceipt(eventId, title == null ? "" : title, plan, amount, method,
+                code == null ? "" : code, until.toDate().getTime(),
+                created == null ? 0 : created.toDate().getTime());
     }
 
     @Override

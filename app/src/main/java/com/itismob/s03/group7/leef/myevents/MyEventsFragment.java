@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.itismob.s03.group7.leef.MainViewModel;
 import com.itismob.s03.group7.leef.R;
+import com.itismob.s03.group7.leef.boost.BoostHistoryActivity;
 import com.itismob.s03.group7.leef.databinding.FragmentMyEventsBinding;
 import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.home.HomeViewModel;
@@ -62,12 +63,15 @@ public class MyEventsFragment extends Fragment {
                 startActivity(CreateEventActivity.createIntent(requireContext())));
         binding.postedRow.setOnClickListener(v ->
                 startActivity(PostedEventsActivity.createIntent(requireContext())));
+        binding.boostHistoryRow.setOnClickListener(v ->
+                startActivity(BoostHistoryActivity.createIntent(requireContext())));
         // Organizer accounts get the Post event button (Screen 11) and the list of events they posted.
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         mainViewModel.getProfile().observe(getViewLifecycleOwner(), profile -> {
             int visibility = profile != null && profile.getRole() == UserRole.ORGANIZER ? View.VISIBLE : View.GONE;
             binding.postEventButton.setVisibility(visibility);
             binding.postedRow.setVisibility(visibility);
+            binding.boostHistoryRow.setVisibility(visibility);
         });
         binding.exploreButton.setOnClickListener(v ->
                 startActivity(SearchActivity.createIntent(requireContext(), false)));

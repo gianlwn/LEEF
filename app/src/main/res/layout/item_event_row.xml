@@ -56,6 +56,28 @@
                 android:textSize="12sp"
                 tools:background="@drawable/bg_price_pill_free"
                 tools:text="Free" />
+
+            <TextView
+                android:id="@+id/boostedTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="6dp"
+                android:background="@drawable/bg_boost_tag"
+                android:contentDescription="@string/event_boosted_tag_a11y"
+                android:drawablePadding="3dp"
+                android:drawableStart="@drawable/ic_boost_bolt"
+                android:gravity="center_vertical"
+                android:paddingStart="7dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="7dp"
+                android:paddingBottom="3dp"
+                android:text="@string/event_boosted_tag"
+                android:textColor="@color/leef_green_900"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
         </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout

@@ -54,6 +54,28 @@
                     android:textAppearance="@style/TextAppearance.LEEF.Event.Price"
                     tools:background="@drawable/bg_price_pill_free"
                     tools:text="Free" />
+
+                <TextView
+                    android:id="@+id/boostedTag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/bg_boost_tag"
+                    android:contentDescription="@string/event_boosted_tag_a11y"
+                    android:drawablePadding="3dp"
+                    android:drawableStart="@drawable/ic_boost_bolt"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/event_boosted_tag"
+                    android:textColor="@color/leef_green_900"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
             </FrameLayout>
 
             <TextView
