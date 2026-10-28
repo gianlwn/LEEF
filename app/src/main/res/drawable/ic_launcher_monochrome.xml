@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- LEEF launcher icon for Android 13+ themed icons: one colour, Android tints it. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="1.08"
+        android:scaleY="1.08">
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M41,36 L41,70 L58,70"
+            android:strokeColor="#FF000000"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="13" />
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M64,50 C60.5,45 59.5,38 60.5,31 L63.5,39 C66,34.5 69.5,31 73,28 C72.5,38 69.5,46 64,50 Z" />
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M68,52 C71,49.5 75,49 78,48.5 C76,52 72.5,54 69,54 C67.5,54 67,53 68,52 Z" />
+    </group>
+</vector>

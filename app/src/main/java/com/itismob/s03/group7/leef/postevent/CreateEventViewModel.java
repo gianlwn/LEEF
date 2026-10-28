@@ -18,6 +18,7 @@ import com.itismob.s03.group7.leef.data.ProfileRepository;
 import com.itismob.s03.group7.leef.home.FeedChange;
 import com.itismob.s03.group7.leef.model.Attendee;
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.model.EventAttachment;
 import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.model.EventDraft;
@@ -52,6 +53,10 @@ public class CreateEventViewModel extends ViewModel {
         ADDED, EMPTY, DUPLICATE, FULL
     }
 
+    public enum AttachmentResult {
+        ADDED, DUPLICATE, FULL
+    }
+
     private final ProfileRepository profiles;
     private final EventRepository events;
     private final AttendeeRepository attendees;
@@ -83,6 +88,7 @@ public class CreateEventViewModel extends ViewModel {
     private long endsAt;
     private final Set<EventAudience> audiences = new LinkedHashSet<>();
     private final List<String> tags = new ArrayList<>();
+    private final List<EventAttachment> attachments = new ArrayList<>();
     private boolean paid;
     private boolean earlyBirdOn;
     private long earlyBirdUntil;
@@ -256,6 +262,31 @@ public class CreateEventViewModel extends ViewModel {
 
     public void removeTag(@NonNull String tag) {
         tags.remove(tag);
+    }
+
+    /** The files linked from the event so far, in the order added. */
+    @NonNull
+    public List<EventAttachment> getAttachments() {
+        return attachments;
+    }
+
+    /** Adds a file link; the name and link were already checked by the dialog. */
+    @NonNull
+    public AttachmentResult addAttachment(@NonNull String name, @NonNull String url) {
+        for (EventAttachment existing : attachments) {
+            if (existing.getUrl().equalsIgnoreCase(url)) {
+                return AttachmentResult.DUPLICATE;
+            }
+        }
+        if (attachments.size() >= EventAttachment.MAX_COUNT) {
+            return AttachmentResult.FULL;
+        }
+        attachments.add(new EventAttachment(name, url));
+        return AttachmentResult.ADDED;
+    }
+
+    public void removeAttachment(@NonNull EventAttachment attachment) {
+        attachments.remove(attachment);
     }
 
     @NonNull
@@ -438,7 +469,7 @@ public class CreateEventViewModel extends ViewModel {
         boolean group = keepPrices ? original.hasGroupPrice() : groupOn && paid;
         EventDraft draft = new EventDraft(text.title, text.description, category, startsAt,
                 endsAt > startsAt ? endsAt : 0, text.venue, text.city,
-                new ArrayList<>(audiences), new ArrayList<>(tags), price,
+                new ArrayList<>(audiences), new ArrayList<>(tags), new ArrayList<>(attachments), price,
                 early ? earlyPrice : -1, early ? earlyUntil : 0,
                 group ? groupPrice : -1, coverUrl, profile.getSchoolOrganization());
         posting = true;
@@ -647,6 +678,8 @@ public class CreateEventViewModel extends ViewModel {
         audiences.addAll(event.getAudiences());
         tags.clear();
         tags.addAll(event.getTags());
+        attachments.clear();
+        attachments.addAll(event.getAttachments());
         paid = !event.isFree();
         earlyBirdOn = event.hasEarlyBird();
         earlyBirdUntil = event.hasEarlyBird() ? event.getEarlyBirdUntilMillis() : 0;

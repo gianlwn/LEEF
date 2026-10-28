@@ -34,12 +34,15 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.databinding.ActivityCreateEventBinding;
+import com.itismob.s03.group7.leef.databinding.ItemFileEditBinding;
 import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.model.EventAttachment;
 import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.search.SearchFilters;
 import com.itismob.s03.group7.leef.ui.ButtonSpinner;
+import com.itismob.s03.group7.leef.ui.AttachmentLinkDialog;
 import com.itismob.s03.group7.leef.ui.ImageLinkDialog;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
@@ -117,6 +120,7 @@ public class CreateEventActivity extends AppCompatActivity {
         setUpTags();
         setUpPricing();
         setUpCover();
+        setUpFiles();
         clearErrorsWhileTyping();
         binding.postButton.setOnClickListener(v -> post());
 
@@ -237,6 +241,40 @@ public class CreateEventActivity extends AppCompatActivity {
         });
     }
 
+    private void setUpFiles() {
+        binding.addFileButton.setOnClickListener(v -> AttachmentLinkDialog.show(this, (name, url) -> {
+            switch (viewModel.addAttachment(name, url)) {
+                case DUPLICATE:
+                    Toast.makeText(this, R.string.create_files_duplicate, Toast.LENGTH_SHORT).show();
+                    break;
+                case FULL:
+                    Toast.makeText(this, R.string.create_files_full, Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    showFiles();
+                    break;
+            }
+        }));
+    }
+
+    /** The linked files under "Flyers and files", each with a remove button; the add button hides at the limit. */
+    private void showFiles() {
+        binding.fileList.removeAllViews();
+        for (EventAttachment attachment : viewModel.getAttachments()) {
+            ItemFileEditBinding row = ItemFileEditBinding.inflate(getLayoutInflater(), binding.fileList, false);
+            row.fileName.setText(attachment.getName());
+            row.fileUrl.setText(attachment.getUrl());
+            row.removeFile.setContentDescription(getString(R.string.create_files_remove_a11y, attachment.getName()));
+            row.removeFile.setOnClickListener(v -> {
+                viewModel.removeAttachment(attachment);
+                showFiles();
+            });
+            binding.fileList.addView(row.getRoot());
+        }
+        binding.addFileButton.setVisibility(
+                viewModel.getAttachments().size() >= EventAttachment.MAX_COUNT ? View.GONE : View.VISIBLE);
+    }
+
     /** Typing in a field takes its error away. */
     private void clearErrorsWhileTyping() {
         clearOnType(binding.titleInput, binding.titleLayout);
@@ -274,6 +312,7 @@ public class CreateEventActivity extends AppCompatActivity {
         showPricingBlocks();
         showTags();
         showCover();
+        showFiles();
         restoring = false;
     }
 

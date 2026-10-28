@@ -612,6 +612,37 @@
                     tools:text="Couldn't load that image."
                     tools:visibility="visible" />
 
+                <TextView
+                    android:id="@+id/sectionFiles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="28dp"
+                    android:text="@string/create_section_files"
+                    android:textAppearance="@style/TextAppearance.LEEF.Registration.Section" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/create_files_hint"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label" />
+
+                <LinearLayout
+                    android:id="@+id/fileList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addFileButton"
+                    style="@style/Widget.LEEF.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/create_files_add"
+                    app:icon="@drawable/ic_attachment"
+                    app:iconGravity="textStart" />
+
             </LinearLayout>
         </ScrollView>
 

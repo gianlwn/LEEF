@@ -32,6 +32,8 @@ public final class Event {
     public static final String FIELD_ORGANIZER_NAME = "organizerName";
     public static final String FIELD_ORGANIZER_LOGO_URL = "organizerLogoUrl";
     public static final String FIELD_TAGS = "tags";
+    /** Flyers and other files the organizer links to: a list of {name, url} maps. */
+    public static final String FIELD_ATTACHMENTS = "attachments";
     public static final String FIELD_PRICE = "price";
     public static final String FIELD_EARLY_BIRD_PRICE = "earlyBirdPrice";
     public static final String FIELD_EARLY_BIRD_UNTIL = "earlyBirdUntil";
@@ -66,6 +68,7 @@ public final class Event {
     @Nullable
     private final String organizerLogoUrl;
     private final List<String> tags;
+    private final List<EventAttachment> attachments;
     /** Regular price in pesos; 0 means free. */
     private final double price;
     /** Discounted price while the early-bird offer lasts; negative when there is no offer. */
@@ -106,6 +109,7 @@ public final class Event {
         this.organizerName = b.organizerName;
         this.organizerLogoUrl = b.organizerLogoUrl;
         this.tags = Collections.unmodifiableList(new ArrayList<>(b.tags));
+        this.attachments = Collections.unmodifiableList(new ArrayList<>(b.attachments));
         this.price = b.price;
         this.earlyBirdPrice = b.earlyBirdPrice;
         this.earlyBirdUntilMillis = b.earlyBirdUntilMillis;
@@ -188,6 +192,12 @@ public final class Event {
     @NonNull
     public List<String> getTags() {
         return tags;
+    }
+
+    /** The files the organizer linked to (flyers, PDFs), in the order they were added; usually empty. */
+    @NonNull
+    public List<EventAttachment> getAttachments() {
+        return attachments;
     }
 
     /** The regular price in pesos (0 = free). */
@@ -335,13 +345,14 @@ public final class Event {
                 && organizerName.equals(event.organizerName)
                 && Objects.equals(organizerLogoUrl, event.organizerLogoUrl)
                 && tags.equals(event.tags)
+                && attachments.equals(event.attachments)
                 && Objects.equals(coverUrl, event.coverUrl);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, title, category, startsAtMillis, endsAtMillis, description, venue, address,
-                city, audiences, organizerId, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
+                city, audiences, organizerId, organizerName, organizerLogoUrl, tags, attachments, price, earlyBirdPrice,
                 earlyBirdUntilMillis, groupPrice, coverUrl, boosted, boostedUntilMillis, cancelled,
                 cancelledAtMillis, updatedAtMillis, ratingCount, ratingSum);
     }
@@ -363,6 +374,7 @@ public final class Event {
         @Nullable
         private String organizerLogoUrl;
         private List<String> tags = Collections.emptyList();
+        private List<EventAttachment> attachments = Collections.emptyList();
         private double price;
         private double earlyBirdPrice = -1;
         private long earlyBirdUntilMillis;
@@ -436,6 +448,12 @@ public final class Event {
         @NonNull
         public Builder organizerLogoUrl(@Nullable String value) {
             this.organizerLogoUrl = value;
+            return this;
+        }
+
+        @NonNull
+        public Builder attachments(@NonNull List<EventAttachment> value) {
+            this.attachments = value;
             return this;
         }
 

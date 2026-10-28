@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.checkin.CheckInActivity;
 import com.itismob.s03.group7.leef.databinding.ActivityEventDetailsBinding;
+import com.itismob.s03.group7.leef.databinding.ItemEventFileBinding;
 import com.itismob.s03.group7.leef.feedback.FeedbackActivity;
 import com.itismob.s03.group7.leef.boost.BoostActivity;
 import com.itismob.s03.group7.leef.feedback.FeedbackListActivity;
@@ -37,6 +38,7 @@ import com.itismob.s03.group7.leef.home.HomeViewModel;
 import com.itismob.s03.group7.leef.messages.ChatActivity;
 import com.itismob.s03.group7.leef.model.ChatRef;
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.model.EventAttachment;
 import com.itismob.s03.group7.leef.registration.RegistrationActivity;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
 
@@ -175,6 +177,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             binding.tags.addView(pill);
         }
 
+        bindFiles(event);
+
         bindPrice(event, now);
 
         // The main button: organizers read their feedback; attendees rate once the event is over;
@@ -301,6 +305,31 @@ public class EventDetailsActivity extends AppCompatActivity {
                 .load(logoUrl)
                 .circleCrop()
                 .into(binding.organizerLogo);
+    }
+
+    /** The flyers and files the organizer linked to; tapping one opens its link (https only). */
+    private void bindFiles(@NonNull Event event) {
+        binding.fileList.removeAllViews();
+        binding.filesBlock.setVisibility(event.getAttachments().isEmpty() ? View.GONE : View.VISIBLE);
+        for (EventAttachment attachment : event.getAttachments()) {
+            ItemEventFileBinding row = ItemEventFileBinding.inflate(getLayoutInflater(), binding.fileList, false);
+            row.fileName.setText(attachment.getName());
+            row.getRoot().setContentDescription(getString(R.string.details_file_open_a11y, attachment.getName()));
+            row.getRoot().setOnClickListener(v -> openFile(attachment));
+            binding.fileList.addView(row.getRoot());
+        }
+    }
+
+    private void openFile(@NonNull EventAttachment attachment) {
+        if (!EventAttachment.isValidUrl(attachment.getUrl())) {
+            Toast.makeText(this, R.string.details_file_failed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(attachment.getUrl())));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.details_file_failed, Toast.LENGTH_SHORT).show();
+        }
     }
 
     /** Hands the event to the phone's share sheet, so it can go to Facebook, Instagram, X, chats or email. */

@@ -346,6 +346,32 @@
                     app:chipSpacingHorizontal="10dp"
                     app:chipSpacingVertical="10dp" />
 
+                <!-- Flyers and files the organizer linked to -->
+                <LinearLayout
+                    android:id="@+id/filesBlock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingEnd="20dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/filesTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/details_files_title"
+                        android:textAppearance="@style/TextAppearance.LEEF.Details.Line" />
+
+                    <LinearLayout
+                        android:id="@+id/fileList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

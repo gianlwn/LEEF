@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.model.EventAttachment;
 import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.model.EventDraft;
@@ -365,6 +366,24 @@ public final class FirebaseEventRepository implements EventRepository {
             }
         }
 
+        List<EventAttachment> attachments = new ArrayList<>();
+        Object rawAttachments = document.get(Event.FIELD_ATTACHMENTS);
+        if (rawAttachments instanceof List) {
+            for (Object item : (List<?>) rawAttachments) {
+                if (!(item instanceof Map)) {
+                    continue;
+                }
+                Object name = ((Map<?, ?>) item).get(EventAttachment.FIELD_NAME);
+                Object url = ((Map<?, ?>) item).get(EventAttachment.FIELD_URL);
+                // A link that isn't https is dropped here, so nothing else is ever opened from an event.
+                if (name instanceof String && url instanceof String
+                        && !((String) name).trim().isEmpty() && EventAttachment.isValidUrl(((String) url).trim())
+                        && attachments.size() < EventAttachment.MAX_COUNT) {
+                    attachments.add(new EventAttachment(((String) name).trim(), ((String) url).trim()));
+                }
+            }
+        }
+
         Event.Builder builder = new Event.Builder(document.getId(), title.trim(), category,
                 startsAt.toDate().getTime())
                 .endsAt(endsAt == null ? 0 : endsAt.toDate().getTime())
@@ -377,6 +396,7 @@ public final class FirebaseEventRepository implements EventRepository {
                 .organizerName(text(document, Event.FIELD_ORGANIZER_NAME))
                 .organizerLogoUrl(optionalText(document, Event.FIELD_ORGANIZER_LOGO_URL))
                 .tags(tags)
+                .attachments(attachments)
                 .price(price == null ? 0 : price)
                 .coverUrl(optionalText(document, Event.FIELD_COVER_URL))
                 .boosted(boosted != null && boosted)

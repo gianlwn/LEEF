@@ -28,6 +28,7 @@ public final class EventDraft {
     private final String city;
     private final List<EventAudience> audiences;
     private final List<String> tags;
+    private final List<EventAttachment> attachments;
     private final double price;
     private final double earlyBirdPrice;
     private final long earlyBirdUntilMillis;
@@ -44,7 +45,8 @@ public final class EventDraft {
      */
     public EventDraft(@NonNull String title, @NonNull String description, @NonNull EventCategory category,
                       long startsAtMillis, long endsAtMillis, @NonNull String venue, @NonNull String city,
-                      @NonNull List<EventAudience> audiences, @NonNull List<String> tags, double price,
+                      @NonNull List<EventAudience> audiences, @NonNull List<String> tags,
+                      @NonNull List<EventAttachment> attachments, double price,
                       double earlyBirdPrice, long earlyBirdUntilMillis, double groupPrice,
                       @Nullable String coverUrl, @NonNull String organizerName) {
         this.title = title;
@@ -56,6 +58,7 @@ public final class EventDraft {
         this.city = city;
         this.audiences = Collections.unmodifiableList(new ArrayList<>(audiences));
         this.tags = Collections.unmodifiableList(new ArrayList<>(tags));
+        this.attachments = Collections.unmodifiableList(new ArrayList<>(attachments));
         this.price = price;
         this.earlyBirdPrice = earlyBirdPrice;
         this.earlyBirdUntilMillis = earlyBirdUntilMillis;
@@ -97,6 +100,16 @@ public final class EventDraft {
         }
         document.put(Event.FIELD_AUDIENCES, audienceValues);
         document.put(Event.FIELD_TAGS, new ArrayList<>(tags));
+        if (!attachments.isEmpty()) {
+            List<Map<String, Object>> files = new ArrayList<>();
+            for (EventAttachment attachment : attachments) {
+                Map<String, Object> file = new HashMap<>();
+                file.put(EventAttachment.FIELD_NAME, attachment.getName());
+                file.put(EventAttachment.FIELD_URL, attachment.getUrl());
+                files.add(file);
+            }
+            document.put(Event.FIELD_ATTACHMENTS, files);
+        }
         document.put(Event.FIELD_PRICE, price);
         if (earlyBirdPrice >= 0 && earlyBirdUntilMillis > 0) {
             document.put(Event.FIELD_EARLY_BIRD_PRICE, earlyBirdPrice);
@@ -128,7 +141,7 @@ public final class EventDraft {
         changes.put(Event.FIELD_UPDATED_AT, FieldValue.serverTimestamp());
         String[] optional = {Event.FIELD_ENDS_AT, Event.FIELD_DESCRIPTION, Event.FIELD_VENUE, Event.FIELD_CITY,
                 Event.FIELD_EARLY_BIRD_PRICE, Event.FIELD_EARLY_BIRD_UNTIL, Event.FIELD_GROUP_PRICE,
-                Event.FIELD_COVER_URL};
+                Event.FIELD_COVER_URL, Event.FIELD_ATTACHMENTS};
         for (String field : optional) {
             if (!changes.containsKey(field)) {
                 changes.put(field, FieldValue.delete());

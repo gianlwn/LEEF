@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Flyers and files an organizer links to from an event (Create/Edit Event and Event Details). -->
+<resources>
+    <string name="create_section_files">Flyers and files (optional)</string>
+    <string name="create_files_hint">Link up to 3 files, such as a flyer or a PDF programme. Upload it to Google Drive or similar and share a public link.</string>
+    <string name="create_files_add">Add a file link</string>
+    <string name="create_files_dialog_title">Add a file link</string>
+    <string name="create_files_dialog_name_hint">Name shown to attendees</string>
+    <string name="create_files_dialog_link_hint">Link to the file</string>
+    <string name="create_files_dialog_helper">Starts with https:// and opens in the browser.</string>
+    <string name="create_files_dialog_add">Add</string>
+    <string name="create_files_error_name">Give the file a name.</string>
+    <string name="create_files_duplicate">That file is already added.</string>
+    <string name="create_files_full">You can link up to 3 files.</string>
+    <string name="create_files_remove_a11y">Remove %1$s</string>
+
+    <string name="details_files_title">Flyers and files</string>
+    <string name="details_file_open_a11y">Open %1$s</string>
+    <string name="details_file_failed">No app can open this link.</string>
+</resources>

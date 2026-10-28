@@ -49,6 +49,8 @@ service cloud.firestore {
 
     // The details an organizer fills in on Create/Edit Event, checked the same way both times. The
     // start time is checked by the callers (new events and edits both need a start in the future).
+    // `attachments` (flyers and files, links) is a list of at most 3 {name, url} entries. Rules can't look
+    // inside a list, so each link is checked by the app: it only saves, shows and opens https links.
     function hasValidEventDetails(d) {
       return d.title is string && d.title.size() > 0 && d.title.size() <= 100
         && d.category in ['seminar', 'workshop', 'competition', 'school_activity']
@@ -60,6 +62,7 @@ service cloud.firestore {
         && d.audiences is list && d.audiences.size() <= 5
         && d.audiences.hasOnly(['students', 'teachers', 'parents', 'freelancers', 'school_admins'])
         && d.tags is list && d.tags.size() <= 5
+        && (!('attachments' in d) || (d.attachments is list && d.attachments.size() <= 3))
         && d.price is number && d.price >= 0 && d.price <= 100000
         && (('earlyBirdPrice' in d) == ('earlyBirdUntil' in d))
         && (!('earlyBirdPrice' in d)
@@ -73,7 +76,7 @@ service cloud.firestore {
       let d = request.resource.data;
       return d.keys().hasAll(['title', 'category', 'startsAt', 'price', 'organizerId', 'organizerName', 'createdAt', 'boosted'])
         && d.keys().hasOnly(['title', 'category', 'startsAt', 'endsAt', 'description', 'venue', 'city',
-          'audiences', 'tags', 'price', 'earlyBirdPrice', 'earlyBirdUntil', 'groupPrice', 'coverUrl',
+          'audiences', 'tags', 'attachments', 'price', 'earlyBirdPrice', 'earlyBirdUntil', 'groupPrice', 'coverUrl',
           'organizerId', 'organizerName', 'createdAt', 'boosted'])
         && hasValidEventDetails(d)
         && d.startsAt > request.time
@@ -94,8 +97,8 @@ service cloud.firestore {
     function isEditOfOwnEvent() {
       let d = request.resource.data;
       return d.diff(resource.data).affectedKeys().hasOnly(['title', 'category', 'startsAt', 'endsAt',
-          'description', 'venue', 'city', 'audiences', 'tags', 'price', 'earlyBirdPrice', 'earlyBirdUntil',
-          'groupPrice', 'coverUrl', 'updatedAt'])
+          'description', 'venue', 'city', 'audiences', 'tags', 'attachments', 'price', 'earlyBirdPrice',
+          'earlyBirdUntil', 'groupPrice', 'coverUrl', 'updatedAt'])
         && resource.data.get('organizerId', '') == request.auth.uid
         && resource.data.get('cancelled', false) == false
         && resource.data.startsAt > request.time
