@@ -413,10 +413,21 @@
                 android:textAppearance="@style/TextAppearance.LEEF.Home.StateBody" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/doneButton"
+                android:id="@+id/shareButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:minWidth="170dp"
+                android:text="@string/feedback_share_button"
+                app:icon="@drawable/ic_share"
+                app:iconGravity="textStart" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/doneButton"
+                style="@style/Widget.LEEF.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:minWidth="170dp"
                 android:text="@string/feedback_done_button" />
         </LinearLayout>

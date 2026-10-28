@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Share your experience, after feedback is sent. -->
+<resources>
+    <string name="feedback_share_button">Share your experience</string>
+    <string name="feedback_share_chooser">Share your experience</string>
+    <string name="feedback_share_intro">I just attended \"%1$s\" and rated it %2$s on LEEF!</string>
+    <string name="feedback_share_highlights">Highlights: %1$s</string>
+</resources>

@@ -76,6 +76,13 @@ public class FeedbackActivity extends AppCompatActivity {
 
         binding.backButton.setOnClickListener(v -> finish());
         binding.doneButton.setOnClickListener(v -> finish());
+        binding.shareButton.setOnClickListener(v -> {
+            FeedbackState current = viewModel.getState().getValue();
+            Event shared = current == null ? null : current.getEvent();
+            if (shared != null) {
+                FeedbackShare.share(this, shared, viewModel.getRating(), viewModel.getTags());
+            }
+        });
         binding.stateButton.setOnClickListener(v -> {
             FeedbackState current = viewModel.getState().getValue();
             if (current != null && current.getStatus() == FeedbackState.Status.ERROR) {
