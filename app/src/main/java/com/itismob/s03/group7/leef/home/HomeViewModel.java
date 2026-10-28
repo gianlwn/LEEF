@@ -11,6 +11,7 @@ import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.data.EventRepository;
 import com.itismob.s03.group7.leef.data.FirebaseEventRepository;
 import com.itismob.s03.group7.leef.model.Event;
+import com.itismob.s03.group7.leef.reminder.ReminderSync;
 import com.itismob.s03.group7.leef.model.EventCategory;
 
 import java.util.ArrayList;
@@ -132,7 +133,8 @@ public class HomeViewModel extends ViewModel {
         events.setEventSaved(id, nowSaved, new EventRepository.DoneCallback() {
             @Override
             public void onDone() {
-                // Already shown; nothing to do.
+                // Already shown; the saved event gets (or loses) its reminder.
+                ReminderSync.refresh();
             }
 
             @Override

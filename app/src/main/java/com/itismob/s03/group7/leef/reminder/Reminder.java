@@ -21,9 +21,21 @@ public final class Reminder {
     private final String title;
     private final String place;
     private final long startsAtMillis;
+    private final boolean registered;
 
+    /** A reminder for an event the person registered for. */
     public Reminder(@NonNull String eventId, @NonNull String uid, @NonNull String title,
                     @NonNull String place, long startsAtMillis) {
+        this(eventId, uid, title, place, startsAtMillis, true);
+    }
+
+    /**
+     * @param registered true for an event the person registered for (the reminder opens their ticket),
+     *                   false for an event they only saved with the heart (it opens the event page)
+     */
+    public Reminder(@NonNull String eventId, @NonNull String uid, @NonNull String title,
+                    @NonNull String place, long startsAtMillis, boolean registered) {
+        this.registered = registered;
         this.eventId = eventId;
         this.uid = uid;
         this.title = title;
@@ -55,6 +67,11 @@ public final class Reminder {
 
     public long getStartsAtMillis() {
         return startsAtMillis;
+    }
+
+    /** False when the person only saved the event (hearted it) and has no ticket for it. */
+    public boolean isRegistered() {
+        return registered;
     }
 
     /** True when the event's start time is unknown (it starts at exactly midnight). */

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reminders for events the person saved (hearted) but did not register for. -->
+<resources>
+    <string name="reminder_title_saved">Saved Event Reminder</string>
+</resources>

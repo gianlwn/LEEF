@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import com.itismob.s03.group7.leef.MainActivity;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.checkin.CheckInActivity;
+import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 
 /** The "Event Reminder" notification and the notification channel it uses. */
 public final class ReminderNotifications {
@@ -53,7 +54,10 @@ public final class ReminderNotifications {
         return manager == null || manager.areNotificationsEnabled();
     }
 
-    /** Shows the reminder. Tapping it opens the check-in ticket (Home underneath, so Back works). */
+    /**
+     * Shows the reminder. Tapping it opens the check-in ticket for an event the person registered for, or
+     * the event page for one they only saved (Home underneath, so Back works).
+     */
     static void show(@NonNull Context context, @NonNull Reminder reminder) {
         if (!canNotify(context)) {
             return;
@@ -66,7 +70,9 @@ public final class ReminderNotifications {
 
         PendingIntent tap = TaskStackBuilder.create(context)
                 .addNextIntent(new Intent(context, MainActivity.class))
-                .addNextIntent(CheckInActivity.createIntent(context, reminder.getEventId()))
+                .addNextIntent(reminder.isRegistered()
+                        ? CheckInActivity.createIntent(context, reminder.getEventId())
+                        : EventDetailsActivity.createIntent(context, reminder.getEventId()))
                 .getPendingIntent(reminder.getEventId().hashCode(),
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
@@ -74,7 +80,8 @@ public final class ReminderNotifications {
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setColor(ContextCompat.getColor(context, R.color.leef_green_700))
-                .setContentTitle(context.getString(R.string.reminder_title))
+                .setContentTitle(context.getString(reminder.isRegistered()
+                        ? R.string.reminder_title : R.string.reminder_title_saved))
                 .setContentText(text)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
