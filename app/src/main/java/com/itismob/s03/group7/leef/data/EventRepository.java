@@ -22,6 +22,11 @@ public interface EventRepository {
         PERMISSION,
         /** The event doesn't exist (any more), or its document is incomplete. */
         NOT_FOUND,
+        /**
+         * The event can't be changed or cancelled any more: it isn't the signed-in person's, it has
+         * started, or it was already cancelled.
+         */
+        LOCKED,
         UNKNOWN
     }
 
@@ -86,4 +91,17 @@ public interface EventRepository {
 
     /** Every event the signed-in person has posted (at most 50), past ones included. */
     void loadPostedEvents(@NonNull EventsCallback callback);
+
+    /**
+     * Replaces the details of an event the signed-in person posted (Edit Event). Fails with
+     * {@link Failure#LOCKED} when it has started or was cancelled, {@link Failure#NOT_FOUND} when it is
+     * gone, and {@link Failure#NETWORK} when offline instead of queueing the change.
+     */
+    void updateEvent(@NonNull String eventId, @NonNull EventDraft draft, @NonNull DoneCallback callback);
+
+    /**
+     * Cancels an event the signed-in person posted. The event stays on record, marked cancelled, so the
+     * people who registered can see what happened. Fails like {@link #updateEvent}.
+     */
+    void cancelEvent(@NonNull String eventId, @NonNull DoneCallback callback);
 }

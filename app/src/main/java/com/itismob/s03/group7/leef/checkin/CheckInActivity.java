@@ -98,6 +98,10 @@ public class CheckInActivity extends AppCompatActivity {
         binding.errorGroup.setVisibility(status == CheckInState.Status.ERROR ? View.VISIBLE : View.GONE);
         binding.notRegisteredGroup.setVisibility(status == CheckInState.Status.NOT_REGISTERED ? View.VISIBLE : View.GONE);
         binding.endedGroup.setVisibility(content && state.isEnded() ? View.VISIBLE : View.GONE);
+        boolean cancelled = content && state.getEvent() != null && state.getEvent().isCancelled();
+        binding.endedIcon.setImageResource(cancelled ? R.drawable.ic_close : R.drawable.ic_check_circle);
+        binding.endedTitle.setText(cancelled ? R.string.check_in_cancelled_title : R.string.check_in_ended_title);
+        binding.endedBody.setText(cancelled ? R.string.check_in_cancelled_body : R.string.check_in_ended_body);
         binding.ticketScroll.setVisibility(ticket ? View.VISIBLE : View.GONE);
 
         if (status == CheckInState.Status.ERROR) {
@@ -114,8 +118,10 @@ public class CheckInActivity extends AppCompatActivity {
         Event event = state.getEvent();
 
         // The event
-        binding.eventTitle.setText(registration.getEventTitle());
-        binding.eventWhen.setText(EventFormat.dateTimeLine(event, registration.getEventStartsAtMillis()));
+        // The event's own title and time win: the organizer may have edited them since the person registered.
+        binding.eventTitle.setText(event != null ? event.getTitle() : registration.getEventTitle());
+        binding.eventWhen.setText(EventFormat.dateTimeLine(event,
+                event != null ? event.getStartsAtMillis() : registration.getEventStartsAtMillis()));
         String place = event == null ? "" : ReminderSync.placeOf(event);
         binding.eventWhere.setText(place);
         binding.eventWhere.setVisibility(place.isEmpty() ? View.GONE : View.VISIBLE);

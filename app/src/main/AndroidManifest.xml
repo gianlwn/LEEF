@@ -107,6 +107,29 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Organizer tools: the events they posted, one event's control panel, who registered, and check-in. -->
+        <activity
+            android:name=".organizer.PostedEventsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".organizer.ManageEventActivity"
+            android:exported="false" />
+        <activity
+            android:name=".organizer.AttendeesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".organizer.ScanCheckInActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- The camera screen that scans a ticket's QR code (locked to portrait). -->
+        <activity
+            android:name=".organizer.ScannerCaptureActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <!-- Terms of Service and Privacy Policy (opened from Create Account, Complete Profile and Profile). -->
         <activity
             android:name=".legal.LegalActivity"

@@ -275,7 +275,7 @@ public class RegistrationViewModel extends ViewModel {
         if (registration != null) {
             status = RegistrationState.Status.DONE;
         } else if (event != null) {
-            status = event.hasEnded(System.currentTimeMillis())
+            status = event.isCancelled() || event.hasEnded(System.currentTimeMillis())
                     ? RegistrationState.Status.CLOSED : RegistrationState.Status.FORM;
         } else if (loading || failure == null) {
             status = RegistrationState.Status.LOADING;

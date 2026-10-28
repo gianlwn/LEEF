@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.itismob.s03.group7.leef.model.PaymentMethod;
 import com.itismob.s03.group7.leef.model.Registration;
 import com.itismob.s03.group7.leef.model.TicketType;
+import com.itismob.s03.group7.leef.model.UserProfile;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,9 +109,19 @@ public final class FirebaseRegistrationRepository implements RegistrationReposit
         document.put(Registration.FIELD_STATUS, Registration.STATUS_CONFIRMED);
         document.put(Registration.FIELD_REGISTERED_AT, FieldValue.serverTimestamp());
 
-        firestore.collection(Registration.COLLECTION)
-                .document(Registration.documentId(user.getUid(), registration.getEventId()))
-                .set(document)
+        DocumentReference registrationRef = firestore.collection(Registration.COLLECTION)
+                .document(Registration.documentId(user.getUid(), registration.getEventId()));
+        DocumentReference profileRef = firestore.collection(UserProfile.COLLECTION).document(user.getUid());
+        // The organizer sees who registered, so the person's name is copied onto the registration. A
+        // transaction (not a plain write) so being offline fails right away instead of queueing.
+        firestore.runTransaction(transaction -> {
+            String fullName = transaction.get(profileRef).getString(UserProfile.FIELD_FULL_NAME);
+            if (fullName != null && !fullName.trim().isEmpty()) {
+                document.put(FirebaseAttendeeRepository.FIELD_ATTENDEE_NAME, fullName.trim());
+            }
+            transaction.set(registrationRef, document);
+            return null;
+        })
                 .addOnSuccessListener(unused -> callback.onSaved())
                 .addOnFailureListener(error -> {
                     Log.w(TAG, "saving registration failed", error);

@@ -104,7 +104,8 @@ public final class FeedbackPrompter {
                 List<Event> ended = new ArrayList<>();
                 for (Registration registration : candidates) {
                     for (Event event : loaded) {
-                        if (event.getId().equals(registration.getEventId()) && event.hasEnded(now)) {
+                        if (event.getId().equals(registration.getEventId()) && event.hasEnded(now)
+                                && !event.isCancelled()) {
                             ended.add(event);
                         }
                     }

@@ -136,6 +136,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         EventCardBinder.bindCover(binding.coverPhoto, event.getCoverUrl());
         EventCardBinder.bindBadge(binding.badge, event);
         binding.title.setText(event.getTitle());
+        binding.cancelledBanner.setVisibility(event.isCancelled() ? View.VISIBLE : View.GONE);
         setTextOrHide(binding.description, event.getDescription());
 
         // Date and time
@@ -179,7 +180,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         boolean isOrganizer = user != null && !event.getOrganizerId().isEmpty()
                 && event.getOrganizerId().equals(user.getUid());
         // Organizers can promote an event until it starts.
-        boolean canPromote = isOrganizer && !event.hasStarted(now);
+        boolean canPromote = isOrganizer && !event.hasStarted(now) && !event.isCancelled();
         binding.promoteButton.setVisibility(canPromote ? View.VISIBLE : View.GONE);
         if (canPromote) {
             binding.promoteButton.setText(event.isBoosted(now) && event.getBoostedUntilMillis() > 0
@@ -193,6 +194,13 @@ public class EventDetailsActivity extends AppCompatActivity {
             binding.registerButton.setText(R.string.details_view_feedback);
             binding.registerButton.setOnClickListener(v ->
                     startActivity(FeedbackListActivity.createIntent(this, eventId)));
+            return;
+        }
+        if (event.isCancelled()) {
+            // Nobody can register for or check in to a cancelled event.
+            binding.registerButton.setEnabled(false);
+            binding.registerButton.setText(R.string.details_event_cancelled);
+            binding.registerButton.setOnClickListener(null);
             return;
         }
         if (registered && ended) {

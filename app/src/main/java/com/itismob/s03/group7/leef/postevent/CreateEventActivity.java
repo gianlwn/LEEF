@@ -35,6 +35,7 @@ import com.google.android.material.timepicker.TimeFormat;
 import com.itismob.s03.group7.leef.R;
 import com.itismob.s03.group7.leef.databinding.ActivityCreateEventBinding;
 import com.itismob.s03.group7.leef.details.EventDetailsActivity;
+import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.search.SearchFilters;
@@ -54,11 +55,14 @@ import java.util.Locale;
  */
 public class CreateEventActivity extends AppCompatActivity {
 
+    private static final String EXTRA_EDIT_EVENT_ID = "edit_event_id";
+
     private ActivityCreateEventBinding binding;
     private CreateEventViewModel viewModel;
     private final EventCategory[] categories = EventCategory.values();
     private boolean restoring;
     private boolean lastPosting;
+    private boolean lastEditing;
     /** Last state shown, so a re-render (rotation, error text) doesn't reset the scroll or the fields. */
     @Nullable
     private CreateEventState.Status shownStatus;
@@ -66,6 +70,12 @@ public class CreateEventActivity extends AppCompatActivity {
     @NonNull
     public static Intent createIntent(@NonNull Context context) {
         return new Intent(context, CreateEventActivity.class);
+    }
+
+    /** Opens the form filled in with an event the organizer already posted, to change it. */
+    @NonNull
+    public static Intent editIntent(@NonNull Context context, @NonNull String eventId) {
+        return new Intent(context, CreateEventActivity.class).putExtra(EXTRA_EDIT_EVENT_ID, eventId);
     }
 
     @Override
@@ -76,7 +86,15 @@ public class CreateEventActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         applyWindowInsets();
 
-        viewModel = new ViewModelProvider(this).get(CreateEventViewModel.class);
+        String editEventId = getIntent().getStringExtra(EXTRA_EDIT_EVENT_ID);
+        if (editEventId != null && editEventId.isEmpty()) {
+            editEventId = null;
+        }
+        viewModel = new ViewModelProvider(this, new CreateEventViewModel.Factory(editEventId))
+                .get(CreateEventViewModel.class);
+        if (viewModel.isEditing()) {
+            binding.screenTitle.setText(R.string.edit_title);
+        }
 
         binding.backButton.setOnClickListener(v -> finish());
         binding.stateButton.setOnClickListener(v -> {
@@ -115,8 +133,13 @@ public class CreateEventActivity extends AppCompatActivity {
         viewModel.getPosted().observe(this, eventId -> {
             if (eventId != null) {
                 viewModel.postedHandled();
-                Toast.makeText(this, R.string.create_posted, Toast.LENGTH_LONG).show();
-                startActivity(EventDetailsActivity.createIntent(this, eventId));
+                if (viewModel.isEditing()) {
+                    // Back to the Manage screen, which reloads and shows the new details.
+                    Toast.makeText(this, R.string.edit_saved, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(this, R.string.create_posted, Toast.LENGTH_LONG).show();
+                    startActivity(EventDetailsActivity.createIntent(this, eventId));
+                }
                 finish();
             }
         });
@@ -151,6 +174,7 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void setUpAudience() {
+        binding.audienceGroup.removeAllViews();
         for (EventAudience audience : EventAudience.values()) {
             Chip chip = (Chip) getLayoutInflater().inflate(R.layout.item_filter_chip, binding.audienceGroup, false);
             chip.setId(View.generateViewId());
@@ -262,12 +286,20 @@ public class CreateEventActivity extends AppCompatActivity {
         binding.bottomBar.setVisibility(form ? View.VISIBLE : View.GONE);
         binding.statePanel.setVisibility(form ? View.GONE : View.VISIBLE);
         binding.loadingSpinner.setVisibility(status == CreateEventState.Status.LOADING ? View.VISIBLE : View.GONE);
-        boolean problem = status == CreateEventState.Status.ERROR || status == CreateEventState.Status.FORBIDDEN;
+        boolean problem = status == CreateEventState.Status.ERROR || status == CreateEventState.Status.FORBIDDEN
+                || status == CreateEventState.Status.LOCKED;
         binding.stateIcon.setVisibility(problem ? View.VISIBLE : View.GONE);
         binding.stateBody.setVisibility(problem ? View.VISIBLE : View.GONE);
         binding.stateButton.setVisibility(problem ? View.VISIBLE : View.GONE);
-        binding.stateTitle.setVisibility(status == CreateEventState.Status.FORBIDDEN ? View.VISIBLE : View.GONE);
-        if (status == CreateEventState.Status.FORBIDDEN) {
+        binding.stateTitle.setVisibility(status == CreateEventState.Status.FORBIDDEN
+                || status == CreateEventState.Status.LOCKED ? View.VISIBLE : View.GONE);
+        if (status == CreateEventState.Status.LOCKED) {
+            binding.stateIcon.setImageResource(R.drawable.ic_field_lock);
+            binding.stateTitle.setText(R.string.edit_locked_title);
+            binding.stateBody.setText(state.getErrorRes());
+            binding.stateButton.setText(R.string.create_forbidden_back);
+        } else if (status == CreateEventState.Status.FORBIDDEN) {
+            binding.stateTitle.setText(R.string.create_forbidden_title);
             binding.stateIcon.setImageResource(R.drawable.ic_field_role);
             binding.stateBody.setText(R.string.create_forbidden_body);
             binding.stateButton.setText(R.string.create_forbidden_back);
@@ -278,11 +310,64 @@ public class CreateEventActivity extends AppCompatActivity {
         }
 
         if (form) {
+            if (state.isEditing()) {
+                Event prefill = viewModel.consumePrefill();
+                if (prefill != null) {
+                    applyPrefill(prefill);
+                }
+            }
             binding.postingAs.setText(getString(R.string.create_posting_as, state.getOrganizerName()));
             binding.postingAs.setVisibility(state.getOrganizerName().isEmpty() ? View.GONE : View.VISIBLE);
+            lastEditing = state.isEditing();
             showPosting(state.isPosting());
+            applyPriceLock(state);
         }
         shownStatus = status;
+    }
+
+    /** Edit mode: puts the event's text into the fields and shows the picked values. */
+    private void applyPrefill(@NonNull Event event) {
+        binding.titleInput.setText(event.getTitle());
+        binding.descriptionInput.setText(event.getDescription());
+        binding.venueInput.setText(event.getVenue());
+        binding.cityInput.setText(event.getCity());
+        if (!event.isFree()) {
+            binding.priceInput.setText(plainPrice(event.getPrice()));
+        }
+        if (event.hasEarlyBird()) {
+            binding.earlyPriceInput.setText(plainPrice(event.getEarlyBirdPrice()));
+        }
+        if (event.hasGroupPrice()) {
+            binding.groupPriceInput.setText(plainPrice(event.getGroupPrice()));
+        }
+        setUpAudience();
+        restoreFromViewModel();
+    }
+
+    /** 350.0 -> "350", 350.5 -> "350.50". */
+    @NonNull
+    private static String plainPrice(double price) {
+        return price == Math.rint(price) ? String.valueOf((long) price) : String.format(Locale.US, "%.2f", price);
+    }
+
+    /** Edit mode with people registered: the prices can be read but not changed. */
+    private void applyPriceLock(@NonNull CreateEventState state) {
+        boolean locked = state.isPricesLocked();
+        binding.priceLockedNote.setVisibility(locked ? View.VISIBLE : View.GONE);
+        if (!locked) {
+            return;
+        }
+        binding.priceLockedNote.setText(state.getRegisteredPeople() < 0
+                ? getString(R.string.edit_prices_locked_unknown)
+                : getResources().getQuantityString(R.plurals.edit_prices_locked,
+                state.getRegisteredPeople(), state.getRegisteredPeople()));
+        setFormEnabled(binding.pricingGroup, false);
+        setFormEnabled(binding.priceLayout, false);
+        binding.earlySwitch.setEnabled(false);
+        setFormEnabled(binding.earlyPriceLayout, false);
+        setFormEnabled(binding.earlyUntilLayout, false);
+        binding.groupSwitch.setEnabled(false);
+        setFormEnabled(binding.groupPriceLayout, false);
     }
 
     private void showPosting(boolean posting) {
@@ -291,7 +376,8 @@ public class CreateEventActivity extends AppCompatActivity {
         }
         lastPosting = posting;
         binding.postButton.setEnabled(!posting);
-        binding.postButton.setText(posting ? "" : getString(R.string.create_post_button));
+        binding.postButton.setText(posting ? "" : getString(lastEditing
+                ? R.string.edit_save_button : R.string.create_post_button));
         binding.postButton.setIcon(posting ? ButtonSpinner.create(this) : null);
         binding.formScroll.setAlpha(posting ? 0.6f : 1f);
         setFormEnabled(binding.formContent, !posting);

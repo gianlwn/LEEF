@@ -132,8 +132,11 @@ public class RegistrationActivity extends AppCompatActivity implements PaymentSh
         }
         if (unavailable) {
             boolean closed = status == RegistrationState.Status.CLOSED;
-            binding.unavailableTitle.setText(closed ? R.string.registration_closed_title : R.string.registration_unavailable_title);
-            binding.unavailableBody.setText(closed ? R.string.registration_closed_body : R.string.registration_unavailable_body);
+            boolean cancelled = closed && state.getEvent() != null && state.getEvent().isCancelled();
+            binding.unavailableTitle.setText(cancelled ? R.string.registration_cancelled_title
+                    : closed ? R.string.registration_closed_title : R.string.registration_unavailable_title);
+            binding.unavailableBody.setText(cancelled ? R.string.registration_cancelled_body
+                    : closed ? R.string.registration_closed_body : R.string.registration_unavailable_body);
         }
         if (form) {
             bindForm(state, state.getEvent());

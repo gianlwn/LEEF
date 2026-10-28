@@ -344,6 +344,16 @@
                     android:text="@string/create_section_pricing"
                     android:textAppearance="@style/TextAppearance.LEEF.Registration.Section" />
 
+                <TextView
+                    android:id="@+id/priceLockedNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/edit_prices_locked_unknown"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/pricingGroup"
                     android:layout_width="match_parent"

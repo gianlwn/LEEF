@@ -21,6 +21,8 @@ public interface BoostRepository {
         NOT_ORGANIZER,
         /** The event has already started. */
         STARTED,
+        /** The organizer cancelled the event, so it can't be promoted. */
+        CANCELLED,
         /** The event is already boosted so far ahead that this would go past the limit. */
         TOO_LONG,
         UNKNOWN

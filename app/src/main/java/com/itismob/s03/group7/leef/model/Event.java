@@ -39,6 +39,8 @@ public final class Event {
     public static final String FIELD_COVER_URL = "coverUrl";
     public static final String FIELD_BOOSTED = "boosted";
     public static final String FIELD_BOOSTED_UNTIL = "boostedUntil";
+    public static final String FIELD_CANCELLED = "cancelled";
+    public static final String FIELD_CANCELLED_AT = "cancelledAt";
 
     private final String id;
     private final String title;
@@ -74,6 +76,8 @@ public final class Event {
     private final boolean boosted;
     /** When the paid boost ends; 0 when there is no end (for example an event boosted by hand in the console). */
     private final long boostedUntilMillis;
+    /** True when the organizer cancelled the event. A cancelled event stays on record but is closed. */
+    private final boolean cancelled;
 
     private Event(@NonNull Builder b) {
         this.id = b.id;
@@ -97,6 +101,7 @@ public final class Event {
         this.coverUrl = b.coverUrl;
         this.boosted = b.boosted;
         this.boostedUntilMillis = b.boostedUntilMillis;
+        this.cancelled = b.cancelled;
     }
 
     @NonNull
@@ -229,6 +234,11 @@ public final class Event {
         return boostedUntilMillis;
     }
 
+    /** True when the organizer cancelled this event. */
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
     /** True once the event has begun (a boost can only be bought before this). */
     public boolean hasStarted(long nowMillis) {
         return nowMillis >= startsAtMillis;
@@ -266,6 +276,7 @@ public final class Event {
                 && Double.compare(groupPrice, event.groupPrice) == 0
                 && boosted == event.boosted
                 && boostedUntilMillis == event.boostedUntilMillis
+                && cancelled == event.cancelled
                 && id.equals(event.id)
                 && title.equals(event.title)
                 && category == event.category
@@ -285,7 +296,7 @@ public final class Event {
     public int hashCode() {
         return Objects.hash(id, title, category, startsAtMillis, endsAtMillis, description, venue, address,
                 city, audiences, organizerId, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
-                earlyBirdUntilMillis, groupPrice, coverUrl, boosted, boostedUntilMillis);
+                earlyBirdUntilMillis, groupPrice, coverUrl, boosted, boostedUntilMillis, cancelled);
     }
 
     /** Collects an event's fields; anything not set stays empty (or free, or "no early bird"). */
@@ -313,6 +324,7 @@ public final class Event {
         private String coverUrl;
         private boolean boosted;
         private long boostedUntilMillis;
+        private boolean cancelled;
 
         public Builder(@NonNull String id, @NonNull String title, @NonNull EventCategory category,
                        long startsAtMillis) {
@@ -416,6 +428,12 @@ public final class Event {
         @NonNull
         public Builder boostedUntil(long millis) {
             this.boostedUntilMillis = millis;
+            return this;
+        }
+
+        @NonNull
+        public Builder cancelled(boolean value) {
+            this.cancelled = value;
             return this;
         }
 

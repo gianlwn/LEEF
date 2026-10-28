@@ -92,6 +92,12 @@ final class MyEventAdapter extends ListAdapter<MyEventItem, MyEventAdapter.Holde
                     background = R.drawable.bg_status_group;
                     textColor = R.color.leef_cat_competition_badge;
                     break;
+                case CANCELLED:
+                    label = R.string.my_events_status_cancelled;
+                    icon = R.drawable.ic_close;
+                    background = R.drawable.bg_status_saved;
+                    textColor = R.color.leef_error;
+                    break;
                 case SAVED:
                     label = R.string.my_events_status_saved;
                     icon = R.drawable.ic_status_saved;

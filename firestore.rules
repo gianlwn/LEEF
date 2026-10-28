@@ -38,22 +38,21 @@ service cloud.firestore {
     }
 
     // Screen 4: events anyone signed in can browse. Screen 11: accounts with the Organizer role can post
-    // new events. Events can't be edited or deleted from the app yet; the one exception is an organizer
-    // boosting their own event (see isBoostOfOwnEvent below). Events added by hand in the Firebase
-    // console are not affected by these rules.
+    // new events. The organizer who posted an event can then change it in three ways, each with its own
+    // rule below: boost it (isBoostOfOwnEvent), edit its details before it starts (isEditOfOwnEvent), or
+    // cancel it before it starts (isCancelOfOwnEvent). Nobody can delete an event: a cancelled event stays
+    // on record, marked `cancelled`. Events added by hand in the Firebase console are not affected by
+    // these rules.
     function isOrganizer() {
       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'organizer';
     }
 
-    function isNewEvent() {
-      let d = request.resource.data;
-      return d.keys().hasAll(['title', 'category', 'startsAt', 'price', 'organizerId', 'organizerName', 'createdAt', 'boosted'])
-        && d.keys().hasOnly(['title', 'category', 'startsAt', 'endsAt', 'description', 'venue', 'city',
-          'audiences', 'tags', 'price', 'earlyBirdPrice', 'earlyBirdUntil', 'groupPrice', 'coverUrl',
-          'organizerId', 'organizerName', 'createdAt', 'boosted'])
-        && d.title is string && d.title.size() > 0 && d.title.size() <= 100
+    // The details an organizer fills in on Create/Edit Event, checked the same way both times. The
+    // start time is checked by the callers (new events and edits both need a start in the future).
+    function hasValidEventDetails(d) {
+      return d.title is string && d.title.size() > 0 && d.title.size() <= 100
         && d.category in ['seminar', 'workshop', 'competition', 'school_activity']
-        && d.startsAt is timestamp && d.startsAt > request.time
+        && d.startsAt is timestamp
         && (!('endsAt' in d) || (d.endsAt is timestamp && d.endsAt > d.startsAt))
         && d.get('description', '') is string && d.get('description', '').size() <= 500
         && d.get('venue', '') is string && d.get('venue', '').size() <= 120
@@ -67,20 +66,62 @@ service cloud.firestore {
           || (d.earlyBirdPrice is number && d.earlyBirdPrice >= 0 && d.earlyBirdPrice < d.price
             && d.earlyBirdUntil is timestamp && d.earlyBirdUntil <= d.startsAt))
         && (!('groupPrice' in d) || (d.groupPrice is number && d.groupPrice >= 0 && d.groupPrice < d.price))
-        && (!('coverUrl' in d) || (d.coverUrl is string && d.coverUrl.matches('https://.+') && d.coverUrl.size() <= 500))
+        && (!('coverUrl' in d) || (d.coverUrl is string && d.coverUrl.matches('https://.+') && d.coverUrl.size() <= 500));
+    }
+
+    function isNewEvent() {
+      let d = request.resource.data;
+      return d.keys().hasAll(['title', 'category', 'startsAt', 'price', 'organizerId', 'organizerName', 'createdAt', 'boosted'])
+        && d.keys().hasOnly(['title', 'category', 'startsAt', 'endsAt', 'description', 'venue', 'city',
+          'audiences', 'tags', 'price', 'earlyBirdPrice', 'earlyBirdUntil', 'groupPrice', 'coverUrl',
+          'organizerId', 'organizerName', 'createdAt', 'boosted'])
+        && hasValidEventDetails(d)
+        && d.startsAt > request.time
         && d.organizerId == request.auth.uid
         && d.organizerName is string && d.organizerName.size() > 0 && d.organizerName.size() <= 100
         && d.createdAt == request.time
         && d.boosted == false;
     }
 
+    // Edit Event: the organizer who posted an event may change its details until it starts, and only
+    // while it isn't cancelled. Only the fields on the Create Event form can change (not the organizer,
+    // the creation time, the boost or the cancellation), the result must pass the same checks as a new
+    // event, and the start must stay in the future.
+    //
+    // The app also keeps the prices as they were once people have registered. The rules can't enforce
+    // that (a rule can't count registrations), so it is a promise made by the app, not by the database.
+    function isEditOfOwnEvent() {
+      let d = request.resource.data;
+      return d.diff(resource.data).affectedKeys().hasOnly(['title', 'category', 'startsAt', 'endsAt',
+          'description', 'venue', 'city', 'audiences', 'tags', 'price', 'earlyBirdPrice', 'earlyBirdUntil',
+          'groupPrice', 'coverUrl'])
+        && resource.data.get('organizerId', '') == request.auth.uid
+        && resource.data.get('cancelled', false) == false
+        && resource.data.startsAt > request.time
+        && hasValidEventDetails(d)
+        && d.startsAt > request.time;
+    }
+
+    // Cancel Event: the organizer may cancel their own event before it starts, once. That sets only
+    // `cancelled` (to true) and `cancelledAt` (to now); it can't be undone from the app.
+    function isCancelOfOwnEvent() {
+      let d = request.resource.data;
+      return d.diff(resource.data).affectedKeys().hasOnly(['cancelled', 'cancelledAt'])
+        && resource.data.get('organizerId', '') == request.auth.uid
+        && resource.data.get('cancelled', false) == false
+        && resource.data.startsAt > request.time
+        && d.cancelled == true
+        && d.cancelledAt == request.time;
+    }
+
     // Promote Event: the organizer who posted an event may boost it before it starts. That changes only
     // `boosted` and `boostedUntil`, and the end must be in the future but no more than 31 days ahead.
-    // Nothing else about an event can be edited, and events can't be deleted, from the app yet.
+    // A cancelled event can't be boosted.
     function isBoostOfOwnEvent() {
       let d = request.resource.data;
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['boosted', 'boostedUntil'])
         && resource.data.get('organizerId', '') == request.auth.uid
+        && resource.data.get('cancelled', false) == false
         && resource.data.startsAt > request.time
         && d.boosted == true
         && d.boostedUntil is timestamp
@@ -91,7 +132,8 @@ service cloud.firestore {
     match /events/{eventId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && isOrganizer() && isNewEvent();
-      allow update: if request.auth != null && isBoostOfOwnEvent();
+      allow update: if request.auth != null
+        && (isBoostOfOwnEvent() || isEditOfOwnEvent() || isCancelOfOwnEvent());
       allow delete: if false;
     }
 
@@ -136,17 +178,26 @@ service cloud.firestore {
 
     // Screen 7: registrations. One document per person per event, named {uid}_{eventId}, so nobody can
     // register twice. The payment is simulated, so the rules don't check prices; they only make sure a
-    // person writes their own registration for an event that exists, and can never change or delete it.
+    // person writes their own registration for an event that exists and hasn't been cancelled.
+    //
+    // Organizer tools: the organizer of an event may list its registrations (the attendee list) and may
+    // check one in: that sets only `checkedInAt` (to now) and `checkedInBy` (themselves), once. Nobody can
+    // create a registration that is already checked in, and nothing else about a registration can change.
+    function isOrganizerOf(eventId) {
+      return get(/databases/$(database)/documents/events/$(eventId)).data.get('organizerId', '') == request.auth.uid;
+    }
+
     match /registrations/{registrationId} {
       allow get: if request.auth != null
         && registrationId.matches(request.auth.uid + '_.*');
       allow list: if request.auth != null
-        && resource.data.userId == request.auth.uid;
+        && (resource.data.userId == request.auth.uid || isOrganizerOf(resource.data.eventId));
       allow create: if request.auth != null
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.eventId is string
         && registrationId == request.auth.uid + '_' + request.resource.data.eventId
         && exists(/databases/$(database)/documents/events/$(request.resource.data.eventId))
+        && get(/databases/$(database)/documents/events/$(request.resource.data.eventId)).data.get('cancelled', false) == false
         && request.resource.data.ticketType in ['earlyBird', 'regular', 'group']
         && request.resource.data.quantity is number
         && request.resource.data.quantity >= 1
@@ -154,8 +205,18 @@ service cloud.firestore {
         && request.resource.data.amount is number
         && request.resource.data.amount >= 0
         && request.resource.data.confirmationCode is string
-        && request.resource.data.status == 'confirmed';
-      allow update, delete: if false;
+        && request.resource.data.status == 'confirmed'
+        && (!('attendeeName' in request.resource.data)
+          || (request.resource.data.attendeeName is string && request.resource.data.attendeeName.size() <= 100))
+        && !('checkedInAt' in request.resource.data)
+        && !('checkedInBy' in request.resource.data);
+      allow update: if request.auth != null
+        && isOrganizerOf(resource.data.eventId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['checkedInAt', 'checkedInBy'])
+        && !('checkedInAt' in resource.data)
+        && request.resource.data.checkedInAt == request.time
+        && request.resource.data.checkedInBy == request.auth.uid;
+      allow delete: if false;
     }
 
     // Screen 10: messaging.

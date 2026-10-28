@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Organizer tools: posted events, Manage event, Attendees and Check-in. -->
+<resources>
+    <string name="my_events_manage_posted">Manage events you posted</string>
+
+    <string name="posted_title">Events you posted</string>
+    <string name="posted_empty_title">No events posted yet</string>
+    <string name="posted_empty_body">Events you post will show up here, with their attendees and check-in.</string>
+    <string name="posted_status_boosted">Boosted</string>
+    <string name="posted_status_upcoming">Upcoming</string>
+    <string name="posted_status_ended">Ended</string>
+
+    <string name="manage_title">Manage event</string>
+    <string name="manage_registered">People registered</string>
+    <string name="manage_checked_in">Checked in</string>
+    <string name="manage_status_boosted">Boosted until %1$s</string>
+    <string name="manage_status_upcoming">Upcoming</string>
+    <string name="manage_status_live">Happening now</string>
+    <string name="manage_status_ended">Ended</string>
+    <string name="manage_attendees">Attendees</string>
+    <string name="manage_check_in">Check in attendees</string>
+    <string name="manage_feedback">Attendee feedback</string>
+    <string name="manage_promote">Promote this event</string>
+    <string name="manage_promote_more">Add boost time</string>
+    <string name="manage_view_page">View event page</string>
+    <string name="manage_not_organizer_body">Sign in with the account that posted it.</string>
+
+    <string name="attendees_title">Attendees</string>
+    <string name="attendees_summary">%1$d people registered · %2$d checked in</string>
+    <string name="attendees_empty_title">Nobody has registered yet</string>
+    <string name="attendees_empty_body">People who register will show up here.</string>
+    <string name="attendees_unnamed">Attendee</string>
+    <string name="attendees_ticket_people">%1$s · %2$d people</string>
+    <string name="attendees_check_in">Check in</string>
+    <string name="attendees_checked_in_at">Checked in %1$s</string>
+
+    <string name="scan_title">Check in attendees</string>
+    <string name="scan_intro">Scan the QR code on an attendee\'s ticket, or type the code shown under it. Each ticket can only be checked in once.</string>
+    <string name="scan_button">Scan ticket</string>
+    <string name="scan_prompt">Point the camera at the ticket\'s QR code</string>
+    <string name="scan_or_type">Or type the code</string>
+    <string name="scan_code_hint">Confirmation code (LEEF-7KQ2MD)</string>
+    <string name="scan_submit">Check in</string>
+    <string name="scan_looking_up">Checking…</string>
+    <string name="scan_result_checked_in">Checked in</string>
+    <string name="scan_result_person">%1$s\n%2$s · %3$s</string>
+    <string name="scan_result_already">Already checked in</string>
+    <string name="scan_result_already_body">%1$s\n%2$s · checked in at %3$s</string>
+    <string name="scan_result_not_found">Ticket not found</string>
+    <string name="scan_result_not_found_body">No one registered for this event has that code.</string>
+    <string name="scan_result_wrong_event">Wrong event</string>
+    <string name="scan_result_wrong_event_body">This ticket is for a different event.</string>
+    <string name="scan_result_unreadable">Not a LEEF ticket</string>
+    <string name="scan_result_unreadable_body">That doesn\'t look like a ticket code. Check it and try again.</string>
+    <string name="scan_result_error">Couldn\'t check in</string>
+
+    <string name="organizer_check_in_offline">You seem to be offline. Check your connection and try again.</string>
+    <string name="organizer_check_in_failed">We couldn\'t check that ticket in. Please try again.</string>
+    <string name="organizer_error_permission">Only the organizer of this event can do that, or the database rules haven\'t been published yet.</string>
+</resources>

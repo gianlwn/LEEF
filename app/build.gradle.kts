@@ -53,6 +53,10 @@ dependencies {
     // Draws the check-in QR code on the device (Screen 9). Free, no network needed.
     implementation(libs.zxing.core)
 
+    // The camera screen that scans a ticket's QR code at check-in (organizer). Free; asks for the camera
+    // permission itself the first time it opens.
+    implementation(libs.zxing.embedded)
+
     // Firebase: the BoM keeps every Firebase library on matching versions.
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)

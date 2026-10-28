@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Edit Event (reuses the Create Event form) -->
+    <string name="edit_title">Edit Event</string>
+    <string name="edit_save_button">Save changes</string>
+    <string name="edit_saved">Your changes are saved.</string>
+    <string name="edit_save_offline">You\'re offline, so your changes weren\'t saved. Connect and try again.</string>
+    <string name="edit_save_denied">Your changes were refused. If you are the organizer, publish the latest firestore.rules in the Firebase console.</string>
+    <string name="edit_save_locked">This event can\'t be changed any more. It may have started or been cancelled.</string>
+    <string name="edit_save_gone">This event no longer exists.</string>
+    <string name="edit_save_failed">Couldn\'t save your changes. Please try again.</string>
+    <string name="edit_error_start_before_early">The early-bird price ends after this start time. Prices can\'t change once people have registered, so pick a start on or after the early-bird deadline.</string>
+
+    <string name="edit_locked_title">This event can\'t be edited</string>
+    <string name="edit_locked_gone">This event no longer exists.</string>
+    <string name="edit_locked_not_yours">Only the organizer who posted this event can edit it.</string>
+    <string name="edit_locked_cancelled">This event was cancelled, so it can\'t be changed.</string>
+    <string name="edit_locked_started">This event has already started, so it can\'t be changed any more.</string>
+
+    <string name="edit_prices_locked_unknown">Prices are locked because we couldn\'t check whether anyone has registered. Everything else can still change.</string>
+    <plurals name="edit_prices_locked">
+        <item quantity="one">Prices are locked because %d person has registered. Everything else can still change.</item>
+        <item quantity="other">Prices are locked because %d people have registered. Everything else can still change.</item>
+    </plurals>
+
+    <!-- Manage Event: edit and cancel -->
+    <string name="manage_status_cancelled">Cancelled</string>
+    <string name="manage_edit">Edit event</string>
+    <string name="manage_cancel_event">Cancel event</string>
+    <string name="manage_cancel_title">Cancel \"%1$s\"?</string>
+    <string name="manage_cancel_body">The event stays in your list marked Cancelled, and nobody can register for it. This can\'t be undone. The app doesn\'t send refunds or notices, so tell attendees yourself.</string>
+    <plurals name="manage_cancel_body_people">
+        <item quantity="one">%d person has registered. The event stays in your list marked Cancelled and nobody can register for it. This can\'t be undone. The app doesn\'t send refunds or notices, so tell attendees yourself.</item>
+        <item quantity="other">%d people have registered. The event stays in your list marked Cancelled and nobody can register for it. This can\'t be undone. The app doesn\'t send refunds or notices, so tell attendees yourself.</item>
+    </plurals>
+    <string name="manage_cancel_confirm">Cancel event</string>
+    <string name="manage_cancel_keep">Keep event</string>
+    <string name="manage_cancel_done">The event is cancelled.</string>
+    <string name="manage_cancel_offline">You\'re offline, so the event wasn\'t cancelled. Connect and try again.</string>
+    <string name="manage_cancel_locked">This event can\'t be cancelled any more. It may have started or already been cancelled.</string>
+    <string name="manage_cancel_failed">Couldn\'t cancel the event. Please try again.</string>
+
+    <!-- What other people see on a cancelled event -->
+    <string name="details_cancelled_banner">This event was cancelled by the organizer.</string>
+    <string name="details_event_cancelled">This event was cancelled</string>
+    <string name="registration_cancelled_title">This event was cancelled</string>
+    <string name="registration_cancelled_body">Registration is closed because the organizer cancelled the event.</string>
+    <string name="check_in_cancelled_title">This event was cancelled</string>
+    <string name="check_in_cancelled_body">The organizer cancelled it, so there is no check-in. Check the event chat for what happens next.</string>
+    <string name="my_events_status_cancelled">Cancelled</string>
+    <string name="posted_status_cancelled">Cancelled</string>
+
+    <!-- Promote Event on a cancelled event -->
+    <string name="boost_cancelled_title">This event was cancelled</string>
+    <string name="boost_cancelled_body">A cancelled event can\'t be promoted.</string>
+    <string name="boost_error_cancelled">This event was cancelled, so it can\'t be boosted. You weren\'t charged.</string>
+</resources>

@@ -90,7 +90,8 @@ public class BoostActivity extends AppCompatActivity implements PaymentSheetHost
         boolean done = status == BoostState.Status.DONE && state.getReceipt() != null;
         boolean unavailable = status == BoostState.Status.NOT_FOUND
                 || status == BoostState.Status.NOT_ORGANIZER
-                || status == BoostState.Status.STARTED;
+                || status == BoostState.Status.STARTED
+                || status == BoostState.Status.CANCELLED;
 
         binding.loading.setVisibility(status == BoostState.Status.LOADING ? View.VISIBLE : View.GONE);
         binding.errorGroup.setVisibility(status == BoostState.Status.ERROR ? View.VISIBLE : View.GONE);
@@ -122,6 +123,10 @@ public class BoostActivity extends AppCompatActivity implements PaymentSheetHost
             case NOT_ORGANIZER:
                 title = R.string.boost_not_organizer_title;
                 body = R.string.boost_not_organizer_body;
+                break;
+            case CANCELLED:
+                title = R.string.boost_cancelled_title;
+                body = R.string.boost_cancelled_body;
                 break;
             case STARTED:
                 title = R.string.boost_started_title;

@@ -22,6 +22,8 @@ public final class BoostState {
         NOT_ORGANIZER,
         /** The event has begun, so a boost no longer helps. */
         STARTED,
+        /** The organizer cancelled the event, so it can't be promoted. */
+        CANCELLED,
         /** Choosing how long to boost and how to pay. */
         FORM,
         /** Boosted: the confirmation is showing. */

@@ -6,18 +6,25 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.itismob.s03.group7.leef.R;
+import com.itismob.s03.group7.leef.data.AttendeeRepository;
 import com.itismob.s03.group7.leef.data.EventRepository;
+import com.itismob.s03.group7.leef.data.FirebaseAttendeeRepository;
 import com.itismob.s03.group7.leef.data.FirebaseEventRepository;
 import com.itismob.s03.group7.leef.data.FirebaseProfileRepository;
 import com.itismob.s03.group7.leef.data.ProfileRepository;
 import com.itismob.s03.group7.leef.home.FeedChange;
+import com.itismob.s03.group7.leef.model.Attendee;
+import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.EventAudience;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.model.EventDraft;
 import com.itismob.s03.group7.leef.model.UserProfile;
 import com.itismob.s03.group7.leef.model.UserRole;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,6 +36,10 @@ import java.util.Set;
  * Screen 11 - Create / Post Event. Holds what the organizer picked (category, dates, audience, tags,
  * pricing mode, photo link), checks the form, and saves the event. The typed text is handed over by the
  * screen when the person taps Post Event, so this class never depends on views.
+ *
+ * <p>The same screen edits an event that was already posted: with an event id it loads that event,
+ * fills the form from it, and saves the changes instead of a new event. Once people have registered the
+ * prices are kept as they were (everything else can still change).
  */
 public class CreateEventViewModel extends ViewModel {
 
@@ -43,6 +54,10 @@ public class CreateEventViewModel extends ViewModel {
 
     private final ProfileRepository profiles;
     private final EventRepository events;
+    private final AttendeeRepository attendees;
+    /** The event being edited, or null when a new event is being created. */
+    @Nullable
+    private final String editEventId;
 
     private final MutableLiveData<CreateEventState> state = new MutableLiveData<>();
     private final MutableLiveData<EventFormErrors> errors = new MutableLiveData<>(new EventFormErrors());
@@ -54,6 +69,13 @@ public class CreateEventViewModel extends ViewModel {
     private CreateEventState.Status status = CreateEventState.Status.LOADING;
     private int errorRes;
     private boolean posting;
+    /** Edit mode: the event as it was loaded, and whether its prices are frozen. */
+    @Nullable
+    private Event original;
+    private boolean pricesLocked;
+    /** People registered, or -1 when that couldn't be checked. */
+    private int registeredPeople;
+    private boolean prefillPending;
 
     @Nullable
     private EventCategory category;
@@ -68,15 +90,50 @@ public class CreateEventViewModel extends ViewModel {
     @Nullable
     private String coverUrl;
 
-    public CreateEventViewModel() {
-        this(new FirebaseProfileRepository(), new FirebaseEventRepository());
-    }
-
-    CreateEventViewModel(@NonNull ProfileRepository profiles, @NonNull EventRepository events) {
+    CreateEventViewModel(@NonNull ProfileRepository profiles, @NonNull EventRepository events,
+                         @NonNull AttendeeRepository attendees, @Nullable String editEventId) {
         this.profiles = profiles;
         this.events = events;
+        this.attendees = attendees;
+        this.editEventId = editEventId;
         publish();
         loadProfile();
+    }
+
+    /** Creates the view model; {@code editEventId} is null to post a new event. */
+    public static final class Factory implements ViewModelProvider.Factory {
+        @Nullable
+        private final String editEventId;
+
+        public Factory(@Nullable String editEventId) {
+            this.editEventId = editEventId;
+        }
+
+        @NonNull
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            return (T) new CreateEventViewModel(new FirebaseProfileRepository(), new FirebaseEventRepository(),
+                    new FirebaseAttendeeRepository(), editEventId);
+        }
+    }
+
+    /** True when an existing event is being edited. */
+    public boolean isEditing() {
+        return editEventId != null;
+    }
+
+    /**
+     * The event to fill the typed fields from, once, right after it loaded in edit mode; null otherwise.
+     * The view model's own fields (category, dates, audience, ...) are already filled by then.
+     */
+    @Nullable
+    public Event consumePrefill() {
+        if (!prefillPending || original == null) {
+            return null;
+        }
+        prefillPending = false;
+        return original;
     }
 
     @NonNull
@@ -116,6 +173,12 @@ public class CreateEventViewModel extends ViewModel {
             publish();
             loadProfile();
         }
+    }
+
+    /** The event as loaded for editing, null otherwise (used to keep prices that are locked). */
+    @Nullable
+    public Event getOriginal() {
+        return original;
     }
 
     // ---- what the person picked -------------------------------------------------------------
@@ -323,7 +386,18 @@ public class CreateEventViewModel extends ViewModel {
         double earlyPrice = -1;
         long earlyUntil = 0;
         double groupPrice = -1;
-        if (paid) {
+        if (pricesLocked && original != null) {
+            // People already registered at these prices, so they stay exactly as they were.
+            price = original.getPrice();
+            if (original.hasEarlyBird()) {
+                earlyPrice = original.getEarlyBirdPrice();
+                earlyUntil = original.getEarlyBirdUntilMillis();
+                if (found.start == 0 && startsAt > 0 && earlyUntil > startsAt) {
+                    found.start = R.string.edit_error_start_before_early;
+                }
+            }
+            groupPrice = original.hasGroupPrice() ? original.getGroupPrice() : -1;
+        } else if (paid) {
             price = parsePrice(text.price);
             if (Double.isNaN(price) || price <= 0 || price > MAX_PRICE) {
                 found.price = R.string.create_error_price;
@@ -359,13 +433,35 @@ public class CreateEventViewModel extends ViewModel {
             return;
         }
 
+        boolean keepPrices = pricesLocked && original != null;
+        boolean early = keepPrices ? original.hasEarlyBird() : earlyBirdOn && paid;
+        boolean group = keepPrices ? original.hasGroupPrice() : groupOn && paid;
         EventDraft draft = new EventDraft(text.title, text.description, category, startsAt,
                 endsAt > startsAt ? endsAt : 0, text.venue, text.city,
                 new ArrayList<>(audiences), new ArrayList<>(tags), price,
-                earlyBirdOn && paid ? earlyPrice : -1, earlyBirdOn && paid ? earlyUntil : 0,
-                groupOn && paid ? groupPrice : -1, coverUrl, profile.getSchoolOrganization());
+                early ? earlyPrice : -1, early ? earlyUntil : 0,
+                group ? groupPrice : -1, coverUrl, profile.getSchoolOrganization());
         posting = true;
         publish();
+        if (editEventId != null) {
+            events.updateEvent(editEventId, draft, new EventRepository.DoneCallback() {
+                @Override
+                public void onDone() {
+                    posting = false;
+                    FeedChange.bump();
+                    publish();
+                    posted.setValue(editEventId);
+                }
+
+                @Override
+                public void onFailure(@NonNull EventRepository.Failure failure) {
+                    posting = false;
+                    publish();
+                    message.setValue(editFailureMessage(failure));
+                }
+            });
+            return;
+        }
         events.postEvent(draft, new EventRepository.PostedCallback() {
             @Override
             public void onPosted(@NonNull String eventId) {
@@ -396,6 +492,22 @@ public class CreateEventViewModel extends ViewModel {
         }
     }
 
+    @StringRes
+    private static int editFailureMessage(@NonNull EventRepository.Failure failure) {
+        switch (failure) {
+            case NETWORK:
+                return R.string.edit_save_offline;
+            case PERMISSION:
+                return R.string.edit_save_denied;
+            case LOCKED:
+                return R.string.edit_save_locked;
+            case NOT_FOUND:
+                return R.string.edit_save_gone;
+            default:
+                return R.string.edit_save_failed;
+        }
+    }
+
     /** Pesos typed by the person ("1,500", "₱350.50") as a number, or NaN when it isn't one. */
     static double parsePrice(@NonNull String raw) {
         String cleaned = raw.replace("₱", "").replace(",", "").replace(" ", "").trim();
@@ -417,9 +529,15 @@ public class CreateEventViewModel extends ViewModel {
             @Override
             public void onLoaded(@NonNull UserProfile loaded) {
                 profile = loaded;
-                status = loaded.getRole() == UserRole.ORGANIZER
-                        ? CreateEventState.Status.FORM : CreateEventState.Status.FORBIDDEN;
-                publish();
+                if (loaded.getRole() != UserRole.ORGANIZER) {
+                    status = CreateEventState.Status.FORBIDDEN;
+                    publish();
+                } else if (editEventId == null || original != null) {
+                    status = CreateEventState.Status.FORM;
+                    publish();
+                } else {
+                    loadEventToEdit();
+                }
             }
 
             @Override
@@ -439,8 +557,107 @@ public class CreateEventViewModel extends ViewModel {
         });
     }
 
+    /** Edit mode: reads the event and who registered, then fills the form from the event. */
+    @SuppressWarnings("unchecked")
+    private void loadEventToEdit() {
+        final int[] pending = {2};
+        final Event[] loadedEvent = {null};
+        final EventRepository.Failure[] eventFailure = {null};
+        final List<Attendee>[] loadedAttendees = new List[]{null};
+
+        Runnable finish = () -> {
+            if (--pending[0] > 0) {
+                return;
+            }
+            Event event = loadedEvent[0];
+            if (event == null) {
+                if (eventFailure[0] == EventRepository.Failure.NOT_FOUND) {
+                    status = CreateEventState.Status.LOCKED;
+                    errorRes = R.string.edit_locked_gone;
+                } else {
+                    status = CreateEventState.Status.ERROR;
+                    errorRes = eventFailure[0] == EventRepository.Failure.NETWORK
+                            ? R.string.home_error_network : R.string.create_error_profile;
+                }
+                publish();
+                return;
+            }
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user == null || !user.getUid().equals(event.getOrganizerId())) {
+                status = CreateEventState.Status.LOCKED;
+                errorRes = R.string.edit_locked_not_yours;
+            } else if (event.isCancelled()) {
+                status = CreateEventState.Status.LOCKED;
+                errorRes = R.string.edit_locked_cancelled;
+            } else if (event.hasStarted(System.currentTimeMillis())) {
+                status = CreateEventState.Status.LOCKED;
+                errorRes = R.string.edit_locked_started;
+            } else {
+                if (loadedAttendees[0] == null) {
+                    // Couldn't check who registered, so keep the prices as they are to be safe.
+                    registeredPeople = -1;
+                    pricesLocked = true;
+                } else {
+                    registeredPeople = 0;
+                    for (Attendee attendee : loadedAttendees[0]) {
+                        registeredPeople += attendee.getQuantity();
+                    }
+                    pricesLocked = registeredPeople > 0;
+                }
+                fillFrom(event);
+                status = CreateEventState.Status.FORM;
+            }
+            publish();
+        };
+
+        events.loadEvent(editEventId, new EventRepository.EventCallback() {
+            @Override
+            public void onLoaded(@NonNull Event result) {
+                loadedEvent[0] = result;
+                finish.run();
+            }
+
+            @Override
+            public void onFailure(@NonNull EventRepository.Failure reason) {
+                eventFailure[0] = reason;
+                finish.run();
+            }
+        });
+        attendees.loadAttendees(editEventId, new AttendeeRepository.ListCallback() {
+            @Override
+            public void onLoaded(@NonNull List<Attendee> result) {
+                loadedAttendees[0] = result;
+                finish.run();
+            }
+
+            @Override
+            public void onFailure(@NonNull AttendeeRepository.Failure reason) {
+                finish.run();
+            }
+        });
+    }
+
+    /** Copies an existing event into the picked values (the typed text is filled by the screen). */
+    private void fillFrom(@NonNull Event event) {
+        original = event;
+        category = event.getCategory();
+        startsAt = event.getStartsAtMillis();
+        endsAt = event.getEndsAtMillis();
+        audiences.clear();
+        audiences.addAll(event.getAudiences());
+        tags.clear();
+        tags.addAll(event.getTags());
+        paid = !event.isFree();
+        earlyBirdOn = event.hasEarlyBird();
+        earlyBirdUntil = event.hasEarlyBird() ? event.getEarlyBirdUntilMillis() : 0;
+        groupOn = event.hasGroupPrice();
+        coverUrl = event.getCoverUrl();
+        prefillPending = true;
+    }
+
     private void publish() {
-        state.setValue(new CreateEventState(status, posting,
+        state.setValue(new CreateEventState(status, posting, editEventId != null, pricesLocked && original != null
+                && status == CreateEventState.Status.FORM, registeredPeople,
                 profile == null ? null : profile.getSchoolOrganization(), errorRes));
     }
 

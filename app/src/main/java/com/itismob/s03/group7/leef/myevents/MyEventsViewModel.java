@@ -200,8 +200,11 @@ public class MyEventsViewModel extends ViewModel {
             }
             String title = event != null ? event.getTitle() : registration.getEventTitle();
             long startsAt = event != null ? event.getStartsAtMillis() : registration.getEventStartsAtMillis();
-            boolean isUpcoming = event != null ? !event.hasEnded(now) : startsAt >= startOfToday;
-            MyEventItem item = new MyEventItem(id, title, startsAt, event, MyEventItem.kindOf(registration), isUpcoming);
+            boolean cancelled = event != null && event.isCancelled();
+            // A cancelled event is never upcoming: it moves to Past and says Cancelled.
+            boolean isUpcoming = !cancelled && (event != null ? !event.hasEnded(now) : startsAt >= startOfToday);
+            MyEventItem.Kind kind = cancelled ? MyEventItem.Kind.CANCELLED : MyEventItem.kindOf(registration);
+            MyEventItem item = new MyEventItem(id, title, startsAt, event, kind, isUpcoming);
             (isUpcoming ? nextUpcoming : nextPast).add(item);
         }
         Collections.sort(nextUpcoming, Comparator.comparingLong(MyEventItem::getStartsAtMillis));

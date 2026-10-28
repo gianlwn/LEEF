@@ -150,7 +150,9 @@ public class CheckInViewModel extends ViewModel {
             status = CheckInState.Status.NOT_REGISTERED;
         } else {
             status = CheckInState.Status.CONTENT;
-            ended = hasEnded(registration, event, System.currentTimeMillis());
+            // A cancelled event has no ticket to show either, so it takes the same "over" screen.
+            ended = (event != null && event.isCancelled())
+                    || hasEnded(registration, event, System.currentTimeMillis());
         }
         state.setValue(new CheckInState(status, registration, event, name, ended, failure));
     }

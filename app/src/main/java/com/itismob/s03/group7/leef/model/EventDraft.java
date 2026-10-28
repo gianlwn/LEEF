@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,6 +111,28 @@ public final class EventDraft {
         document.put(Event.FIELD_ORGANIZER_NAME, organizerName);
         document.put(Event.FIELD_BOOSTED, false);
         return document;
+    }
+
+    /**
+     * The changes that turn an existing event into this version of it (Edit Event). Every field an
+     * organizer can edit is listed: a value when there is one, otherwise {@link FieldValue#delete()} so
+     * an optional field the organizer cleared (end time, description, early bird, ...) really goes away.
+     * The organizer, creation time, boost and cancellation fields are never touched.
+     */
+    @NonNull
+    public Map<String, Object> toUpdate() {
+        Map<String, Object> changes = new HashMap<>(toDocument());
+        changes.remove(Event.FIELD_ORGANIZER_NAME);
+        changes.remove(Event.FIELD_BOOSTED);
+        String[] optional = {Event.FIELD_ENDS_AT, Event.FIELD_DESCRIPTION, Event.FIELD_VENUE, Event.FIELD_CITY,
+                Event.FIELD_EARLY_BIRD_PRICE, Event.FIELD_EARLY_BIRD_UNTIL, Event.FIELD_GROUP_PRICE,
+                Event.FIELD_COVER_URL};
+        for (String field : optional) {
+            if (!changes.containsKey(field)) {
+                changes.put(field, FieldValue.delete());
+            }
+        }
+        return changes;
     }
 
     @NonNull

@@ -162,6 +162,7 @@ public class BoostViewModel extends ViewModel {
             case NOT_FOUND:
             case NOT_ORGANIZER:
             case STARTED:
+            case CANCELLED:
             case TOO_LONG:
                 return true;
             default:
@@ -177,6 +178,8 @@ public class BoostViewModel extends ViewModel {
                 return R.string.boost_error_not_organizer;
             case STARTED:
                 return R.string.boost_error_started;
+            case CANCELLED:
+                return R.string.boost_error_cancelled;
             case TOO_LONG:
                 return R.string.boost_error_too_long;
             case PERMISSION:
@@ -232,6 +235,8 @@ public class BoostViewModel extends ViewModel {
         } else if (event != null) {
             if (userId == null || !userId.equals(event.getOrganizerId())) {
                 status = BoostState.Status.NOT_ORGANIZER;
+            } else if (event.isCancelled()) {
+                status = BoostState.Status.CANCELLED;
             } else if (event.hasStarted(now)) {
                 status = BoostState.Status.STARTED;
             } else {

@@ -73,6 +73,9 @@ public final class FirebaseBoostRepository implements BoostRepository {
             if (!user.getUid().equals(event.getString(Event.FIELD_ORGANIZER_ID))) {
                 throw new Refused(Failure.NOT_ORGANIZER);
             }
+            if (Boolean.TRUE.equals(event.getBoolean(Event.FIELD_CANCELLED))) {
+                throw new Refused(Failure.CANCELLED);
+            }
             Timestamp startsAt = event.getTimestamp(Event.FIELD_STARTS_AT);
             long now = System.currentTimeMillis();
             if (startsAt == null || startsAt.toDate().getTime() <= now) {

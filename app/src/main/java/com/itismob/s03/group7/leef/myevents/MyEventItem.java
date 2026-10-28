@@ -21,7 +21,9 @@ public final class MyEventItem {
         /** Registered with a Group (5+) ticket. */
         GROUP_REGISTERED,
         /** Saved with the heart but not registered. */
-        SAVED
+        SAVED,
+        /** The organizer cancelled the event (whether or not the person registered). */
+        CANCELLED
     }
 
     private final String eventId;

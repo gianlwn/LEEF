@@ -70,7 +70,7 @@ public final class FirebaseEventRepository implements EventRepository {
                     for (DocumentSnapshot document : snapshot.getDocuments()) {
                         Event event = toEvent(document);
                         // The query only drops past days, so skip today's events that are already over.
-                        if (event != null && !event.hasEnded(now)) {
+                        if (event != null && !event.hasEnded(now) && !event.isCancelled()) {
                             events.add(event);
                         }
                     }
@@ -238,6 +238,76 @@ public final class FirebaseEventRepository implements EventRepository {
                 });
     }
 
+    @Override
+    public void updateEvent(@NonNull String eventId, @NonNull EventDraft draft, @NonNull DoneCallback callback) {
+        changeOwnEvent(eventId, draft.toUpdate(), callback);
+    }
+
+    @Override
+    public void cancelEvent(@NonNull String eventId, @NonNull DoneCallback callback) {
+        Map<String, Object> changes = new HashMap<>();
+        changes.put(Event.FIELD_CANCELLED, true);
+        changes.put(Event.FIELD_CANCELLED_AT, FieldValue.serverTimestamp());
+        changeOwnEvent(eventId, changes, callback);
+    }
+
+    /**
+     * Applies {@code changes} to one of the signed-in person's events that hasn't started and isn't
+     * cancelled. A transaction (not a plain update) so that being offline fails right away instead of
+     * queueing a change that would be applied later, and so the checks and the change see the same event.
+     */
+    private void changeOwnEvent(@NonNull String eventId, @NonNull Map<String, Object> changes,
+                                @NonNull DoneCallback callback) {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user == null) {
+            callback.onFailure(Failure.SIGNED_OUT);
+            return;
+        }
+        DocumentReference reference = firestore.collection(Event.COLLECTION).document(eventId);
+        firestore.runTransaction(transaction -> {
+            DocumentSnapshot current = transaction.get(reference);
+            if (!current.exists()) {
+                throw new Refused(Failure.NOT_FOUND);
+            }
+            Timestamp startsAt = current.getTimestamp(Event.FIELD_STARTS_AT);
+            Boolean cancelled = current.getBoolean(Event.FIELD_CANCELLED);
+            if (!user.getUid().equals(current.getString(Event.FIELD_ORGANIZER_ID))
+                    || (cancelled != null && cancelled)
+                    || startsAt == null || startsAt.toDate().getTime() <= System.currentTimeMillis()) {
+                throw new Refused(Failure.LOCKED);
+            }
+            transaction.update(reference, changes);
+            return null;
+        }).addOnSuccessListener(unused -> callback.onDone())
+                .addOnFailureListener(error -> {
+                    Log.w(TAG, "changing event failed", error);
+                    callback.onFailure(refusalOrFailure(error));
+                });
+    }
+
+    /** The reason a transaction was stopped on purpose (it may be wrapped), or the usual failure kind. */
+    @NonNull
+    private static Failure refusalOrFailure(@NonNull Exception error) {
+        Throwable cause = error;
+        while (cause != null) {
+            if (cause instanceof Refused) {
+                return ((Refused) cause).failure;
+            }
+            cause = cause.getCause();
+        }
+        return toFailure(error);
+    }
+
+    /** Thrown inside a transaction when the event can't be changed; carries the reason. */
+    private static final class Refused extends RuntimeException {
+        final Failure failure;
+
+        Refused(@NonNull Failure failure) {
+            super(failure.name());
+            this.failure = failure;
+        }
+    }
+
     private com.google.firebase.firestore.CollectionReference savedCollection(@NonNull FirebaseUser user) {
         return firestore.collection("users").document(user.getUid()).collection(SAVED_COLLECTION);
     }
@@ -269,6 +339,7 @@ public final class FirebaseEventRepository implements EventRepository {
         Double groupPrice = document.getDouble(Event.FIELD_GROUP_PRICE);
         Boolean boosted = document.getBoolean(Event.FIELD_BOOSTED);
         Timestamp boostedUntil = document.getTimestamp(Event.FIELD_BOOSTED_UNTIL);
+        Boolean cancelled = document.getBoolean(Event.FIELD_CANCELLED);
 
         List<EventAudience> audiences = new ArrayList<>();
         Object rawAudiences = document.get(Event.FIELD_AUDIENCES);
@@ -305,7 +376,8 @@ public final class FirebaseEventRepository implements EventRepository {
                 .price(price == null ? 0 : price)
                 .coverUrl(optionalText(document, Event.FIELD_COVER_URL))
                 .boosted(boosted != null && boosted)
-                .boostedUntil(boostedUntil == null ? 0 : boostedUntil.toDate().getTime());
+                .boostedUntil(boostedUntil == null ? 0 : boostedUntil.toDate().getTime())
+                .cancelled(cancelled != null && cancelled);
         if (earlyBirdPrice != null && earlyBirdPrice >= 0 && earlyBirdUntil != null) {
             builder.earlyBird(earlyBirdPrice, earlyBirdUntil.toDate().getTime());
         }

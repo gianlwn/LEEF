@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One registration in the organizer's Attendees list. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/bg_info_card"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="14dp">
+
+    <TextView
+        android:id="@+id/initials"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="@drawable/bg_profile_icon"
+        android:gravity="center"
+        android:importantForAccessibility="no"
+        android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle"
+        android:textColor="@color/leef_green_900"
+        tools:text="AS" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.LEEF.Registration.RowTitle"
+            tools:text="Ana Santos" />
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/TextAppearance.LEEF.Registration.RowSubtitle"
+            tools:text="Group · 8 people" />
+
+        <TextView
+            android:id="@+id/code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:letterSpacing="0.04"
+            android:textAppearance="@style/TextAppearance.LEEF.Registration.RowSubtitle"
+            tools:text="LEEF-7KQ2MD" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/checkedInPill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_status_registered"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.LEEF.Registration.RowSubtitle"
+        android:textColor="@color/leef_green_900"
+        android:visibility="gone"
+        tools:text="Checked in 9:14 AM"
+        tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/checkInButton"
+        style="@style/Widget.LEEF.Button.Tonal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/attendees_check_in" />
+</LinearLayout>

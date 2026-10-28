@@ -19,6 +19,7 @@ import com.itismob.s03.group7.leef.databinding.FragmentMyEventsBinding;
 import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.home.HomeViewModel;
 import com.itismob.s03.group7.leef.model.UserRole;
+import com.itismob.s03.group7.leef.organizer.PostedEventsActivity;
 import com.itismob.s03.group7.leef.postevent.CreateEventActivity;
 import com.itismob.s03.group7.leef.search.SearchActivity;
 
@@ -59,11 +60,15 @@ public class MyEventsFragment extends Fragment {
         binding.retryButton.setOnClickListener(v -> viewModel.retry());
         binding.postEventButton.setOnClickListener(v ->
                 startActivity(CreateEventActivity.createIntent(requireContext())));
-        // Organizer accounts get the Post event button (Screen 11).
+        binding.postedRow.setOnClickListener(v ->
+                startActivity(PostedEventsActivity.createIntent(requireContext())));
+        // Organizer accounts get the Post event button (Screen 11) and the list of events they posted.
         MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.getProfile().observe(getViewLifecycleOwner(), profile ->
-                binding.postEventButton.setVisibility(
-                        profile != null && profile.getRole() == UserRole.ORGANIZER ? View.VISIBLE : View.GONE));
+        mainViewModel.getProfile().observe(getViewLifecycleOwner(), profile -> {
+            int visibility = profile != null && profile.getRole() == UserRole.ORGANIZER ? View.VISIBLE : View.GONE;
+            binding.postEventButton.setVisibility(visibility);
+            binding.postedRow.setVisibility(visibility);
+        });
         binding.exploreButton.setOnClickListener(v ->
                 startActivity(SearchActivity.createIntent(requireContext(), false)));
 

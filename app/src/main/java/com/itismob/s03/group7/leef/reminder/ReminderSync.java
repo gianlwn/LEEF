@@ -26,6 +26,9 @@ import java.util.Set;
  */
 public final class ReminderSync {
 
+    /** How far back a registration's event is still checked, in case its time changed. */
+    private static final long RESCHEDULE_WINDOW_MILLIS = 14L * 24 * 60 * 60 * 1000;
+
     private ReminderSync() {
     }
 
@@ -66,7 +69,8 @@ public final class ReminderSync {
         for (Registration registration : registrations) {
             Reminder probe = new Reminder(registration.getEventId(), uid, registration.getEventTitle(), "",
                     registration.getEventStartsAtMillis());
-            if (probe.triggerAtMillis() > now) {
+            // Events that just passed are looked up too, in case the organizer moved them to a later time.
+            if (probe.triggerAtMillis() > now - RESCHEDULE_WINDOW_MILLIS) {
                 upcoming.put(registration.getEventId(), registration);
             }
         }
@@ -96,6 +100,10 @@ public final class ReminderSync {
                                     @NonNull Map<String, Registration> upcoming, @NonNull Map<String, Event> events) {
         for (Registration registration : upcoming.values()) {
             Event event = events.get(registration.getEventId());
+            if (event != null && event.isCancelled()) {
+                ReminderScheduler.cancel(context, registration.getEventId());
+                continue;
+            }
             long startsAt = event != null ? event.getStartsAtMillis() : registration.getEventStartsAtMillis();
             String title = event != null ? event.getTitle() : registration.getEventTitle();
             ReminderScheduler.schedule(context, new Reminder(registration.getEventId(), uid, title,
