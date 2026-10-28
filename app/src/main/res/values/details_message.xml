@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Event Details: message the organizer -->
+    <string name="details_message_organizer">Message</string>
+    <string name="details_message_organizer_a11y">Message %1$s</string>
+    <string name="details_organizer_fallback">Organizer</string>
+</resources>

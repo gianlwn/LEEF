@@ -307,6 +307,17 @@
                             android:textAppearance="@style/TextAppearance.LEEF.Details.Organizer"
                             tools:text="Ateneo Innovation Center" />
                     </LinearLayout>
+
+                    <!-- Opens a private chat with the organizer; hidden on your own events. -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/messageOrganizerButton"
+                        style="@style/Widget.LEEF.Button.Tonal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/details_message_organizer"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
                 </LinearLayout>
 
                 <!-- Tags -->
