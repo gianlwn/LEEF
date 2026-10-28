@@ -37,10 +37,20 @@ public final class Registration {
     @Nullable
     private final PaymentMethod paymentMethod;
     private final String confirmationCode;
+    /** When the person registered; 0 for a registration that hasn't been saved yet (or has no time). */
+    private final long registeredAtMillis;
 
     public Registration(@NonNull String eventId, @NonNull String eventTitle, long eventStartsAtMillis,
                         @NonNull TicketType ticketType, int quantity, double amount,
                         @Nullable PaymentMethod paymentMethod, @NonNull String confirmationCode) {
+        this(eventId, eventTitle, eventStartsAtMillis, ticketType, quantity, amount, paymentMethod,
+                confirmationCode, 0);
+    }
+
+    public Registration(@NonNull String eventId, @NonNull String eventTitle, long eventStartsAtMillis,
+                        @NonNull TicketType ticketType, int quantity, double amount,
+                        @Nullable PaymentMethod paymentMethod, @NonNull String confirmationCode,
+                        long registeredAtMillis) {
         this.eventId = eventId;
         this.eventTitle = eventTitle;
         this.eventStartsAtMillis = eventStartsAtMillis;
@@ -49,6 +59,7 @@ public final class Registration {
         this.amount = amount;
         this.paymentMethod = paymentMethod;
         this.confirmationCode = confirmationCode;
+        this.registeredAtMillis = registeredAtMillis;
     }
 
     @NonNull
@@ -86,6 +97,10 @@ public final class Registration {
     @NonNull
     public String getConfirmationCode() {
         return confirmationCode;
+    }
+
+    public long getRegisteredAtMillis() {
+        return registeredAtMillis;
     }
 
     /** The document id: one registration per person per event. */

@@ -117,13 +117,15 @@ public final class EventDraft {
      * The changes that turn an existing event into this version of it (Edit Event). Every field an
      * organizer can edit is listed: a value when there is one, otherwise {@link FieldValue#delete()} so
      * an optional field the organizer cleared (end time, description, early bird, ...) really goes away.
-     * The organizer, creation time, boost and cancellation fields are never touched.
+     * The organizer, creation time, boost and cancellation fields are never touched; {@code updatedAt} is stamped.
      */
     @NonNull
     public Map<String, Object> toUpdate() {
         Map<String, Object> changes = new HashMap<>(toDocument());
         changes.remove(Event.FIELD_ORGANIZER_NAME);
         changes.remove(Event.FIELD_BOOSTED);
+        // So the people who registered can be told the details changed.
+        changes.put(Event.FIELD_UPDATED_AT, FieldValue.serverTimestamp());
         String[] optional = {Event.FIELD_ENDS_AT, Event.FIELD_DESCRIPTION, Event.FIELD_VENUE, Event.FIELD_CITY,
                 Event.FIELD_EARLY_BIRD_PRICE, Event.FIELD_EARLY_BIRD_UNTIL, Event.FIELD_GROUP_PRICE,
                 Event.FIELD_COVER_URL};

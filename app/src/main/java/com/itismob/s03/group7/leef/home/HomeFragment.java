@@ -22,8 +22,9 @@ import com.itismob.s03.group7.leef.details.EventDetailsActivity;
 import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.model.EventCategory;
 import com.itismob.s03.group7.leef.model.UserProfile;
+import com.itismob.s03.group7.leef.notifications.NotificationBadgeViewModel;
+import com.itismob.s03.group7.leef.notifications.NotificationsActivity;
 import com.itismob.s03.group7.leef.search.SearchActivity;
-import com.itismob.s03.group7.leef.ui.ComingSoon;
 import com.itismob.s03.group7.leef.ui.GapDecoration;
 
 import java.util.Calendar;
@@ -44,6 +45,7 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private HomeViewModel viewModel;
     private MainViewModel mainViewModel;
+    private NotificationBadgeViewModel badgeViewModel;
     private CategoryChipAdapter chipAdapter;
     private FeaturedEventAdapter featuredAdapter;
     private EventRowAdapter rowAdapter;
@@ -61,6 +63,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        badgeViewModel = new ViewModelProvider(this).get(NotificationBadgeViewModel.class);
 
         binding.greetingLine.setText(greetingRes());
         ViewCompat.setAccessibilityHeading(binding.featuredTitle, true);
@@ -95,7 +98,7 @@ public class HomeFragment extends Fragment {
         binding.upcomingList.setAdapter(rowAdapter);
 
         binding.searchBar.setOnClickListener(v -> startActivity(SearchActivity.createIntent(requireContext(), true)));
-        binding.notificationsButton.setOnClickListener(v -> ComingSoon.show(requireContext(), R.string.feature_notifications));
+        binding.notificationsButton.setOnClickListener(v -> startActivity(NotificationsActivity.createIntent(requireContext())));
         binding.avatar.setOnClickListener(v -> {
             if (requireActivity() instanceof MainActivity) {
                 ((MainActivity) requireActivity()).openProfileTab();
@@ -114,6 +117,7 @@ public class HomeFragment extends Fragment {
                 viewModel.messageHandled();
             }
         });
+        badgeViewModel.getCount().observe(getViewLifecycleOwner(), this::showBadge);
         mainViewModel.getProfile().observe(getViewLifecycleOwner(), this::showProfile);
         mainViewModel.getProfileFinished().observe(getViewLifecycleOwner(), finished -> showProfile(mainViewModel.getProfile().getValue()));
     }
@@ -126,6 +130,10 @@ public class HomeFragment extends Fragment {
             viewModel.reloadIfFeedChanged();
             viewModel.reloadSaved();
         }
+        // The bell: recount what is new (quietly, and not more than once a minute unless something changed).
+        if (badgeViewModel != null) {
+            badgeViewModel.refreshIfNeeded();
+        }
     }
 
     @Override
@@ -136,12 +144,25 @@ public class HomeFragment extends Fragment {
             viewModel.reloadIfFeedChanged();
             viewModel.reloadSaved();
         }
+        if (!hidden && badgeViewModel != null) {
+            badgeViewModel.refreshIfNeeded();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    /** Shows how many notifications are new on the bell ("9+" when there are many). */
+    private void showBadge(@Nullable Integer count) {
+        int value = count == null ? 0 : count;
+        binding.notificationsBadge.setVisibility(value > 0 ? View.VISIBLE : View.GONE);
+        binding.notificationsBadge.setText(value > 9 ? getString(R.string.notif_badge_many) : String.valueOf(value));
+        binding.notificationsButton.setContentDescription(value > 0
+                ? getResources().getQuantityString(R.plurals.home_notifications_new_a11y, value, value)
+                : getString(R.string.home_notifications_a11y));
     }
 
     private void render(@NonNull HomeState state) {

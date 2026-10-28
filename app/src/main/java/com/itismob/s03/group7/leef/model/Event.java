@@ -41,6 +41,7 @@ public final class Event {
     public static final String FIELD_BOOSTED_UNTIL = "boostedUntil";
     public static final String FIELD_CANCELLED = "cancelled";
     public static final String FIELD_CANCELLED_AT = "cancelledAt";
+    public static final String FIELD_UPDATED_AT = "updatedAt";
 
     private final String id;
     private final String title;
@@ -78,6 +79,10 @@ public final class Event {
     private final long boostedUntilMillis;
     /** True when the organizer cancelled the event. A cancelled event stays on record but is closed. */
     private final boolean cancelled;
+    /** When the organizer cancelled it; 0 when not cancelled (or cancelled without a recorded time). */
+    private final long cancelledAtMillis;
+    /** When the organizer last edited the details; 0 when never edited. */
+    private final long updatedAtMillis;
 
     private Event(@NonNull Builder b) {
         this.id = b.id;
@@ -102,6 +107,8 @@ public final class Event {
         this.boosted = b.boosted;
         this.boostedUntilMillis = b.boostedUntilMillis;
         this.cancelled = b.cancelled;
+        this.cancelledAtMillis = b.cancelledAtMillis;
+        this.updatedAtMillis = b.updatedAtMillis;
     }
 
     @NonNull
@@ -239,6 +246,14 @@ public final class Event {
         return cancelled;
     }
 
+    public long getCancelledAtMillis() {
+        return cancelledAtMillis;
+    }
+
+    public long getUpdatedAtMillis() {
+        return updatedAtMillis;
+    }
+
     /** True once the event has begun (a boost can only be bought before this). */
     public boolean hasStarted(long nowMillis) {
         return nowMillis >= startsAtMillis;
@@ -277,6 +292,8 @@ public final class Event {
                 && boosted == event.boosted
                 && boostedUntilMillis == event.boostedUntilMillis
                 && cancelled == event.cancelled
+                && cancelledAtMillis == event.cancelledAtMillis
+                && updatedAtMillis == event.updatedAtMillis
                 && id.equals(event.id)
                 && title.equals(event.title)
                 && category == event.category
@@ -296,7 +313,8 @@ public final class Event {
     public int hashCode() {
         return Objects.hash(id, title, category, startsAtMillis, endsAtMillis, description, venue, address,
                 city, audiences, organizerId, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
-                earlyBirdUntilMillis, groupPrice, coverUrl, boosted, boostedUntilMillis, cancelled);
+                earlyBirdUntilMillis, groupPrice, coverUrl, boosted, boostedUntilMillis, cancelled,
+                cancelledAtMillis, updatedAtMillis);
     }
 
     /** Collects an event's fields; anything not set stays empty (or free, or "no early bird"). */
@@ -325,6 +343,8 @@ public final class Event {
         private boolean boosted;
         private long boostedUntilMillis;
         private boolean cancelled;
+        private long cancelledAtMillis;
+        private long updatedAtMillis;
 
         public Builder(@NonNull String id, @NonNull String title, @NonNull EventCategory category,
                        long startsAtMillis) {
@@ -434,6 +454,18 @@ public final class Event {
         @NonNull
         public Builder cancelled(boolean value) {
             this.cancelled = value;
+            return this;
+        }
+
+        @NonNull
+        public Builder cancelledAt(long millis) {
+            this.cancelledAtMillis = millis;
+            return this;
+        }
+
+        @NonNull
+        public Builder updatedAt(long millis) {
+            this.updatedAtMillis = millis;
             return this;
         }
 

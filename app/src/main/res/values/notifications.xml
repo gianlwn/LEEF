@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notifications (the bell on Home) -->
+    <string name="notif_title">Notifications</string>
+    <string name="notif_empty_title">You\'re all caught up</string>
+    <string name="notif_empty_body">Reminders, event changes and new messages will show up here.</string>
+    <string name="notif_error_title">Couldn\'t load notifications</string>
+    <string name="notif_error_network">No internet connection. Check your connection and try again.</string>
+    <string name="notif_error_permission">Notifications couldn\'t be loaded because the database rules haven\'t been published yet.</string>
+    <string name="notif_error_generic">Something went wrong. Please try again.</string>
+    <string name="notif_new_a11y">New</string>
+    <string name="notif_yesterday">Yesterday</string>
+
+    <string name="notif_registered_headline">You\'re registered</string>
+    <string name="notif_registered_body">%1$s is on your list. Your ticket is in My Events.</string>
+    <string name="notif_cancelled_headline">Event cancelled</string>
+    <string name="notif_cancelled_body">%1$s was cancelled by the organizer.</string>
+    <string name="notif_changed_headline">Event details changed</string>
+    <string name="notif_changed_body">The organizer updated %1$s. Check the date, time and place.</string>
+    <string name="notif_soon_headline">Starting soon</string>
+    <string name="notif_soon_body">%1$s starts %2$s.</string>
+    <string name="notif_start_today">today at %1$s</string>
+    <string name="notif_start_tomorrow">tomorrow at %1$s</string>
+    <string name="notif_start_on_day">on %1$s at %2$s</string>
+    <string name="notif_messages_body">%1$s</string>
+    <string name="notif_rate_headline">How was it?</string>
+    <string name="notif_rate_body">Rate %1$s to help the organizer.</string>
+
+    <plurals name="notif_messages_headline">
+        <item quantity="one">%d new message</item>
+        <item quantity="other">%d new messages</item>
+    </plurals>
+
+    <string name="notif_badge_many">9+</string>
+
+    <!-- Bell on Home: read out when there are new notifications. -->
+    <plurals name="home_notifications_new_a11y">
+        <item quantity="one">Notifications, %d new</item>
+        <item quantity="other">Notifications, %d new</item>
+    </plurals>
+</resources>

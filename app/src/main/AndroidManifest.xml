@@ -130,6 +130,11 @@
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <!-- The bell on Home: reminders, registrations, event changes and new messages. -->
+        <activity
+            android:name=".notifications.NotificationsActivity"
+            android:exported="false" />
+
         <!-- Terms of Service and Privacy Policy (opened from Create Account, Complete Profile and Profile). -->
         <activity
             android:name=".legal.LegalActivity"

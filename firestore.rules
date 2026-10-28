@@ -86,7 +86,8 @@ service cloud.firestore {
     // Edit Event: the organizer who posted an event may change its details until it starts, and only
     // while it isn't cancelled. Only the fields on the Create Event form can change (not the organizer,
     // the creation time, the boost or the cancellation), the result must pass the same checks as a new
-    // event, and the start must stay in the future.
+    // event, and the start must stay in the future. Every edit also stamps `updatedAt` with the time of
+    // the edit, which is how people who registered get an "Event details changed" notification.
     //
     // The app also keeps the prices as they were once people have registered. The rules can't enforce
     // that (a rule can't count registrations), so it is a promise made by the app, not by the database.
@@ -94,12 +95,13 @@ service cloud.firestore {
       let d = request.resource.data;
       return d.diff(resource.data).affectedKeys().hasOnly(['title', 'category', 'startsAt', 'endsAt',
           'description', 'venue', 'city', 'audiences', 'tags', 'price', 'earlyBirdPrice', 'earlyBirdUntil',
-          'groupPrice', 'coverUrl'])
+          'groupPrice', 'coverUrl', 'updatedAt'])
         && resource.data.get('organizerId', '') == request.auth.uid
         && resource.data.get('cancelled', false) == false
         && resource.data.startsAt > request.time
         && hasValidEventDetails(d)
-        && d.startsAt > request.time;
+        && d.startsAt > request.time
+        && d.updatedAt == request.time;
     }
 
     // Cancel Event: the organizer may cancel their own event before it starts, once. That sets only
@@ -174,6 +176,19 @@ service cloud.firestore {
         && request.auth.uid == userId
         && request.resource.data.keys().hasOnly(['savedAt']);
       allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Notifications bell: the list itself is worked out in the app from registrations, events, chats and
+    // ratings, so the only thing stored is when the person last opened it, at
+    // users/{uid}/notificationState/read. They can read it and set it to "now"; nobody else can touch it.
+    match /users/{userId}/notificationState/{docId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && docId == 'read'
+        && request.resource.data.keys().hasOnly(['lastReadAt'])
+        && request.resource.data.lastReadAt == request.time;
+      allow delete: if false;
     }
 
     // Screen 7: registrations. One document per person per event, named {uid}_{eventId}, so nobody can

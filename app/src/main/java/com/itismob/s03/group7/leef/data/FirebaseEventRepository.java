@@ -340,6 +340,8 @@ public final class FirebaseEventRepository implements EventRepository {
         Boolean boosted = document.getBoolean(Event.FIELD_BOOSTED);
         Timestamp boostedUntil = document.getTimestamp(Event.FIELD_BOOSTED_UNTIL);
         Boolean cancelled = document.getBoolean(Event.FIELD_CANCELLED);
+        Timestamp cancelledAt = document.getTimestamp(Event.FIELD_CANCELLED_AT);
+        Timestamp updatedAt = document.getTimestamp(Event.FIELD_UPDATED_AT);
 
         List<EventAudience> audiences = new ArrayList<>();
         Object rawAudiences = document.get(Event.FIELD_AUDIENCES);
@@ -377,7 +379,9 @@ public final class FirebaseEventRepository implements EventRepository {
                 .coverUrl(optionalText(document, Event.FIELD_COVER_URL))
                 .boosted(boosted != null && boosted)
                 .boostedUntil(boostedUntil == null ? 0 : boostedUntil.toDate().getTime())
-                .cancelled(cancelled != null && cancelled);
+                .cancelled(cancelled != null && cancelled)
+                .cancelledAt(cancelledAt == null ? 0 : cancelledAt.toDate().getTime())
+                .updatedAt(updatedAt == null ? 0 : updatedAt.toDate().getTime());
         if (earlyBirdPrice != null && earlyBirdPrice >= 0 && earlyBirdUntil != null) {
             builder.earlyBird(earlyBirdPrice, earlyBirdUntil.toDate().getTime());
         }

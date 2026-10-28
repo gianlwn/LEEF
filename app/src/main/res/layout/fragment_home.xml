@@ -88,16 +88,42 @@
                         tools:visibility="visible" />
                 </LinearLayout>
 
-                <ImageButton
-                    android:id="@+id/notificationsButton"
+                <FrameLayout
                     android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/home_notifications_a11y"
-                    android:padding="11dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_bell"
-                    app:tint="@color/leef_ink" />
+                    android:layout_height="48dp">
+
+                    <ImageButton
+                        android:id="@+id/notificationsButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/home_notifications_a11y"
+                        android:padding="11dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_bell"
+                        app:tint="@color/leef_ink" />
+
+                    <!-- New-notification count; only shown when there is something new. -->
+                    <TextView
+                        android:id="@+id/notificationsBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_gravity="top|end"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:background="@drawable/bg_bell_badge"
+                        android:gravity="center"
+                        android:importantForAccessibility="no"
+                        android:minWidth="20dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        tools:text="3"
+                        tools:visibility="visible" />
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Search entry: opens the Search & Filter screen -->

@@ -142,10 +142,11 @@ public final class FirebaseRegistrationRepository implements RegistrationReposit
         Double amount = document.getDouble(Registration.FIELD_AMOUNT);
         Long quantity = document.getLong(Registration.FIELD_QUANTITY);
         String code = document.getString(Registration.FIELD_CONFIRMATION_CODE);
+        Timestamp registeredAt = document.getTimestamp(Registration.FIELD_REGISTERED_AT);
         return new Registration(eventId, title, startsAt.toDate().getTime(), ticket,
                 quantity == null ? 1 : quantity.intValue(), amount == null ? 0 : amount,
                 PaymentMethod.fromValue(document.getString(Registration.FIELD_PAYMENT_METHOD)),
-                code == null ? "" : code);
+                code == null ? "" : code, registeredAt == null ? 0 : registeredAt.toDate().getTime());
     }
 
     @NonNull
