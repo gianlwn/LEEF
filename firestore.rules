@@ -104,6 +104,27 @@ service cloud.firestore {
         && d.updatedAt == request.time;
     }
 
+    // Public average rating: ratings themselves stay private, so each event keeps a running tally
+    // (`ratingCount`, `ratingSum`) that the app updates in the same save as a person's rating. This lets
+    // someone who rated change those two numbers, and only by exactly what their own rating changes:
+    // +1 on the count for a first rating, and the new stars (minus their old stars when re-rating) on the
+    // sum. It must go together with their feedback document (existsAfter / getAfter see the result of the
+    // same save), so nobody can bump the numbers without rating. An event that was rated before tallies
+    // existed counts that person's rating as the first one.
+    function isRatingTally(eventId) {
+      let d = request.resource.data;
+      let before = resource.data;
+      let mine = /databases/$(database)/documents/events/$(eventId)/feedback/$(request.auth.uid);
+      let had = exists(mine);
+      let legacy = had && !('ratingCount' in before);
+      return d.diff(before).affectedKeys().hasOnly(['ratingCount', 'ratingSum'])
+        && existsAfter(mine)
+        && d.ratingCount is int && d.ratingSum is int
+        && d.ratingCount == (legacy ? 1 : before.get('ratingCount', 0) + (had ? 0 : 1))
+        && d.ratingSum == (legacy ? getAfter(mine).data.rating
+          : before.get('ratingSum', 0) + getAfter(mine).data.rating - (had ? get(mine).data.rating : 0));
+    }
+
     // Cancel Event: the organizer may cancel their own event before it starts, once. That sets only
     // `cancelled` (to true) and `cancelledAt` (to now); it can't be undone from the app.
     function isCancelOfOwnEvent() {
@@ -135,7 +156,7 @@ service cloud.firestore {
       allow read: if request.auth != null;
       allow create: if request.auth != null && isOrganizer() && isNewEvent();
       allow update: if request.auth != null
-        && (isBoostOfOwnEvent() || isEditOfOwnEvent() || isCancelOfOwnEvent());
+        && (isBoostOfOwnEvent() || isEditOfOwnEvent() || isCancelOfOwnEvent() || isRatingTally(eventId));
       allow delete: if false;
     }
 

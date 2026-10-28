@@ -130,6 +130,20 @@ public final class EventCardBinder {
         }
     }
 
+    /** "4.6 (12)" with a star in front, or hidden when nobody has rated the event yet. */
+    public static void bindRating(@NonNull TextView view, @NonNull Event event) {
+        if (!event.hasRating()) {
+            view.setVisibility(View.GONE);
+            return;
+        }
+        Context context = view.getContext();
+        String average = EventFormat.averageText(event);
+        view.setVisibility(View.VISIBLE);
+        view.setText(context.getString(R.string.event_rating_short, average, event.getRatingCount()));
+        view.setContentDescription(context.getResources().getQuantityString(R.plurals.event_rating_a11y,
+                event.getRatingCount(), average, event.getRatingCount()));
+    }
+
     /** The heart: red and filled when saved. */
     public static void bindHeart(@NonNull ImageButton heart, @NonNull EventItem item) {
         Context context = heart.getContext();

@@ -150,6 +150,21 @@
                     android:textAppearance="@style/TextAppearance.LEEF.Details.Title"
                     tools:text="Future-Ready: AI for Students" />
 
+                <!-- Average stars; only shown once someone has rated the event. -->
+                <TextView
+                    android:id="@+id/ratingText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="6dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_star_filled"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.LEEF.Details.Label"
+                    android:visibility="gone"
+                    tools:text="4.6 (12 ratings)"
+                    tools:visibility="visible" />
+
                 <TextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"

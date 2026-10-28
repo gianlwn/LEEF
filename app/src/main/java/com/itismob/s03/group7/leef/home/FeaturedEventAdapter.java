@@ -60,6 +60,7 @@ final class FeaturedEventAdapter extends ListAdapter<EventItem, FeaturedEventAda
             EventCardBinder.bindBadge(binding.badge, event);
             EventCardBinder.bindPrice(binding.price, event);
             EventCardBinder.bindDetails(binding.title, binding.dateText, binding.venueText, event, true);
+            EventCardBinder.bindRating(binding.ratingText, event);
             EventCardBinder.bindTags(binding.tags, event.getTags());
             EventCardBinder.bindHeart(binding.heart, item);
             binding.getRoot().setOnClickListener(v -> actions.onEventClick(event));

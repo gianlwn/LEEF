@@ -34,6 +34,8 @@ import com.itismob.s03.group7.leef.home.EventCardBinder;
 import com.itismob.s03.group7.leef.home.EventFormat;
 import com.itismob.s03.group7.leef.home.EventItem;
 import com.itismob.s03.group7.leef.home.HomeViewModel;
+import com.itismob.s03.group7.leef.messages.ChatActivity;
+import com.itismob.s03.group7.leef.model.ChatRef;
 import com.itismob.s03.group7.leef.model.Event;
 import com.itismob.s03.group7.leef.registration.RegistrationActivity;
 import com.itismob.s03.group7.leef.ui.LeefEdgeToEdge;
@@ -137,6 +139,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         EventCardBinder.bindBadge(binding.badge, event);
         binding.title.setText(event.getTitle());
         binding.cancelledBanner.setVisibility(event.isCancelled() ? View.VISIBLE : View.GONE);
+        bindRating(event);
         setTextOrHide(binding.description, event.getDescription());
 
         // Date and time
@@ -160,6 +163,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         binding.organizerRow.setVisibility(hasOrganizer ? View.VISIBLE : View.GONE);
         binding.organizerName.setText(event.getOrganizerName());
         bindOrganizerLogo(event);
+        bindMessageOrganizer(event);
 
         // Tags
         binding.tags.removeAllViews();
@@ -222,6 +226,40 @@ public class EventDetailsActivity extends AppCompatActivity {
                 registrationLauncher.launch(RegistrationActivity.createIntent(this, eventId));
             }
         });
+    }
+
+    /** "4.6 (12 ratings)" under the title, or nothing until someone has rated the event. */
+    private void bindRating(@NonNull Event event) {
+        if (!event.hasRating()) {
+            binding.ratingText.setVisibility(View.GONE);
+            return;
+        }
+        String average = EventFormat.averageText(event);
+        binding.ratingText.setVisibility(View.VISIBLE);
+        binding.ratingText.setText(getResources().getQuantityString(R.plurals.details_rating,
+                event.getRatingCount(), average, event.getRatingCount()));
+        binding.ratingText.setContentDescription(getResources().getQuantityString(R.plurals.event_rating_a11y,
+                event.getRatingCount(), average, event.getRatingCount()));
+    }
+
+    /**
+     * "Message" beside the organizer: opens a private chat with them. It is only offered when the event
+     * records who posted it (events added by hand don't) and the viewer isn't that organizer.
+     */
+    private void bindMessageOrganizer(@NonNull Event event) {
+        FirebaseUser me = FirebaseAuth.getInstance().getCurrentUser();
+        String organizerId = event.getOrganizerId();
+        boolean canMessage = me != null && !organizerId.isEmpty() && !organizerId.equals(me.getUid());
+        binding.messageOrganizerButton.setVisibility(canMessage ? View.VISIBLE : View.GONE);
+        if (!canMessage) {
+            binding.messageOrganizerButton.setOnClickListener(null);
+            return;
+        }
+        String name = event.getOrganizerName().isEmpty()
+                ? getString(R.string.details_organizer_fallback) : event.getOrganizerName();
+        binding.messageOrganizerButton.setContentDescription(getString(R.string.details_message_organizer_a11y, name));
+        binding.messageOrganizerButton.setOnClickListener(v -> startActivity(
+                ChatActivity.createIntent(this, ChatRef.direct(organizerId), name, null)));
     }
 
     /** "Oct 24, 3:00 PM". */

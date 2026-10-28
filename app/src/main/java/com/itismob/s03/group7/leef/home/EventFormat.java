@@ -144,6 +144,12 @@ public final class EventFormat {
         return new SimpleDateFormat("MMM d", Locale.getDefault()).format(new Date(millis));
     }
 
+    /** The average stars with one decimal ("4.6"; a whole number reads "5.0"). */
+    @NonNull
+    public static String averageText(@NonNull Event event) {
+        return String.format(Locale.getDefault(), "%.1f", event.getAverageRating());
+    }
+
     private static boolean isMultiDay(@NonNull Event event) {
         if (event.getEndsAtMillis() <= event.getStartsAtMillis()) {
             return false;

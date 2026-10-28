@@ -42,6 +42,9 @@ public final class Event {
     public static final String FIELD_CANCELLED = "cancelled";
     public static final String FIELD_CANCELLED_AT = "cancelledAt";
     public static final String FIELD_UPDATED_AT = "updatedAt";
+    /** How many people rated the event, and the total of their stars (the average is sum / count). */
+    public static final String FIELD_RATING_COUNT = "ratingCount";
+    public static final String FIELD_RATING_SUM = "ratingSum";
 
     private final String id;
     private final String title;
@@ -83,6 +86,10 @@ public final class Event {
     private final long cancelledAtMillis;
     /** When the organizer last edited the details; 0 when never edited. */
     private final long updatedAtMillis;
+    /** How many people rated the event; 0 when nobody has (or it predates ratings being tallied). */
+    private final int ratingCount;
+    /** The total of all their star ratings (1 to 5 each). */
+    private final long ratingSum;
 
     private Event(@NonNull Builder b) {
         this.id = b.id;
@@ -109,6 +116,8 @@ public final class Event {
         this.cancelled = b.cancelled;
         this.cancelledAtMillis = b.cancelledAtMillis;
         this.updatedAtMillis = b.updatedAtMillis;
+        this.ratingCount = b.ratingCount;
+        this.ratingSum = b.ratingSum;
     }
 
     @NonNull
@@ -254,6 +263,24 @@ public final class Event {
         return updatedAtMillis;
     }
 
+    public int getRatingCount() {
+        return ratingCount;
+    }
+
+    public long getRatingSum() {
+        return ratingSum;
+    }
+
+    /** True when at least one person rated the event, so there is an average to show. */
+    public boolean hasRating() {
+        return ratingCount > 0;
+    }
+
+    /** The average stars out of 5 (0 when nobody rated it yet). */
+    public double getAverageRating() {
+        return ratingCount > 0 ? (double) ratingSum / ratingCount : 0;
+    }
+
     /** True once the event has begun (a boost can only be bought before this). */
     public boolean hasStarted(long nowMillis) {
         return nowMillis >= startsAtMillis;
@@ -294,6 +321,8 @@ public final class Event {
                 && cancelled == event.cancelled
                 && cancelledAtMillis == event.cancelledAtMillis
                 && updatedAtMillis == event.updatedAtMillis
+                && ratingCount == event.ratingCount
+                && ratingSum == event.ratingSum
                 && id.equals(event.id)
                 && title.equals(event.title)
                 && category == event.category
@@ -314,7 +343,7 @@ public final class Event {
         return Objects.hash(id, title, category, startsAtMillis, endsAtMillis, description, venue, address,
                 city, audiences, organizerId, organizerName, organizerLogoUrl, tags, price, earlyBirdPrice,
                 earlyBirdUntilMillis, groupPrice, coverUrl, boosted, boostedUntilMillis, cancelled,
-                cancelledAtMillis, updatedAtMillis);
+                cancelledAtMillis, updatedAtMillis, ratingCount, ratingSum);
     }
 
     /** Collects an event's fields; anything not set stays empty (or free, or "no early bird"). */
@@ -345,6 +374,8 @@ public final class Event {
         private boolean cancelled;
         private long cancelledAtMillis;
         private long updatedAtMillis;
+        private int ratingCount;
+        private long ratingSum;
 
         public Builder(@NonNull String id, @NonNull String title, @NonNull EventCategory category,
                        long startsAtMillis) {
@@ -466,6 +497,14 @@ public final class Event {
         @NonNull
         public Builder updatedAt(long millis) {
             this.updatedAtMillis = millis;
+            return this;
+        }
+
+        /** The tally of ratings: how many people rated and the total of their stars. */
+        @NonNull
+        public Builder ratings(int count, long sum) {
+            this.ratingCount = Math.max(count, 0);
+            this.ratingSum = Math.max(sum, 0);
             return this;
         }
 

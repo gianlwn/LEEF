@@ -84,9 +84,33 @@ public final class FirebaseFeedbackRepository implements FeedbackRepository {
         document.put(Feedback.FIELD_SUBMITTED_AT, FieldValue.serverTimestamp());
 
         DocumentReference reference = reference(eventId, user.getUid());
+        DocumentReference eventReference = firestore.collection(Event.COLLECTION).document(eventId);
         // A transaction (not a plain set) so being offline fails right away instead of queueing a write.
+        // It also keeps the event's running tally of ratings (how many, and the total of the stars) in step
+        // with this person's rating, which is what lets everyone see an average without reading anyone's
+        // feedback. The database rules check that the tally changes by exactly this person's rating.
         firestore.runTransaction(transaction -> {
+            DocumentSnapshot event = transaction.get(eventReference);
+            DocumentSnapshot before = transaction.get(reference);
+            Long oldCount = event.getLong(Event.FIELD_RATING_COUNT);
+            Long oldSum = event.getLong(Event.FIELD_RATING_SUM);
+            boolean hadRating = before.exists();
+            Long oldRating = hadRating ? before.getLong(Feedback.FIELD_RATING) : null;
+            long count;
+            long sum;
+            if (hadRating && oldCount == null) {
+                // Rated before ratings were tallied: this rating becomes the first one counted.
+                count = 1;
+                sum = rating;
+            } else {
+                count = (oldCount == null ? 0 : oldCount) + (hadRating ? 0 : 1);
+                sum = (oldSum == null ? 0 : oldSum) + rating - (oldRating == null ? 0 : oldRating);
+            }
+            Map<String, Object> tally = new HashMap<>();
+            tally.put(Event.FIELD_RATING_COUNT, count);
+            tally.put(Event.FIELD_RATING_SUM, sum);
             transaction.set(reference, document);
+            transaction.update(eventReference, tally);
             return null;
         }).addOnSuccessListener(unused -> callback.onDone())
                 .addOnFailureListener(error -> {
