@@ -12,6 +12,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
+        android:tag="home"
         android:name="com.itismob.s03.group7.leef.home.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"

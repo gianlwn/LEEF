@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Switches tabs. All the tabs stay alive, so Home keeps its scroll and filters. */
     private void showTab(@NonNull String tab) {
-        Fragment home = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        Fragment home = getSupportFragmentManager().findFragmentByTag("home");
         if (home == null) {
             return;
         }
