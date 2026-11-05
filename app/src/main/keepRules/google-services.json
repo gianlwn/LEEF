@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "374273010741",
+    "project_id": "leef-e53c2",
+    "storage_bucket": "leef-e53c2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374273010741:android:6b284ad83f2ef560d6d57c",
+        "android_client_info": {
+          "package_name": "com.itismob.s03.group7.leef"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374273010741-2cbc8jgride90t5kohddge42va04e6s0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itismob.s03.group7.leef",
+            "certificate_hash": "b4c4f869b0c247fe6daf50ce57f23a7808aede7b"
+          }
+        },
+        {
+          "client_id": "374273010741-jgfrcd8fus1m0putoavd8h0888dfn2au.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itismob.s03.group7.leef",
+            "certificate_hash": "17fa508bb852e2fc8225fcacae784a53441e3a58"
+          }
+        },
+        {
+          "client_id": "374273010741-040lvai25btduucijavr64s0qhoo4sr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5ydm8t_PdcsWUn5fG-glogpgFf-65aPk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374273010741-040lvai25btduucijavr64s0qhoo4sr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
